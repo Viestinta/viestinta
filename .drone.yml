@@ -1,0 +1,11 @@
+pipeline:
+  ssh:
+    image: plugins/ssh
+    when:
+      event: push
+      branch: master
+    host: stokkers.no
+    port: 22014
+    script:
+      - mkdir -p /tmp/my-app
+      - date > /tmp/my-app/last_deploy.txt
