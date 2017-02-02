@@ -5,6 +5,7 @@ pipeline:
       event: push
       branch: master
     host: stokkers.no
+    user: root
     port: 22014
     script:
       - mkdir -p /tmp/my-app
