@@ -1,13 +1,21 @@
 pipeline:
   ssh:
-    image: plugins/ssh
+    image: node:${NODE_VERSION}
     when:
       event: push
       branch: master
-    host: stokkers.no
-    user: root
-    port: 22014
+    commands:
+      - npm install
+      - npm start
+      - npm run lint
+      - npm run test
     script:
       - echo "hello world!"
       - mkdir -p /tmp/my-app
-      - date > /tmp/my-app/last_deploy.txt
+      - date >> /tmp/my-app/last_deploy.txt
+matrix:
+  NODE_VERSION
+    - latest
+    - "7"
+    - "6"
+    - "4.6"
