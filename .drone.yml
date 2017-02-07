@@ -2,7 +2,7 @@ build:
   image: node:7.5
   when:
     event: push
-    branch: master
+    branch: react-start
   commands:
     - npm install
     - npm start
