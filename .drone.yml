@@ -1,6 +1,6 @@
 pipeline:
   ssh:
-    image: node:${NODE_VERSION}
+    image: node:7.5
     when:
       event: push
       branch: master
@@ -13,9 +13,4 @@ pipeline:
       - echo "hello world!"
       - mkdir -p /tmp/my-app
       - date >> /tmp/my-app/last_deploy.txt
-matrix:
-  NODE_VERSION
-    - latest
-    - "7"
-    - "6"
-    - "4.6"
+
