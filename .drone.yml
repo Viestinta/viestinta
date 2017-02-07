@@ -1,15 +1,8 @@
 build:
-  image: node:7.5
-  when:
-    event: push
-    branch: react-start
+  image: node:7.5.0
   commands:
     - npm install
     - npm start
     - npm run lint
     - npm run test
-  script:
-    - echo "hello world!"
-    - mkdir -p /tmp/my-app
-    - date >> /tmp/my-app/last_deploy.txt
 
