@@ -1,8 +1,9 @@
-build:
-  image: node:7.5.0
-  commands:
-    - npm install
-    - npm start
-    - npm run lint
-    - npm run test
+pipeline:
+  test: 
+    image: node:7.5.0
+    commands:
+      - npm install
+      - npm run test
+      - npm run lint
+      - npm start
 
