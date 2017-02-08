@@ -2,11 +2,11 @@
   "name": "viestinta",
   "version": "0.0.1",
   "description": "Placeholder",
-  "main": "server.js",
+  "main": "server/app.js",
   "scripts": {
     "test": "echo 'Running tests...'",
-    "start": "node server.js",
-    "lint": "standard"
+    "start": "node server/app.js",
+    "lint": "standard ./server/* ./client/*"
   },
   "repository": {
     "type": "git",

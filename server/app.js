@@ -24,7 +24,7 @@ const PDStrategy = require('passport-openid-connect').Strategy
 
 nconf.argv()
   .env('__')
-  .file({ file: 'etc/config.json' })
+  .file({ file: 'server/etc/config.json' })
   .defaults({
     'http': {
       'port': 8080,
