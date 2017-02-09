@@ -6,6 +6,7 @@ pipeline:
       branches: [master, react-start]
     commands:
       - npm install --silent
+      - npm install standard -g
       - npm run test
       - npm run lint
 
