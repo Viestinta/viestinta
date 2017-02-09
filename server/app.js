@@ -67,13 +67,7 @@ let router = express.Router()
 // Main App
 // ///////////////////////////////////////////////////
 
-router.route('/')
-  .get((req, res) => {
-    res.json({
-      'hello': 'world',
-      'user': req.user
-    })
-  })
+app.get('/', (req, res) => {res.json({'hello': 'world', 'user': req.user})})
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 

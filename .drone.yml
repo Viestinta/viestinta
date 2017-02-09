@@ -5,7 +5,7 @@ pipeline:
       event: [push,pull_request]
       branches: [master, react-start]
     commands:
-      - npm install
+      - npm install --silent
       - npm run test
       - npm run lint
 
