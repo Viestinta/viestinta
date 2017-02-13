@@ -64,6 +64,23 @@ app.use(passport.session())
 
 let router = express.Router()
 
+// Socket.io for sending and receiving
+var http = require('http').Server(express);
+var io = require('socket.io')(http);
+
+io.on('connection', function(socket) {
+    console.log("Connection established");
+    socket.on("new-message", function(msg) {
+        console.log(msg);
+        io.emit("receive-message", msg);
+    })
+});
+
+http.listen('3000', function() {
+    console.log("Connected")
+})
+
+
 // ///////////////////////////////////////////////////
 // Main App
 // ///////////////////////////////////////////////////
@@ -80,7 +97,7 @@ app.listen(app.get('port'), () => {
   console.log('Node app is running on port', app.get('port'))
 })
 
-
+app.use('/', express.static(path.resolve(__dirname, '../client/')))
 app.use(express.static(path.resolve(__dirname, '../client/css/')))
 app.use('/components', express.static(path.resolve(__dirname, '../client/components')))
 app.use('/css', express.static(path.resolve(__dirname, '../client/css')))
