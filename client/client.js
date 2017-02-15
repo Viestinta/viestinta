@@ -26,38 +26,65 @@ class ChatField extends React.Component {
         const messages = this.props
         return (
             <div id="chat-field">
-                Mottate meldinger kommer her
-
+                {
+                    this.props.messages.map((message, i) => {
+                        return (
+                            <Message
+                                key={i}
+                                user={message.user}
+                                text={message.text}
+                            />
+                        );
+                    })
+                }
+                Meldingen kommer her
             </div>
         )
     }
 }
 
 class ChatBox extends React.Component {
+    getInitialState() {
+        return {text: ''};
+    },
 
-   handleSend(e) {
-       const msg = e.target.value;
-        // TODO Send message
-       this.props.sendMessage(msg);
+    handleSend(e) {
+        e.preventDefault();
+        console.log("In handle send");
+        var msg = {
+            user : this.props.user,
+            text : this.state.text
+        }
+        this.props.sendMessage(msg);
+        this.setState({ text: ''});
+
    }
+   changeHandler(e) {
+       this.setState({ text : e.target.value });
+   },
+
    render() {
         return (
-            <div id="chat-field col-lg-6">
-                <div id="input-group">
-                    <input type="text" class="form-control" aria-describedby="basic-addon2" />
-                    <span class="btn btn-default" type="button" onClick={this.handleSend.bind(this)}>
-                        Send
-                    </span>
-                </div>
+            <div id="chat-box col-lg-6">
+                <h3>Ny melding</h3>
+                <form onSubmit="{this.sendMessage}">
+                    <input
+                        onChange={this.changeHandler}
+                        value={this.state.text}
+                    />
+                </form>
             </div>
         )
     }
 }
 
+
 class Message extends React.Component {
     render() {
         return (
             <div id="message">
+                { this.props.user }
+                { this.props.text }
                 <p>Melding her</p>
             </div>
         );
