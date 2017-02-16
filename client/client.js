@@ -10,33 +10,38 @@ class Header extends React.Component {
     }
 }
 
+
+class Message extends React.Component {
+    render() {
+        return (
+            <div id='message'>
+                /*{ this.props.user }*/
+                { this.props.text }
+                <p>Melding her</p>
+            </div>
+        );
+    }
+}
+
 class ChatField extends React.Component {
     constructor(messages) {
-        super(messages);
-    }
-
-    printMessages(messages) {
-        for (var i = 0; i < messages.size(); i++) {
-            <p> messages[i] </p>
-        }
+        super(messages)
     }
 
     render() {
 
-        const messages = this.props
+        // Loop trought the messages in the state and create a Message component
+        const messages = this.props.messages.map((message) => {
+            return (
+                <Message
+                    text={message.text}
+                />
+            )
+        })
+
         return (
-            <div id="chat-field">
-                {
-                    this.props.messages.map((message, i) => {
-                        return (
-                            <Message
-                                key={i}
-                                user={message.user}
-                                text={message.text}
-                            />
-                        );
-                    })
-                }
+            <div id='chat-field'>
+                { messages }
                 Meldingen kommer her
             </div>
         )
@@ -46,89 +51,74 @@ class ChatField extends React.Component {
 var ChatBox = React.createClass( {
 
     getInitialState() {
-        return {text: ''};
+        return {text: ''}
     },
 
     handleMessageSubmit(e) {
-        e.preventDefault();
-        console.log("In handle send");
+        e.preventDefault()
+        console.log('In handle send')
         var msg = {
             user : this.props.user,
             text : this.state.text
         }
-        this.props.sendMessage(msg);
-        this.setState({ text: ''});
+        this.props.sendMessage(msg)
+        this.setState({ text: ''})
 
    },
    changeHandler(e) {
-       this.setState({ text : e.target.value });
+       this.setState({ text : e.target.value })
    },
 
    render() {
         return (
-            <div id="chat-box col-lg-6">
+            <div id='chat-box col-lg-6'>
                 <h3>Ny melding</h3>
-                <form onSubmit="{this.sendMessage}">
+                <form onSubmit={this.handleMessageubmit}>
                     <input
                         onChange={this.changeHandler}
                         value={this.state.text}
                     />
+                    <button type='btn btn-submit'></button>
                 </form>
             </div>
         )
     }
-});
-
-
-class Message extends React.Component {
-    render() {
-        return (
-            <div id="message">
-                { this.props.user }
-                { this.props.text }
-                <p>Melding her</p>
-            </div>
-        );
-    }
-}
-
+})
 
 var ChatApp = React.createClass({
 
   getInitialState() {
       return {
-          messages:[], text: ''};
+          messages:[], text: ''}
   },
 
   componentDidMount() {
-      socket.on('init', this._initialize);
-      socket.on('send:message', this._messageRecieve);
+      socket.on('init', this._initialize)
+      socket.on('send:message', this._messageRecieve)
   },
 
   _initialize(data) {
-      var {users, name} = data;
-      this.setState({users, user: name});
+      var {users, name} = data
+      /*this.setState({users, user: name})*/
   },
 
   _messageRecieve(message) {
-      var {messages} = this.state;
-      messages.push(message);
-      this.setState({messages});
+      var {messages} = this.state
+      messages.push(message)
+      this.setState({messages})
   },
 
   handleMessageSubmit(message) {
-      var {messages} = this.state;
-      messages.push(message);
-      this.setState({messages});
-      socket.emit('send:message', message);
+      var {messages} = this.state
+      messages.push(message)
+      this.setState({messages})
+      socket.emit('send:message', message)
   },
 
   render() {
       return (
           <div id="content">
-              <Header
-
-              />
+              <Header />
               <ChatField
                   messages={this.state.messages}
               />
@@ -144,6 +134,6 @@ var ChatApp = React.createClass({
 
 ReactDOM.render(
     <ChatApp />,
-    document.getElementById("app")
-);
+    document.getElementById('app')
+)
 
