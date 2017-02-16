@@ -24,7 +24,7 @@ const PDStrategy = require('passport-openid-connect').Strategy
 
 nconf.argv()
   .env('__')
-  .file({ file: 'etc/config.json' })
+  .file({ file: 'server/etc/config.json' })
   .defaults({
     'http': {
       'port': 8080,
@@ -61,19 +61,11 @@ passport.deserializeUser(PDStrategy.deserializeUser)
 app.use(passport.initialize())
 app.use(passport.session())
 
-let router = express.Router()
-
 // ///////////////////////////////////////////////////
 // Main App
 // ///////////////////////////////////////////////////
 
-router.route('/')
-  .get((req, res) => {
-    res.json({
-      'hello': 'world',
-      'user': req.user
-    })
-  })
+app.get('/', (req, res) => res.json({'hello': 'world', 'user': req.user}))
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 

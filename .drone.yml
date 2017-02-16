@@ -1,21 +1,12 @@
 pipeline:
-  ssh:
-    image: node:${NODE_VERSION}
+  test: 
+    image: node:7.5.0
     when:
-      event: push
-      branch: master
+      event: [push,pull_request]
+      branches: [master, react-start]
     commands:
-      - npm install
-      - npm start
-      - npm run lint
+      - npm install --silent
+      - npm install standard -g
       - npm run test
-    script:
-      - echo "hello world!"
-      - mkdir -p /tmp/my-app
-      - date >> /tmp/my-app/last_deploy.txt
-matrix:
-  NODE_VERSION
-    - latest
-    - "7"
-    - "6"
-    - "4.6"
+      - npm run lint
+
