@@ -1,0 +1,23 @@
+#app {
+    padding: auto 0px;
+    width:500px;
+}
+
+#content {
+    padding: auto 0px;
+    width: 500px;
+}
+#chat-field {
+    height: 800px;
+    width: 500px;
+    border-color: black;
+}
+
+#chat-field {
+    background-color: darkgray;
+}
+
+#message {
+    background-color: white;
+    border-radius: 10%;
+}
