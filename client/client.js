@@ -43,10 +43,11 @@ class ChatField extends React.Component {
     }
 }
 
-class ChatBox extends React.Component {
+var ChatBox = React.CreateClass( {
+
     getInitialState() {
         return {text: ''};
-    }
+    },
 
     handleMessageSubmit(e) {
         e.preventDefault();
@@ -58,10 +59,10 @@ class ChatBox extends React.Component {
         this.props.sendMessage(msg);
         this.setState({ text: ''});
 
-   }
+   },
    changeHandler(e) {
        this.setState({ text : e.target.value });
-   }
+   },
 
    render() {
         return (
@@ -76,7 +77,7 @@ class ChatBox extends React.Component {
             </div>
         )
     }
-}
+});
 
 
 class Message extends React.Component {
@@ -92,7 +93,7 @@ class Message extends React.Component {
 }
 
 
-class ChatApp extends React.Component {
+var ChatApp = React.CreateClass({
 
   getInitialState() {
       return {
@@ -102,9 +103,6 @@ class ChatApp extends React.Component {
   componentDidMount() {
       socket.on('init', this._initialize);
       socket.on('send:message', this._messageRecieve);
-      socket.on('user:join', this._userJoined);
-      socket.on('user:left', this._userLeft);
-      socket.on('change:name', this._userChangedName);
   }
 
   _initialize(data) {
@@ -129,7 +127,7 @@ class ChatApp extends React.Component {
       return (
           <div id="content">
               <Header
-                  users={this.state.users}
+
               />
               <ChatField
                   messages={this.state.messages}
@@ -141,7 +139,7 @@ class ChatApp extends React.Component {
           </div>
       );
   }
-}
+});
 
 
 ReactDOM.render(
