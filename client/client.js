@@ -43,7 +43,7 @@ class ChatField extends React.Component {
     }
 }
 
-var ChatBox = React.CreateClass( {
+var ChatBox = React.createClass( {
 
     getInitialState() {
         return {text: ''};
@@ -93,35 +93,35 @@ class Message extends React.Component {
 }
 
 
-var ChatApp = React.CreateClass({
+var ChatApp = React.createClass({
 
   getInitialState() {
       return {
           messages:[], text: ''};
-  }
+  },
 
   componentDidMount() {
       socket.on('init', this._initialize);
       socket.on('send:message', this._messageRecieve);
-  }
+  },
 
   _initialize(data) {
       var {users, name} = data;
       this.setState({users, user: name});
-  }
+  },
 
   _messageRecieve(message) {
       var {messages} = this.state;
       messages.push(message);
       this.setState({messages});
-  }
+  },
 
   handleMessageSubmit(message) {
       var {messages} = this.state;
       messages.push(message);
       this.setState({messages});
       socket.emit('send:message', message);
-  }
+  },
 
   render() {
       return (
