@@ -46,9 +46,9 @@ class ChatField extends React.Component {
 class ChatBox extends React.Component {
     getInitialState() {
         return {text: ''};
-    },
+    }
 
-    handleSend(e) {
+    handleMessageSubmit(e) {
         e.preventDefault();
         console.log("In handle send");
         var msg = {
@@ -61,7 +61,7 @@ class ChatBox extends React.Component {
    }
    changeHandler(e) {
        this.setState({ text : e.target.value });
-   },
+   }
 
    render() {
         return (
@@ -92,44 +92,60 @@ class Message extends React.Component {
 }
 
 
-class Layout extends React.Component {
-    getInitialState() {
-        return (
-            messages = []
-            //socket: window.io('http://localhost:3000')
+class ChatApp extends React.Component {
 
-        )
-    }
+  getInitialState() {
+      return {
+          messages:[], text: ''};
+  }
 
-    componentMounted() {
-        this.state.socket.on('new-message', function(msg) {
-            this.setState({messages: this.state.messages.push(msg)})
-        })
-    }
+  componentDidMount() {
+      socket.on('init', this._initialize);
+      socket.on('send:message', this._messageRecieve);
+      socket.on('user:join', this._userJoined);
+      socket.on('user:left', this._userLeft);
+      socket.on('change:name', this._userChangedName);
+  }
 
-    sendMessage(msg) {
-        const message = new Message(msg);
+  _initialize(data) {
+      var {users, name} = data;
+      this.setState({users, user: name});
+  }
 
-    }
+  _messageRecieve(message) {
+      var {messages} = this.state;
+      messages.push(message);
+      this.setState({messages});
+  }
 
-    render() {
-        const messages = ["Number one", "Number two", "Three"]
-        return (
-            <div id="content">
+  handleMessageSubmit(message) {
+      var {messages} = this.state;
+      messages.push(message);
+      this.setState({messages});
+      socket.emit('send:message', message);
+  }
 
-                <Header />
-                <ChatField messages="messages"/>
-
-                <ChatBox />
-
-
-            </div>
-        );
-    }
+  render() {
+      return (
+          <div id="content">
+              <Header
+                  users={this.state.users}
+              />
+              <ChatField
+                  messages={this.state.messages}
+              />
+              <ChatBox
+                  onMessageSubmit={this.handleMessageSubmit}
+                  user={this.state.user}
+              />
+          </div>
+      );
+  }
 }
 
+
 ReactDOM.render(
-    <Layout />,
+    <ChatApp />,
     document.getElementById("app")
 );
 
