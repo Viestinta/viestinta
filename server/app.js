@@ -62,25 +62,6 @@ passport.deserializeUser(PDStrategy.deserializeUser)
 app.use(passport.initialize())
 app.use(passport.session())
 
-let router = express.Router()
-
-// Socket.io for sending and receiving
-var http = require('http').Server(express);
-var io = require('socket.io')(http);
-
-io.on('connection', function(socket) {
-    console.log("Connection established");
-    socket.on("new-message", function(msg) {
-        console.log(msg);
-        io.emit("receive-message", msg);
-    })
-});
-
-http.listen('3000', function() {
-    console.log("Connected")
-})
-
-
 // ///////////////////////////////////////////////////
 // Main App
 // ///////////////////////////////////////////////////
@@ -93,7 +74,8 @@ app.get('/', (req, res) => {res.sendFile(path.resolve(__dirname, '../client/inde
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'), (err) => {
+    if (err) throw err
   console.log('Node app is running on port', app.get('port'))
 })
 
