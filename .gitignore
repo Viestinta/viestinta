@@ -97,3 +97,5 @@ $RECYCLE.BIN/
 .idea/workspace.xml
 
 # End of https://www.gitignore.io/api/linux,windows,node
+
+*bundle.js
