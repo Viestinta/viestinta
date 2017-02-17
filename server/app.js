@@ -66,7 +66,6 @@ app.use(passport.session())
 // Main App
 // ///////////////////////////////////////////////////
 
-//app.get('/', (req, res) => {res.json({'hello': 'world', 'user': req.user})})
 // Go to index.html
 app.get('/', (req, res) => {res.sendFile(path.resolve(__dirname, '../client/index.html'))})
 
@@ -80,6 +79,7 @@ app.listen(app.get('port'), (err) => {
   console.log('Node app is running on port', app.get('port'))
 })
 
+// To get static files. Need to ble cleaned up
 app.use('/', express.static(path.resolve(__dirname, '../client/')))
 app.use(express.static(path.resolve(__dirname, '../client/css/')))
 app.use('/components', express.static(path.resolve(__dirname, '../client/components')))

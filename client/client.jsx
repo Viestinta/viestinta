@@ -1,4 +1,4 @@
-console.log('In client.jsx')
+var socket = io.connect()
 
 class Header extends React.Component {
   render () {
@@ -15,7 +15,6 @@ class Message extends React.Component {
     return (
       <div id='message'>
                 { this.props.text }
-        <p>Melding her</p>
       </div>
     )
   }
@@ -39,7 +38,6 @@ class ChatField extends React.Component {
     return (
       <div id='chat-field'>
         { messages }
-        Meldingen kommer her
     </div>
     )
   }
@@ -92,12 +90,12 @@ var ChatApp = React.createClass({
     return {
       messages: [],
         text: '',
-        socket: io('http://localhost:8000')
     }
   },
 
   componentDidMount () {
-      this.state.socket.on('new message', handleMessageSubmit('En melding'))
+      // Not working, I think
+      socket.on('send:message', this._messageRecieve);
 
   },
 
@@ -110,10 +108,10 @@ var ChatApp = React.createClass({
 
     // When a message is submitted
   sendMessage (message) {
-      console.log("In sendMessage")
-    var {messages} = this.state
-    messages.push(message)
-    this.setState({messages})
+      var messages = this.state.messages;
+      messages.push(message);
+      this.setState({ messages: messages });
+      socket.emit('send:message', message);
   },
 
   render () {
@@ -135,4 +133,3 @@ ReactDOM.render(
   <ChatApp />,
     document.getElementById('app')
 )
-
