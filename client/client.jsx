@@ -1,5 +1,3 @@
-var socket = io.connect()
-
 class Header extends React.Component {
   render () {
     return (
@@ -89,29 +87,29 @@ var ChatApp = React.createClass({
   getInitialState () {
     return {
       messages: [],
-        text: '',
+      text: '',
+      socket: io('http://localhost:8000')
     }
   },
 
   componentDidMount () {
       // Not working, I think
-      socket.on('send:message', this._messageRecieve);
+      //socket.on('send:message', this._messageRecieve);
+      this.state.socket.on("new-message", function(msb) {
+      	this.setState({messages: this.state.messages.push(msg)})
+      })
 
   },
 
-    // When a message is received
-  _messageRecieve (message) {
-    var {messages} = this.state
-    messages.push(message)
-    this.setState({messages})
-  },
+
 
     // When a message is submitted
   sendMessage (message) {
       var messages = this.state.messages;
       messages.push(message);
+      this.socket.emit('new-message', message)
       this.setState({ messages: messages });
-      socket.emit('send:message', message);
+      //socket.emit('send:message', message);
   },
 
   render () {
