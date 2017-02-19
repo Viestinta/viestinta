@@ -101,13 +101,13 @@ var ChatApp = React.createClass({
 
   },
 
-
-
     // When a message is submitted
   sendMessage (message) {
       var messages = this.state.messages;
       messages.push(message);
-      this.socket.emit('new-message', message)
+      console.log(message)
+      this.state.socket.emit('new-message', message)
+      console.log("After emit")
       this.setState({ messages: messages });
       //socket.emit('send:message', message);
   },
