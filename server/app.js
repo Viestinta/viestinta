@@ -68,31 +68,43 @@ app.use(passport.session())
 // Main App
 // ///////////////////////////////////////////////////
 
+// URL-specifications
 // Go to index.html
 app.get('/', (req, res) => {res.sendFile(path.resolve(__dirname, '../client/index.html'))})
-
 app.get('/user', (req, res) => res.json({'hello': 'world', 'user': req.user}))
-
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
+// Opens a port and listens on it
 server.listen(app.get('port'), (err) => {
   if (err) throw err
   console.log('Node app is running on port', app.get('port'))
 })
 
-const io = require('socket.io').listen(server)
+// Not sure what this does or if it is dupliacte
+var io = require('socket.io')(server)
 
+// Create a connection
+//var socket = io.connect('http://localhost::8000')
 
+// Listen for connections
 io.on('connection', function(socket){
-	console.log('Connection')
-	var session = socket.handshake.session
-	console.log("Session: " + session)
+	// Reports when it finds a connection
+	console.log('Client connected')
+	
+	// Wait for a message from the client for 'join'
+	socket.on('join', function(data) {
+		console.log("New client have joined")
+		socket.emit('messages', 'Hello from server')
+	})
+
+	// When a new message is sendt from somebody
 	socket.on('new-message', function(msg){
-		console.log("Message: " + msg)
-		io.emit('receive-message', msg)
+		console.log("Message: " + msg.text)
+		socket.emit('receive-message', msg)
 
 	})
+
 	socket.on('test', function(){
 		console.log('Mounted')
 	})

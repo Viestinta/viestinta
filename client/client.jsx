@@ -1,20 +1,21 @@
+
 class Header extends React.Component {
   render () {
-    return (
-      <header>
-        <h1> Velkommen til Viestinta! </h1>
-      </header>
-    )
+	return (
+	  <header>
+		<h1> Velkommen til Viestinta! </h1>
+	  </header>
+	)
   }
 }
 
 class Message extends React.Component {
   render () {
-    return (
-      <div id='message'>
-                { this.props.text }
-      </div>
-    )
+	return (
+	  <div id='message'>
+				{ this.props.text }
+	  </div>
+	)
   }
 }
 
@@ -22,112 +23,120 @@ class ChatField extends React.Component {
 
   render () {
 
-      // Loop trought the messages in the state and create a Message component
-      const messages = this.props.messages.map((message, i) => {
-          console.log("Looping trought messages")
-          return (
-            <Message
-                key = {i}
-                text={message.text}
-                    />
-          )
-      })
+	  // Loop trought the messages in the state and create a Message component
+	  const messages = this.props.messages.map((message, i) => {
+		  console.log("Looping trought messages")
+		  return (
+			<Message
+				key = {i}
+				text={message.text}
+					/>
+		  )
+	  })
 
-    return (
-      <div id='chat-field'>
-        { messages }
-    </div>
-    )
+	return (
+	  <div id='chat-field'>
+		{ messages }
+	</div>
+	)
   }
 }
 
 var ChatBox = React.createClass({
 
   getInitialState () {
-      // Starting with empty inputfield
-    return {text: ''}
+	  // Starting with empty inputfield
+	return {text: ''}
   },
 
   handleMessageSubmit (e) {
-    e.preventDefault()
-    console.log('In handle send')
-    var msg = {
-        // Setting msg.text to written input
-        text: this.state.text
-    }
+	e.preventDefault()
+	console.log('In handle send')
+	var msg = {
+		// Setting msg.text to written input
+		text: this.state.text
+	}
 
-    this.props.sendMessage(msg)
-      // Emtpy input field
-    this.setState({ text: '' })
+	this.props.sendMessage(msg)
+	  // Emtpy input field
+	this.setState({ text: '' })
   },
-    // Listen and update field dynamically when something is written
+	// Listen and update field dynamically when something is written
   changeHandler (e) {
-    this.setState({ text: e.target.value })
-      console.log("Changing state")
+	this.setState({ text: e.target.value })
+	  console.log("Changing state")
   },
 
   render () {
-    return (
-      <div id='chat-box col-lg-6'>
-        <h3>Ny melding</h3>
-          <input
-            onChange={this.changeHandler}
-            value={this.state.text}
-                    />
-          <button type='submit' value="Send" onClick={this.handleMessageSubmit}>Send</button>
+	return (
+	  <div id='chat-box col-lg-6'>
+		<h3>Ny melding</h3>
+		  <input
+			onChange={this.changeHandler}
+			value={this.state.text}
+					/>
+		  <button type='submit' value="Send" onClick={this.handleMessageSubmit}>Send</button>
 
-      </div>
-    )
+	  </div>
+	)
   }
 })
 
 var ChatApp = React.createClass({
 
-    // At beginning there is no msg and the text-field is empty
+	// At beginning there is no msg and the text-field is empty
   getInitialState () {
-    return {
-      messages: [],
-      text: '',
-      socket: io('http://localhost:8000')
-    }
+  	console.log("In getinitialstate")
+	return {
+	  messages: [],
+	  text: '',
+	  socket: io.connect('http://localhost:8000'),
+	}
+
+	  console.log("Socket in getInitialState: ", socket)
   },
 
   componentDidMount () {
-      // Not working, I think
-      //socket.on('send:message', this._messageRecieve);
-      this.state.socket.on("new-message", function(msb) {
-      	this.setState({messages: this.state.messages.push(msg)})
-      })
-
+  		this.state.socket.on('join', this.join)
+  		this.state.socket.on('send-message', this.sendMessage)
+  		this.state.socket.on('receive-message', this.receiveMessage)
+  		
   },
 
-    // When a message is submitted
-  sendMessage (message) {
-      var messages = this.state.messages;
-      messages.push(message);
-      console.log(message)
-      this.state.socket.emit('new-message', message)
-      console.log("After emit")
-      this.setState({ messages: messages });
-      //socket.emit('send:message', message);
+  join () {
+  	console.log("join")
+  	this.state.socket.emit("join", 'Hello world from client')
+  },
+
+  receiveMessage (msg) {
+  	console.log("receiveMessage: ", msg)
+  	this.state.messages.push(msg)
+  },
+  
+  // When a message is submitted
+  sendMessage (msg) {
+  	console.log("sendMessage: ", msg)
+	  var messages = this.state.messages;
+	  this.state.socket.emit('new-message', msg)
+	  this.setState({ messages: messages });
   },
 
   render () {
-    return (
-      <div id='content'>
-        <Header />
-        <ChatField
-          messages={this.state.messages}
-              />
-        <ChatBox
-          sendMessage={this.sendMessage}
-              />
-      </div>
-    )
+	return (
+	  <div id='content'>
+		<Header />
+		<ChatField
+		  messages={this.state.messages}
+			  />
+		<ChatBox
+		  sendMessage={this.sendMessage}
+			  />
+	  </div>
+	)
   }
 })
 
 ReactDOM.render(
   <ChatApp />,
-    document.getElementById('app')
+	document.getElementById('app')
 )
