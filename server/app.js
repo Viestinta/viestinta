@@ -87,16 +87,29 @@ var io = require('socket.io')(server)
 // Create a connection
 //var socket = io.connect('http://localhost::8000')
 
+var num_sockets = 0
 // Listen for connections
-io.on('connection', function(socket){
+io.sockets.on('connection', function(socket){
 	// Reports when it finds a connection
 	console.log('Client connected')
+	num_sockets ++;
+	console.log("Num clients: ", num_sockets)
 	
 	// Wait for a message from the client for 'join'
 	socket.on('join', function(data) {
 		console.log("New client have joined")
 		socket.emit('messages', 'Hello from server')
+		num_sockets ++
 	})
+
+	// Wait for a message from the client for 'join'
+	socket.on('leave', function(data) {
+		console.log("Client have left")
+		socket.emit('messages', 'Goodbye from server')
+		num_sockets --
+	})
+
+
 
 	// When a new message is sendt from somebody
 	socket.on('new-message', function(msg){

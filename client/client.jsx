@@ -1,4 +1,8 @@
 
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+
 class Header extends React.Component {
   render () {
 	return (
@@ -9,7 +13,7 @@ class Header extends React.Component {
   }
 }
 
-class Message extends React.Component {
+export default class Message extends React.Component {
   render () {
 	return (
 	  <div id='message'>
@@ -37,7 +41,7 @@ class ChatField extends React.Component {
 	return (
 	  <div id='chat-field'>
 		{ messages }
-	</div>
+		</div>
 	)
   }
 }
@@ -136,7 +140,15 @@ var ChatApp = React.createClass({
   }
 })
 
-ReactDOM.render(
-  <ChatApp />,
-	document.getElementById('app')
-)
+if (typeof window !== 'undefined') {
+	ReactDOM.render(
+	  <ChatApp />,
+		document.getElementById('app')
+	)
+}
+
+Message.propTypes = {
+	text: React.PropTypes.string
+}
+
+module.exports = Message
