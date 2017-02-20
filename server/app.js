@@ -114,8 +114,14 @@ io.sockets.on('connection', function(socket){
 	// When a new message is sendt from somebody
 	socket.on('new-message', function(msg){
 		console.log("Message in new-message in app.js: " + msg.text)
-		io.sockets.emit('receive-message', msg)
+		//io.sockets.emit('receive-message', msg)
+		socket.emit('receive-message', msg)
+	})
 
+	socket.on('message', function(msg){
+		console.log("Message in new-message in app.js: " + msg.text)
+		//io.sockets.emit('receive-message', msg)
+		io.sockets.emit('message', msg)
 	})
 
 	socket.on('test', function(){

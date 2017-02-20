@@ -28,15 +28,16 @@ describe('Socket.io', function() {
 	var user3 = {'name' : 'Turid'}
 	var user4 = {'name' : 'Hans'}
 
-	const wrapper = null
+	
 	// Create a message object
 	it('Should be able to create message component', function()  {
 
 		//const wrapper = render(<Message text="Hello world"/>)
-		const wrapper = render(<Message text='Hello world'/>)
+		const message = render(<Message text='Hello world'/>)
 		console.log("after rendering")
 
-		assert.equal(wrapper.text(), 'Hello world')
+		assert.equal(message.text(), 'Hello world')
+		console.log(assert.equal(message.text(), 'Hello world'))
 		console.log("After equal")
 	})
 
@@ -55,18 +56,21 @@ describe('Socket.io', function() {
 	// Test 1
 	it('Should be able to broadcast messages', function(done) {
 		var user1, user2, user3, user4
-		var message = wrapper
+		//var message = render(<Message text='Hello world'/>)
+		var message = 'Hello world'
 		var messages = 0
 
 		var checkMessages = function (client) {
-			console.log("In checkMessages")
-			client.emit('new-message', function(msg) {
-				console.log("in client.on")
+			console.log("In checkMessages\n")
+			client.on('message', function(msg) {
+				console.log("------in client.on")
 				message.should.equal(msg)
-				// client.disconnect()
-				self.messages++
+				//console.log("Text: ", message.text())
+				// message.text.should.equal(msg.text)
+				//client.disconnect()
+				messages++
 				console.log(messages)
-				if (self.messages === 4) {
+				if (messages === 4) {
 					done()
 				}
 			})
@@ -75,6 +79,7 @@ describe('Socket.io', function() {
 		console.log("In test before first connect")
 		
 		user1 = io.connect(socketURL, options)
+		console.log("Before first check")
 		checkMessages(user1)
 
 		user1.on('connect', function(data) {
