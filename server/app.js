@@ -100,8 +100,8 @@ io.on('connection', function(socket){
 
 	// When a new message is sendt from somebody
 	socket.on('new-message', function(msg){
-		console.log("Message: " + msg.text)
-		socket.emit('receive-message', msg)
+		console.log("Message in new-message in app.js: " + msg.text)
+		io.sockets.emit('receive-message', msg)
 
 	})
 
