@@ -1,32 +1,26 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-
   var User = sequelize.define('User', {
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING
+    first_name: DataTypes.STRING,
+    last_name: DataTypes.STRING
   }, {
-
-    underscored: true,
-
     classMethods: {
+        associate: function (models) {
+            // associations can be defined here
+        },
         getterMethods: {
             fullName: function () {
-                return this.getDataValue(firstName) + " " + this.getDataValue(lastName);
+                return this.first_name + ' ' + this.last_name
             }
         },
 
         setterMethods: {
             fullName: function (value) {
                 var names = value.split(' ');
-                this.setDataValue('firstName', names.slice(0, -1).join(' '));
-                this.setDataValue('lastName', names.slice(-1).join(' '));
-            }
-        },
 
-        associate: function (models) {
-            User.hasMany(models.Lecture, {
-              onUpdate: 'cascade'
-            });
+                this.setDataValue('first_name', names.slice(0, -1).join(' '));
+                this.setDataValue('last_name', names.slice(-1).join(' '));
+            },
         }
     }
   });

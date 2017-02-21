@@ -31,8 +31,8 @@ module.exports= {
                 res.status(500).json(error);
             });
     },*/
-
     //Create a new user using model.create()
+
     create(req, res) {
         User.create(req.body)
             .then(function (newUser) {

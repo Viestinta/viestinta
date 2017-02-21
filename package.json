@@ -4,8 +4,10 @@
   "description": "Placeholder",
   "main": "server/app.js",
   "scripts": {
+
+    "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node server/app.js",
     "test": "echo 'Running tests...'",
-    "start": "node server/app.js",
+    "start": "sequelize db:migrate && sequelize db:seed:all && node server/app.js",
     "lint": "standard ./server/* ./client/*"
   },
   "repository": {
