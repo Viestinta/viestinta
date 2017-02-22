@@ -70,7 +70,7 @@ app.use(passport.session())
 
 // URL-specifications
 // Go to index.html
-app.get('/', (req, res) => {res.sendFile(path.resolve(__dirname, '../client/index.html'))})
+app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
 app.get('/user', (req, res) => res.json({'hello': 'world', 'user': req.user}))
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
@@ -85,37 +85,34 @@ server.listen(app.get('port'), (err) => {
 var io = require('socket.io')(server)
 
 // Create a connection
-//var socket = io.connect('http://localhost::8000')
+// var socket = io.connect('http://localhost::8000')
 
 // Listen for connections
-io.sockets.on('connection', function(socket){
-	// Reports when it finds a connection
-	console.log('Client connected')
-	
-	// Wait for a message from the client for 'join'
-	socket.on('join', function(data) {
-		console.log("New client have joined")
-		socket.emit('messages', 'Hello from server')
-		
-	})
+io.sockets.on('connection', function (socket) {
+    // Reports when it finds a connection
+  console.log('Client connected')
 
-	// Wait for a message from the client for 'join'
-	socket.on('leave', function(data) {
-		console.log("Client have left")
-		socket.emit('messages', 'Goodbye from server')
-		
-	})
+    // Wait for a message from the client for 'join'
+  socket.on('join', function (data) {
+    console.log('New client have joined')
+    socket.emit('messages', 'Hello from server')
+  })
 
+    // Wait for a message from the client for 'join'
+  socket.on('leave', function (data) {
+    console.log('Client have left')
+    socket.emit('messages', 'Goodbye from server')
+  })
 
-	// When a new message is sendt from somebody
-	socket.on('new-message', function(msg){
-		console.log("Message in new-message in app.js: " + msg.text)
-		io.sockets.emit('receive-message', msg)
-	})
+    // When a new message is sendt from somebody
+  socket.on('new-message', function (msg) {
+    console.log('Message in new-message in app.js: ' + msg.text)
+    io.sockets.emit('receive-message', msg)
+  })
 
-	socket.on('test', function(){
-		console.log('Mounted')
-	})
+  socket.on('test', function () {
+    console.log('Mounted')
+  })
 })
 
 // To get static files. Need to ble cleaned up

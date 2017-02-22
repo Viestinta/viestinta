@@ -50,8 +50,8 @@ export default class ChatApp extends React.createClass({
   	  <div id='content'>
     		<Header />
     		<ChatField
-    		  messages={this.state.messages}
-    			  />
+            messages={this.state.messages}
+    			/>
     		<ChatBox
     		  sendMessage={this.sendMessage}
     			  />

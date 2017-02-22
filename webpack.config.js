@@ -1,4 +1,4 @@
-var path = require('path');
+var path = require('path')
 
 module.exports = {
   entry: './client/client.js',
@@ -27,5 +27,5 @@ module.exports = {
     ]
   }
 
-};
+}
 
