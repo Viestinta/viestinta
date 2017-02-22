@@ -6,7 +6,7 @@
   "scripts": {
 
     "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node server/app.js",
-    "test": "echo 'Running tests...'",
+    "test": "node tests/init.js",
     "start": "sequelize db:migrate && sequelize db:seed:all && node server/app.js",
     "lint": "standard ./server/* ./client/*"
   },

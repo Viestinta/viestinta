@@ -5,7 +5,6 @@
 var pg = require('pg')
 delete pg.native
 
-process.env.NODE_ENV = 'test'
 var User = require('../server/models/').User
 var assert = require('assert')
 var db = require('../server/models/index')

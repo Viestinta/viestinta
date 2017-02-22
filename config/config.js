@@ -3,14 +3,14 @@ module.exports = {
   development: {
     'username': 'postgres',
     'password': 'viestintacentos',
-    'database': 'viestintadb2',
+    'database': 'viestintadb_dev',
     'host': '0.0.0.0',
     'dialect': 'postgres'
   },
   test: {
     'username': 'postgres',
     'password': 'viestintacentos',
-    'database': 'viestintadb2',
+    'database': 'viestintadb_test',
     'host': '0.0.0.0',
     'dialect': 'postgres',
     'logging': false
