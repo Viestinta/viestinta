@@ -1,5 +1,5 @@
-import React form 'react'
-import Message from 'components/Message'
+import React from 'react'
+import Message from './Message'
 
 
 export default class ChatField extends React.Component {

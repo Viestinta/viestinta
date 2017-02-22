@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-export default ChatBox = React.createClass({
+export default class ChatBox extends React.createClass({
 
   getInitialState () {
 	  // Starting with empty inputfield

@@ -1,23 +1,23 @@
 import React from 'react'
 
-import ChatBox from 'components/ChatBox'
-import ChatField from 'components/ChatField'
-import Header from 'components/Header'
-import Message from 'components/Message'
+import ChatBox from './ChatBox'
+import ChatField from './ChatField'
+import Header from './Header'
+import Message from './Message'
+import FeedBackMenu from './FeedBackMenu'
 
-
-export default var ChatApp = React.createClass({
+export default class ChatApp extends React.createClass({
 
 	// At beginning there is no msg and the text-field is empty
   getInitialState () {
   	console.log("In getinitialstate")
-	return {
-	  messages: [],
-	  text: '',
-	  socket: io.connect('http://localhost:8000'),
-	}
+  	return {
+  	  messages: [],
+  	  text: '',
+  	  socket: io.connect('http://localhost:8000'),
+  	}
 
-	  console.log("Socket in getInitialState: ", socket)
+  	  console.log("Socket in getInitialState: ", socket)
   },
 
   componentDidMount () {
@@ -46,16 +46,16 @@ export default var ChatApp = React.createClass({
   },
 
   render () { 
-	return (
-	  <div id='content'>
-		<Header />
-		<ChatField
-		  messages={this.state.messages}
-			  />
-		<ChatBox
-		  sendMessage={this.sendMessage}
-			  />
-	  </div>
-	)
+  	return (
+  	  <div id='content'>
+    		<Header />
+    		<ChatField
+    		  messages={this.state.messages}
+    			  />
+    		<ChatBox
+    		  sendMessage={this.sendMessage}
+    			  />
+  	  </div>
+  	)
   }
 })
