@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --compilers js:babel-core/register ./client/test",
     "start": "node server/app.js",
-    "lint": "standard ./server/* ./client/*"
+    "lint": "standard ./server/* ./client/*",
+    "webpack": "./node_modules/.bin/webpack"
   },
   "repository": {
     "type": "git",
