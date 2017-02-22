@@ -1,12 +1,16 @@
 import io from 'socket.io-client'
 import React from 'react'
 import { render } from 'enzyme'
-import { assert, expect } from 'chai'
+import { assert } from 'chai'
 
 import Message from '../components/Message'
 
+// If removed, the test won't work
+import server from '../../server/app'
+import should from 'should'
+
 describe('MessageComponent', function () {
-	// Create a message object
+  // Create a message object
   it('Should be able to create message component', function () {
     const message = render(<Message text='Hello world' />)
 
@@ -25,24 +29,25 @@ describe('Socket.io', function () {
 
   it('Should be able to broadcast messages', function (done) {
     var user1, user2, user3, user4
-    var message = render(<Message text='Hello world' />)
+    // const message = render(<Message text='Hello world' />)
     var message = 'Hello world'
     var messages = 0
 
     var checkMessages = function (client) {
-      console.log('In checkMessages\n')
+      console.log('In checkMessages')
 			// Working with message and not new-message since message emit back to message
-
-			// Send new message
+      // Send new message
       client.emit('new-message', message)
+      console.log('Emit message')
 
       client.on('receive-message', function (msg) {
+        console.log('Msg in client.on receive-message')
+        // assert.equal(msg.text(), 'Hello world')
         message.should.equal(msg)
         messages++
-        console.log('Received message')
-        console.log(messages)
 				// Received 1 time + 2 + 3 + 4 = 10
         if (messages === 10) {
+          console.log('Done')
           done()
         }
       })
