@@ -85,16 +85,15 @@ app.use(express.static(path.resolve(__dirname, '../client/css/')))
 app.use('/components', express.static(path.resolve(__dirname, '../client/components')))
 app.use('/css', express.static(path.resolve(__dirname, '../client/css')))
 
-
-//SETUP FOR DATABASE
-//TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
+// SETUP FOR DATABASE
+// TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
 
 var db = require('../server/models/index')
 
 var user = db['User']
 user.sync().then(function () {
-    return user.create({
-        first_name: 'Jacob',
-        last_name: 'Tørring'
-    })
+  return user.create({
+    first_name: 'Jacob',
+    last_name: 'Tørring'
+  })
 })

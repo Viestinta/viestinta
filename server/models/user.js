@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
   var User = sequelize.define('User', {
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,
-      student_id: DataTypes.INTEGER
+    student_id: DataTypes.INTEGER
   }, {
 
       // Definition of methods related to the user object

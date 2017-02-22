@@ -50,25 +50,12 @@ sequelize
     .catch(function (err) {
       console.log('Unable to connect to the database:', err)
     })
-
 /*
-db['User']
-    .findOrCreate({
-      where: {first_name: 'Bjarne', last_name: 'Tørring'},
-      attributes: ['id', 'first_name', 'last_name']
-    }).then(function (user) {
-      console.log('No errors!')
-      db['User'].findById(29).then(function (user) {
-        console.log(user.first_name + ' ' + user.last_name)
-      }).catch(function (err) {
-        console.error(err)
-      })
-      db['User'].findById(30).then(function (user) {
-        console.log(user.first_name + ' ' + user.last_name)
-      }).catch(function (err) {
-        console.error(err)
-      })
-    })
+function logExceptOnTest(string) {
+    if (process.env.NODE_ENV !== 'test') {
+        console.log(string);
+    }
+}
 */
 module.exports = db
 

@@ -5,6 +5,7 @@
 var pg = require('pg')
 delete pg.native
 
+process.env.NODE_ENV = 'test'
 var User = require('../server/models/').User
 var assert = require('assert')
 var db = require('../server/models/index')
@@ -35,18 +36,13 @@ var testUser1 = User.build({first_name: first_name1, last_name: last_name1})
 var testUser2 = User.build({first_name: first_name2, last_name: last_name2})
 var testUser3 = User.build({first_name: first_name3, last_name: last_name3})
 
-testUser1.save()
-testUser2.save().catch(function (err) {
-  console.error(err)
-})
-
 // Creates a tuple array for the test
 var testArray = [ [testUser1, first_name1 + ' ' + last_name1],
                     [testUser2, first_name2 + ' ' + last_name2],
                     [testUser3, first_name3 + ' ' + last_name3]
 ]
 
-// Test1
+// Test for local user creation
 describe('Test suite: User build', function () {
   testArray.forEach(function (arrElement, callback) {
     describe('Build test for name: ' + arrElement[0].first_name + ' ' + arrElement[0].last_name, function () {
@@ -58,50 +54,40 @@ describe('Test suite: User build', function () {
   })
 })
 
-/*
+// Get the User object from the database
+// Creates a tuple array for the test
+var test2Array = [
+    [first_name1, last_name1],
+    [first_name2, last_name2],
+    [first_name3, last_name3]
+]
 
-//WORK IN PROGRESS
-
-//Creates the User object with the corresponding name. Saves the User objects to the database.
-User.create({ first_name: first_name1,  last_name: last_name1 }).then(function (user) {
-    console.log(user.sequelize);
-});
-
-User.create({first_name: first_name2, last_name: last_name2});
-User.create({first_name: first_name3, last_name: last_name3});
-
-console.log(test2Array);
-
-//Get the User object from the database
-//Creates a tuple array for the test
-var test2Array = [   [test2User1, first_name1 + " " + last_name1],
-    [test2User2, first_name2 + " " + last_name2],
-    [test2User3, first_name3 + " " + last_name3]
-];
-
-//Test2
+// Test for database user creation
 describe('Test suite: User create', function () {
-    test2Array.forEach(function(arrElement, callback) {
-        describe('Database test for name: ' + arrElement[0].first_name + " " + arrElement[0].last_name, function() {
-            it('Name to User object in database is identical to name generated', function(done) {
-                assert.equal(arrElement[0].first_name + " " + arrElement[0].last_name, arrElement[1])
-                done();
-            });
-        });
-    });
-});
+    // For each element in test2Array
+  test2Array.forEach(function (arrElement, callback) {
+    describe('Database test for name: ' + arrElement[0] + ' ' + arrElement[1], function () {
+      it('Name to User object in database is identical to name generated', function (done) {
+                // Access database and create the user if it doesn't exist
+        db['User']
+                    .findOrCreate({
+                      where: {first_name: arrElement[0], last_name: arrElement[1]},
+                      attributes: ['id', 'first_name', 'last_name']
+                    })
 
-db['User']
-    .findOrCreate({
-        where: {first_name: 'Bjarne',  last_name: 'Tørring'},
-        attributes: ['id', 'first_name', 'last_name']
-    }).then(function (user) {
-    console.log("No errors!");
-    db['User'].findById(29).then(function (user) {
-        console.log(user.first_name + " " + user.last_name);
-    });
-    db['User'].findById(30).then(function (user) {
-        console.log(user.first_name + " " + user.last_name);
+                    // Then compare that user's variables to the variables given
+                    .spread(function (user, created) {
+                      assert.equal(
+                        arrElement[0] + ' ' + arrElement[1],
+                        user.first_name + ' ' + user.last_name
+                    )
+
+                    // Delete the user from the database
+                      user.destroy()
+                      done()
+                    })
+      })
     })
-});
-*/
+  })
+})
+
