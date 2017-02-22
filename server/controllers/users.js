@@ -3,34 +3,9 @@
  */
 User = require('../models/').User;
 
+//Controller for user model
+
 module.exports= {
-    //Get a list of all users using model.findAll()
-        /*
-    index(req, res) {
-        User.findAll({
-            include: Book
-        })
-            .then(function (users) {
-                res.status(200).json(users);
-            })
-            .catch(function (error) {
-                res.status(500).json(error);
-            });
-    },
-
-    //Get an user by the unique ID using model.findById()
-
-    show(req, res) {
-        User.findById(req.params.id, {
-            include: Book
-        })
-            .then(function (user) {
-                res.status(200).json(user);
-            })
-            .catch(function (error){
-                res.status(500).json(error);
-            });
-    },*/
     //Create a new user using model.create()
 
     create(req, res) {
@@ -72,8 +47,4 @@ module.exports= {
                 res.status(500).json(error);
             });
     }
-
-
-
-
 };
