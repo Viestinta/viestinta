@@ -1,5 +1,7 @@
 
 *etc/config.json
+server/etc/config.json
+src/server/config.json
 
 ### Linux ###
 *~
