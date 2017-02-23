@@ -71,7 +71,12 @@ app.use(passport.session())
 // URL-specifications
 // Go to index.html
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
-app.get('/user', (req, res) => res.json({'hello': 'world', 'user': req.user}))
+app.get('/user', (req, res) => {
+  if (req.user) {
+    res.json({user: req.user})
+  } else {
+    res.status(404)
+  }})
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
