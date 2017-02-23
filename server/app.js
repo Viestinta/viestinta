@@ -17,6 +17,7 @@ const nconf = require('nconf')
 
 const path = require('path')
 const PDStrategy = require('passport-openid-connect').Strategy
+//const PDStrategy = require('./passport/Strategy.js').Strategy
 // const User = require('passport-openid-connect').User
 
 // ///////////////////////////////////////////////////
@@ -68,6 +69,7 @@ app.use(passport.session())
 // Main App
 // ///////////////////////////////////////////////////
 
+
 // URL-specifications
 // Go to index.html
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
@@ -77,11 +79,32 @@ app.get('/user', (req, res) => {
   } else {
     res.status(404)
   }})
-app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
-app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
-// Opens a port and listens on it
-server.listen(app.get('port'), (err) => {
+app.get('/connect', (req, res) => {
+  if (req.user) {
+    let userinfo = req.user.data
+    db['User'].findOrCreate({
+          where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
+        })
+          .spread(function (user, created) {
+            console.log(user)
+          })
+        .catch((err) => {
+          console.error(err)
+        })
+  } else {
+    res.status(403)
+  }
+})
+app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/user'}))
+app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/user'}))
+
+app.get('/test', (req, res) => {
+  res.json(req.user)
+})
+
+app.listen(app.get('port'), (err) => {
+
   if (err) throw err
   console.log('Node app is running on port', app.get('port'))
 })
@@ -125,3 +148,16 @@ app.use('/', express.static(path.resolve(__dirname, '../client/')))
 app.use(express.static(path.resolve(__dirname, '../client/css/')))
 app.use('/components', express.static(path.resolve(__dirname, '../client/components')))
 app.use('/css', express.static(path.resolve(__dirname, '../client/css')))
+
+
+// SETUP FOR DATABASE
+// TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
+
+var db = require('../server/models/index')
+
+var user = db['User']
+user.sync({force: true}).then(function () {
+  return user.create({
+    name: 'Pekka Foreleser'
+  })
+})
