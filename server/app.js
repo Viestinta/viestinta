@@ -17,6 +17,7 @@ const nconf = require('nconf')
 
 const path = require('path')
 const PDStrategy = require('passport-openid-connect').Strategy
+//const PDStrategy = require('./passport/Strategy.js').Strategy
 // const User = require('passport-openid-connect').User
 
 // ///////////////////////////////////////////////////
@@ -71,9 +72,28 @@ app.use(passport.session())
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
 
 app.get('/user', (req, res) => res.json({'hello': 'world', 'user': req.user}))
+app.get('/connect', (req, res) => {
+  if (req.user) {
+    let userinfo = req.user.data
+    db['User'].findOrCreate({
+          where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
+        })
+          .spread(function (user, created) {
+            console.log(user)
+          })
+        .catch((err) => {
+          console.error(err)
+        })
+  } else {
+    res.status(403)
+  }
+})
+app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/user'}))
+app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/user'}))
 
-app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
-app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
+app.get('/test', (req, res) => {
+  res.json(req.user)
+})
 
 app.listen(app.get('port'), (err) => {
   if (err) throw err
@@ -91,9 +111,8 @@ app.use('/css', express.static(path.resolve(__dirname, '../client/css')))
 var db = require('../server/models/index')
 
 var user = db['User']
-user.sync().then(function () {
+user.sync({force: true}).then(function () {
   return user.create({
-    first_name: 'Jacob',
-    last_name: 'Tørring'
+    name: 'Pekka Foreleser'
   })
 })

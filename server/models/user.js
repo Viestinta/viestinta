@@ -6,9 +6,11 @@ module.exports = function (sequelize, DataTypes) {
     // Definition of User attributes
 
   var User = sequelize.define('User', {
-    first_name: DataTypes.STRING,
-    last_name: DataTypes.STRING,
-    student_id: DataTypes.INTEGER
+    name: DataTypes.STRING,
+    student_id: DataTypes.INTEGER,
+    email: DataTypes.STRING,
+    email_verified: DataTypes.BOOLEAN,
+    sub: DataTypes.STRING
   }, {
 
       // Definition of methods related to the user object
@@ -21,18 +23,9 @@ module.exports = function (sequelize, DataTypes) {
       },
 
       getterMethods: {
-        fullName: function () {
-          return this.first_name + ' ' + this.last_name
-        }
       },
 
       setterMethods: {
-        fullName: function (value) {
-          var names = value.split(' ')
-
-          this.setDataValue('first_name', names.slice(0, -1).join(' '))
-          this.setDataValue('last_name', names.slice(-1).join(' '))
-        }
       }
     }
   })
