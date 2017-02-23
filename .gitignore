@@ -94,7 +94,8 @@ $RECYCLE.BIN/
 *.lnk
 
 #Pycharm settingsfile
-.idea/workspace.xml
+.idea/*
+workspace.xml
 
 # End of https://www.gitignore.io/api/linux,windows,node
 
