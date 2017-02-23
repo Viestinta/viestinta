@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import ChatBox from './ChatBox'
 import ChatField from './ChatField'
 import Header from './Header'
+import Login from './Login'
 
 export default class ChatApp extends Component {
 
@@ -47,6 +48,7 @@ export default class ChatApp extends Component {
     return (
       <div id='content'>
         <Header />
+        <Login />
         <ChatField
           messages={this.state.messages}
 				/>
