@@ -2,6 +2,7 @@ import io from 'socket.io-client'
 import React from 'react'
 import { render } from 'enzyme'
 import { assert } from 'chai'
+import { it, describe } from 'mocha'
 
 import Message from '../components/Message'
 
