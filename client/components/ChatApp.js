@@ -12,7 +12,7 @@ export default class ChatApp extends Component {
     this.state = {
       messages: [],
       text: '',
-      socket: io.connect('http://localhost:8000')
+      socket: io.connect()
     }
 
     this.sendMessage = this.sendMessage.bind(this)
