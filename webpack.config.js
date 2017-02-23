@@ -4,8 +4,8 @@ module.exports = {
   entry: './client/client.js',
 
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: './client/bundle.js',
+    //path: path.resolve(__dirname, 'dist')
   },
 
   devServer: {
@@ -21,7 +21,7 @@ module.exports = {
         loader: 'babel-loader',
 
         query: {
-          presets: ['es2015', 'react']
+          presets: ['react', 'es2015']
         }
       }
     ]
