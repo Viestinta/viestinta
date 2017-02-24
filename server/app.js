@@ -17,7 +17,6 @@ const nconf = require('nconf')
 
 const path = require('path')
 const PDStrategy = require('passport-openid-connect').Strategy
-//const PDStrategy = require('./passport/Strategy.js').Strategy
 // const User = require('passport-openid-connect').User
 
 // ///////////////////////////////////////////////////
@@ -41,6 +40,7 @@ nconf.argv()
   })
 
 const app = express()
+const server = require('http').createServer(app)
 app.set('view options', { pretty: true })
 app.set('json spaces', 2)
 app.set('port', 8000)
@@ -67,11 +67,18 @@ app.use(passport.session())
 // Main App
 // ///////////////////////////////////////////////////
 
-// app.get('/', (req, res) => {res.json({'hello': 'world', 'user': req.user})})
+
+
+// URL-specifications
 // Go to index.html
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
+app.get('/user', (req, res) => {
+  if (req.user) {
+    res.json({user: req.user})
+  } else {
+    res.status(404)
+  }})
 
-app.get('/user', (req, res) => res.json({'hello': 'world', 'user': req.user}))
 app.get('/connect', (req, res) => {
   if (req.user) {
     let userinfo = req.user.data
@@ -88,16 +95,45 @@ app.get('/connect', (req, res) => {
     res.status(403)
   }
 })
-app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/user'}))
-app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/user'}))
 
-app.get('/test', (req, res) => {
-  res.json(req.user)
-})
+app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
+app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
 app.listen(app.get('port'), (err) => {
   if (err) throw err
   console.log('Node app is running on port', app.get('port'))
+})
+
+// Create a connection
+// var socket = io.connect('http://localhost::8000')
+var io = require('socket.io')(server)
+
+// Listen for connections
+io.sockets.on('connection', function (socket) {
+		// Reports when it finds a connection
+  console.log('Client connected')
+
+		// Wait for a message from the client for 'join'
+  socket.on('join', function (data) {
+    console.log('New client have joined')
+    socket.emit('messages', 'Hello from server')
+  })
+
+		// Wait for a message from the client for 'join'
+  socket.on('leave', function (data) {
+    console.log('Client have left')
+    socket.emit('messages', 'Goodbye from server')
+  })
+
+		// When a new message is sendt from somebody
+  socket.on('new-message', function (msg) {
+    console.log('Message in new-message in app.js: ' + msg.text)
+    io.sockets.emit('receive-message', msg)
+  })
+
+  socket.on('test', function () {
+    console.log('Mounted')
+  })
 })
 
 app.use('/', express.static(path.resolve(__dirname, '../client/')))

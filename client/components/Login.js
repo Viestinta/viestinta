@@ -1,44 +1,23 @@
 import React from 'react'
 
-export default class Login extends React.Component {
+const Login = React.createClass({
+  getInitialState() {
+    return {
+      // Empty username and password fields in the beginning
+      username: '',
+      password: ''
+    }
+  },
 
-	getInitialState() {
-		return {
-			// Empty username and password fields in the beginning
-			username: '',
-			password: ''
-		}
-	},
+  render () {
+    return (
+      <div id='login'>
+        <form action='/login'>
+          <button type='btn btn-submit' value='Log In'>Log In</button>
+        </form>		
+      </div>
+    )
+  }
+})
 
-	// Run when submit is pushed
-	logIn () {
-		console.log('Login')
-
-		var loginInfo = {
-			user: this.props.username,
-			password: this.props.password
-		}
-
-		// TODO: validate username and password
-
-		// TODO: login
-
-		// TODO: redirect to ChatBox
-	},
-
-	render () {
-		return (
-			<div id='login'>
-				<form onSubmit={this.LogIn}>
-					<input
-						value={this.state.username}
-					/>
-					<input
-						value={this.state.password}
-					/>
-					<button type='btn btn-submit'>
-				</form>		
-			</div>
-		)
-	}
-}
+export default Login

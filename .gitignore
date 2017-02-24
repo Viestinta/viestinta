@@ -1,5 +1,8 @@
 
 etc/config.json
+*etc/config.json
+server/etc/config.json
+src/server/config.json
 
 ### Linux ###
 *~
@@ -99,4 +102,3 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/linux,windows,node
 
 *bundle.js
-.server/migrations/
