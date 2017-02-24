@@ -41,6 +41,7 @@ nconf.argv()
 
 const app = express()
 const server = require('http').createServer(app)
+
 app.set('view options', { pretty: true })
 app.set('json spaces', 2)
 app.set('port', 8000)
@@ -66,8 +67,6 @@ app.use(passport.session())
 // ///////////////////////////////////////////////////
 // Main App
 // ///////////////////////////////////////////////////
-
-
 
 // URL-specifications
 // Go to index.html
@@ -99,7 +98,7 @@ app.get('/connect', (req, res) => {
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
-app.listen(app.get('port'), (err) => {
+server.listen(app.get('port'), (err) => {
   if (err) throw err
   console.log('Node app is running on port', app.get('port'))
 })
