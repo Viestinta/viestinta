@@ -15,3 +15,4 @@ services:
     - /arv/app/node_modules
     tty: true
     stdin_open: true
+    
