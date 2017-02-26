@@ -1,12 +1,11 @@
-version: '3'
+version: '2'
 
 services:
   nodejs:
     build:
-    - context: .
-    - dockerfile: Dockerfile.pm2.prod
+      context: .
+      dockerfile: Dockerfile.pm2.prod
     image: viestinta:prod
-    links:
     container_name: viestinta_node
     ports:
     - "54321:8000"
@@ -15,4 +14,3 @@ services:
     - /arv/app/node_modules
     tty: true
     stdin_open: true
-    
