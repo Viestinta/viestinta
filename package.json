@@ -2,10 +2,10 @@
   "name": "viestinta",
   "version": "0.0.1",
   "description": "Placeholder",
-  "main": "server/app.js",
+  "main": "src/server/app.js",
   "scripts": {
-    "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node server/app.js",
-    "test-client": "node server/app.js && mocha --compilers js:babel-core/register ./client/test",
+    "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node src/server/app.js",
+    "test-client": "node src/server/app.js && mocha --compilers js:babel-core/register ./src/client/test",
     "test-server": "node src/server/app.js && node src/tests/init.js",
     "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",

@@ -140,7 +140,7 @@ io.sockets.on('connection', function (socket) {
 
 
 app.use('/', express.static(path.resolve(__dirname, '../client/')))
-app.use(express.static(path.resolve(__dirname, '../static/css/')))
+app.use(express.static(path.resolve(__dirname, '../static')))
 app.use('/components', express.static(path.resolve(__dirname, '../client/components')))
 app.use('/css', express.static(path.resolve(__dirname, '../static/css')))
 
