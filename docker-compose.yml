@@ -21,7 +21,7 @@ services:
     - postgres
     container_name: viestinta_node
     ports:
-    - "54321:8000"
+    - "8000:8000"
     volumes:
     - .:/srv/app/
     - /arv/app/node_modules
