@@ -42,7 +42,6 @@ nconf.argv()
 const app = express()
 const server = require('http').createServer(app)
 
-
 app.set('view options', { pretty: true })
 app.set('json spaces', 2)
 app.set('port', 8000)
@@ -136,8 +135,6 @@ io.sockets.on('connection', function (socket) {
     console.log('Mounted')
   })
 })
-
-
 
 app.use('/', express.static(path.resolve(__dirname, '../client/')))
 app.use(express.static(path.resolve(__dirname, '../static')))

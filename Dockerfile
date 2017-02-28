@@ -15,6 +15,5 @@ COPY . $APP_DIR
 RUN webpack
 
 EXPOSE 8000
-
 CMD ["npm","start"]
 
