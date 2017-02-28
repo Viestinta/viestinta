@@ -7,9 +7,11 @@ services:
     environment:
     - POSTGRES_USER=postgres
     - POSTGRES_PASSWORD=viestintacentos
-    - POSTGRES_DB=viestintadb_test
+    - POSTGRES_DB=viestintadb_dev
     tty: true
     stdin_open: true
+    ports:
+    - "5432:5432"
   nodejs:
     build: .
     image: nodetest:viestinta

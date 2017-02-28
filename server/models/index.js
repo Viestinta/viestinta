@@ -8,14 +8,15 @@ exports db object with all relevant references to models
 
  */
 
-var fs = require('fs')
-var path = require('path')
-var Sequelize = require('sequelize')
+const fs = require('fs')
+const path = require('path')
+const Sequelize = require('sequelize')
 
-var basename = path.basename(module.filename)
-var env = process.env.NODE_ENV || 'development'
-var config = require(path.join(__dirname, '/../../config/config.js'))[env]
-var db = {}
+const basename = path.basename(module.filename)
+const env = process.env.NODE_ENV || 'development'
+const config = require(path.join(__dirname, '/../../config/config.js'))[env]
+let db = {}
+
 
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable])
@@ -41,6 +42,7 @@ Object.keys(db).forEach(function (modelName) {
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize
+console.log("This is fine")
 
 sequelize
     .authenticate()

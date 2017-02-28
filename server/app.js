@@ -144,9 +144,9 @@ app.use('/css', express.static(path.resolve(__dirname, '../client/css')))
 // SETUP FOR DATABASE
 // TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
 
-var db = require('../server/models/index')
+const db = require('./models/index')
 
-var user = db['User']
+const user = db['User']
 user.sync({force: true}).then(function () {
   return user.create({
     name: 'Pekka Foreleser'
