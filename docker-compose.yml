@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:9.6
+    container_name: viestinta_postgres
+    ports:
+        - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: viestintacentos
+      POSTGRES_DB: viestintadb_dev
+    tty: true
+    stdin_open: true
+
+
+  nodejs:
+    build: .
+    image: nodetest:viestinta
+    links:
+    - postgres
+    container_name: viestinta_node
+    ports:
+    - "54321:8000"
+    volumes:
+    - .:/srv/app/
+    - /arv/app/node_modules
+    environment:
+      DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
+    tty: true
+    stdin_open: true

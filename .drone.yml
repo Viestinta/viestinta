@@ -8,5 +8,13 @@ pipeline:
       - npm install --silent
       - npm install standard -g
       - npm run test
-      - npm run lint
+  deploy:
+    image: plugins/ssh
+    when:
+      event: push
+      branch: production
+    host: stokkers.no
+    port: 22014
+    commands:
+      - bash /scripts/deploy-viestinta-prod.sh
 
