@@ -25,7 +25,7 @@ const PDStrategy = require('passport-openid-connect').Strategy
 
 nconf.argv()
   .env('__')
-  .file({ file: 'src/server/etc/config.json' })
+  .file({ file: path.resolve(__dirname, './etc/config.json') })
   .defaults({
     'http': {
       'port': 8080,
@@ -41,6 +41,7 @@ nconf.argv()
 
 const app = express()
 const server = require('http').createServer(app)
+
 
 app.set('view options', { pretty: true })
 app.set('json spaces', 2)

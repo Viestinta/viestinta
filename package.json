@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node server/app.js",
     "test-client": "node server/app.js && mocha --compilers js:babel-core/register ./client/test",
-    "test-server": "node server/app.js && node tests/init.js",
-    "start": "node server/app.js",
+    "test-server": "node src/server/app.js && node src/tests/init.js",
+    "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",
     "webpack": "./node_modules/.bin/webpack"
   },

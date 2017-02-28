@@ -26,6 +26,6 @@ services:
     - .:/srv/app/
     - /arv/app/node_modules
     environment:
-      DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestinta_dev
+      DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
     tty: true
     stdin_open: true

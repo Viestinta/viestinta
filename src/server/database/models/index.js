@@ -18,14 +18,14 @@ const config = require(path.join(__dirname, '/../config/config.js'))[env]
 let db = {}
 
 
-//var sequelize = new Sequelize(process.env['DATABASE_URL'], config)
-//Sequelize()
-if (config.use_env_variable) {
+var sequelize = new Sequelize(process.env['DATABASE_URL'])
+
+/*if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable])
 } else {
   var sequelize = new Sequelize(config.database, config.username, config.password, config)
 }
-
+*/
 fs
   .readdirSync(__dirname)
   .filter(function (file) {
@@ -44,7 +44,6 @@ Object.keys(db).forEach(function (modelName) {
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize
-console.log("This is fine")
 
 sequelize
     .authenticate()
