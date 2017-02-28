@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Login = React.createClass({
-  getInitialState() {
+  getInitialState () {
     return {
       // Empty username and password fields in the beginning
       username: '',
@@ -14,7 +14,7 @@ const Login = React.createClass({
       <div id='login'>
         <form action='/login'>
           <button type='btn btn-submit' value='Log In'>Log In</button>
-        </form>		
+        </form>
       </div>
     )
   }

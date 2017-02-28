@@ -3,8 +3,8 @@ import React, { Component } from 'react'
 export default class ChatBox extends Component {
 
   constructor (props) {
+    // Starting with empty inputfield
     super(props)
-		// Starting with empty inputfield
     this.state = {
       text: ''
     }
@@ -15,24 +15,25 @@ export default class ChatBox extends Component {
   }
 
   cleanInput () {
-    this.setState({ text: ''})
+    this.setState({text: ''})
   }
 
   handleMessageSubmit (e) {
     e.preventDefault()
     console.log('In handle send')
+    // Setting msg.text to written input
     var msg = {
-		// Setting msg.text to written input
       text: this.state.text
     }
-		// Emtpy input field
+
+    // Emtpy input field
     this.setState({text: ''})
 
     console.log('Empty message field: ', this.state.text)
 
     this.props.sendMessage(msg)
   }
-	// Listen and update field dynamically when something is written
+  // Listen and update field dynamically when something is written
   changeHandler (e) {
     this.setState({ text: e.target.value })
     console.log('Changing state')
@@ -44,8 +45,7 @@ export default class ChatBox extends Component {
         <h3>Ny melding</h3>
         <input
           onChange={this.changeHandler}
-          value={this.state.text}
-					/>
+          value={this.state.text} />
         <button type='submit' value='Send' onClick={this.handleMessageSubmit}>Send</button>
 
       </div>

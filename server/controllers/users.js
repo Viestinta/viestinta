@@ -1,11 +1,12 @@
 /**
  * Created by jacob on 20.02.17.
  */
-User = require('../models/').User
 
+const User = require('../models/').User
 // Controller for user model
 
 module.exports = {
+
     // Create a new user using model.create()
 
   create (req, res) {

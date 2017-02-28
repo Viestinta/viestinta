@@ -76,14 +76,15 @@ app.get('/user', (req, res) => {
     res.json({user: req.user})
   } else {
     res.status(404)
-  }})
+  }
+})
 
 app.get('/connect', (req, res) => {
   if (req.user) {
     let userinfo = req.user.data
     db['User'].findOrCreate({
-          where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
-        })
+      where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
+    })
           .spread(function (user, created) {
             console.log(user)
           })
@@ -109,22 +110,22 @@ var io = require('socket.io')(server)
 
 // Listen for connections
 io.sockets.on('connection', function (socket) {
-		// Reports when it finds a connection
+  // Reports when it finds a connection
   console.log('Client connected')
 
-		// Wait for a message from the client for 'join'
+  // Wait for a message from the client for 'join'
   socket.on('join', function (data) {
     console.log('New client have joined')
     socket.emit('messages', 'Hello from server')
   })
 
-		// Wait for a message from the client for 'join'
+  // Wait for a message from the client for 'join'
   socket.on('leave', function (data) {
     console.log('Client have left')
     socket.emit('messages', 'Goodbye from server')
   })
 
-		// When a new message is sendt from somebody
+  // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
     console.log('Message in new-message in app.js: ' + msg.text)
     io.sockets.emit('receive-message', msg)
