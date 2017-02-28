@@ -5,9 +5,9 @@
 var pg = require('pg')
 delete pg.native
 
-var User = require('../server/models/').User
+var User = require('./models/').User
 var assert = require('assert')
-var db = require('../server/models/index')
+var db = require('./models/index')
 
 // Extra test frameworks:
 // var should = require('should');

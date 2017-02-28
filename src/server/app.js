@@ -25,7 +25,7 @@ const PDStrategy = require('passport-openid-connect').Strategy
 
 nconf.argv()
   .env('__')
-  .file({ file: 'server/etc/config.json' })
+  .file({ file: 'src/server/etc/config.json' })
   .defaults({
     'http': {
       'port': 8080,
@@ -136,15 +136,17 @@ io.sockets.on('connection', function (socket) {
   })
 })
 
+
+
 app.use('/', express.static(path.resolve(__dirname, '../client/')))
-app.use(express.static(path.resolve(__dirname, '../client/css/')))
+app.use(express.static(path.resolve(__dirname, '../static/css/')))
 app.use('/components', express.static(path.resolve(__dirname, '../client/components')))
-app.use('/css', express.static(path.resolve(__dirname, '../client/css')))
+app.use('/css', express.static(path.resolve(__dirname, '../static/css')))
 
 // SETUP FOR DATABASE
 // TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
 
-const db = require('./models/index')
+const db = require('./database/models/index')
 
 const user = db['User']
 user.sync({force: true}).then(function () {

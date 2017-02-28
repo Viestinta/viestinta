@@ -13,7 +13,7 @@ const path = require('path')
 // Instantiate a Mocha instance.
 const mocha = new Mocha()
 
-const testDir = path.resolve(__dirname, '../tests')
+const testDir = path.resolve(__dirname, './server')
 
 // Add each .js file to the mocha instance
 fs.readdirSync(testDir).filter(function (file) {

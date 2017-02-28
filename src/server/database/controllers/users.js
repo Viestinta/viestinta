@@ -2,7 +2,7 @@
  * Created by jacob on 20.02.17.
  */
 
-const User = require('../models/').User
+const User = require('../models/index').User
 // Controller for user model
 
 module.exports = {

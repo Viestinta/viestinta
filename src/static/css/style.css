@@ -1,0 +1,30 @@
+#chat-app {
+    position: absolute;
+    margin: auto;
+    width:500px;
+}
+
+#header {
+    text-align: center;
+}
+
+#content {
+    padding: auto;
+    width: 500px;
+}
+
+#chat-field {
+    height: 400px;
+    width: 500px;
+    border-color: black;
+    background-color: lightgrey;
+}
+
+#chat-box {
+    background-color: lightgray;
+}
+
+#message {
+    padding: 5px;
+    border-bottom: 2px solid black;
+}

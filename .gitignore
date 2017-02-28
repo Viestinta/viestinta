@@ -1,7 +1,4 @@
-
-etc/config.json
-*etc/config.json
-server/etc/config.json
+src/server/etc/config.json
 src/server/config.json
 *bundle.js
 npm-debug.log
@@ -104,3 +101,7 @@ $RECYCLE.BIN/
 workspace.xml
 
 # End of https://www.gitignore.io/api/linux,windows,node
+.idea/
+src/server/etc/
+src/server/database/migrations/
+src/server/database/seeders/

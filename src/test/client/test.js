@@ -4,7 +4,7 @@ import { render } from 'enzyme'
 import { assert } from 'chai'
 import { it, describe } from 'mocha'
 
-import Message from '../components/Message'
+import Message from '../../client/components/Message'
 const should = require('should')
 
 describe('MessageComponent', function () {
