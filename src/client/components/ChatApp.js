@@ -3,16 +3,16 @@ import React, { Component } from 'react'
 import ChatBox from './ChatBox'
 import ChatField from './ChatField'
 import Header from './Header'
+import Login from './Login'
 
 export default class ChatApp extends Component {
-
-	// At beginning there is no msg and the text-field is empty
+    // At beginning there is no msg and the text-field is empty
   constructor (props) {
     super(props)
     this.state = {
       messages: [],
       text: '',
-      socket: io.connect('http://localhost:8000')
+      socket: io.connect()
     }
 
     this.sendMessage = this.sendMessage.bind(this)
@@ -37,7 +37,7 @@ export default class ChatApp extends Component {
     this.setState({ messages: this.state.messages })
   }
 
-	// When a message is submitted
+  // When a message is submitted
   sendMessage (msg) {
     console.log('sendMessage: ', msg.text)
     this.state.socket.emit('new-message', msg)
@@ -47,12 +47,11 @@ export default class ChatApp extends Component {
     return (
       <div id='content'>
         <Header />
+        <Login />
         <ChatField
-          messages={this.state.messages}
-				/>
+          messages={this.state.messages} />
         <ChatBox
-          sendMessage={this.sendMessage}
-					/>
+          sendMessage={this.sendMessage} />
       </div>
     )
   }

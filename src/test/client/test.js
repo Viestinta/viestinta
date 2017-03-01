@@ -4,11 +4,8 @@ import { render } from 'enzyme'
 import { assert } from 'chai'
 import { it, describe } from 'mocha'
 
-import Message from '../components/Message'
-
-// If removed, the test won't work
-import server from '../../server/app'
-import should from 'should'
+import Message from '../../client/components/Message'
+const should = require('should')
 
 describe('MessageComponent', function () {
   // Create a message object
@@ -36,7 +33,7 @@ describe('Socket.io', function () {
 
     var checkMessages = function (client) {
       console.log('In checkMessages')
-			// Working with message and not new-message since message emit back to message
+      // Working with message and not new-message since message emit back to message
       // Send new message
       client.emit('new-message', message)
       console.log('Emit message')
@@ -46,7 +43,8 @@ describe('Socket.io', function () {
         // assert.equal(msg.text(), 'Hello world')
         message.should.equal(msg)
         messages++
-				// Received 1 time + 2 + 3 + 4 = 10
+
+        // Received 1 time + 2 + 3 + 4 = 10
         if (messages === 10) {
           console.log('Done')
           done()

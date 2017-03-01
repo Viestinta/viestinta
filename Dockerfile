@@ -1,5 +1,5 @@
 
-FROM registry.viestinta.eu/viestinta:bare
+FROM node:boron
 
 ENV APP_DIR=/srv/app
 
@@ -15,6 +15,5 @@ COPY . $APP_DIR
 RUN webpack
 
 EXPOSE 8000
-
 CMD ["npm","start"]
 

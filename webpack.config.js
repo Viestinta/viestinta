@@ -1,11 +1,10 @@
-var path = require('path')
+// var path = require('path')
 
 module.exports = {
-  entry: './client/client.js',
+  entry: './src/client/client.js',
 
   output: {
-    filename: './client/bundle.js'
-		// path: path.resolve(__dirname, 'dist')
+    filename: './src/client/bundle.js' // path: path.resolve(__dirname, 'dist')
   },
 
   devServer: {
@@ -28,4 +27,3 @@ module.exports = {
   }
 
 }
-

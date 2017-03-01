@@ -5,7 +5,5 @@ import ChatApp from './components/ChatApp'
 
 if (typeof window !== 'undefined') {
   ReactDOM.render(
-    <ChatApp />,
-		document.getElementById('app')
-	)
+    <ChatApp />, document.getElementById('app'))
 }
