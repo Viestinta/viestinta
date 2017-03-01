@@ -102,6 +102,5 @@ workspace.xml
 
 # End of https://www.gitignore.io/api/linux,windows,node
 .idea/
-src/server/etc/
 src/server/database/migrations/
 src/server/database/seeders/
