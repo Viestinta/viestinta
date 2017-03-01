@@ -31,3 +31,5 @@ mocha.run(function (failures) {
     process.exit(failures)  // exit with non-zero status if there were failures
   })
 })
+
+console.log("Test change to enable commit")
