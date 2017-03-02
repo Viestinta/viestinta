@@ -1,12 +1,10 @@
 'use strict'
 
-/*
+// ///////////////////////////////////////////////////
+// Setup for Sequalize connection
+// ///////////////////////////////////////////////////
 
-SETUP FOR SEQUELIZE CONNECTION
-
-exports db object with all relevant references to models
-
- */
+// exports db object with all relevant references to models
 
 const fs = require('fs')
 const path = require('path')

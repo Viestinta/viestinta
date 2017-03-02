@@ -65,7 +65,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // ///////////////////////////////////////////////////
-// Main App
+// Routing
 // ///////////////////////////////////////////////////
 
 // URL-specifications
@@ -104,9 +104,39 @@ server.listen(app.get('port'), (err) => {
   console.log('Node app is running on port', app.get('port'))
 })
 
+// ///////////////////////////////////////////////////
+// Setup for database
+// ///////////////////////////////////////////////////
+
+// TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
+
+const db = require('./database/models/index')
+
+const user = db['User']
+const message = db['Message']
+const feedback = db['Feedback']
+
+const userController = require('./database/controllers').user
+const messageController = require('./database/controllers').message
+const feedbackCOntroller = require('./database/controllers').feedback
+
+user.sync({force: true}).then(function () {
+  return user.create({
+    name: 'Pekka Foreleser'
+  })
+})
+
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
 var io = require('socket.io')(server)
+
+// When a new user connects
+io.sockets.on('connect', function (socket) {
+  console.log('New client have connected in app')
+    // TODO: get x last messages in chat and send
+    // TODO: get status of feedback and send
+    // socket.emit('connect', "You are connected")
+})
 
 // Listen for connections
 io.sockets.on('connection', function (socket) {
@@ -136,10 +166,10 @@ io.sockets.on('connection', function (socket) {
   })
 })
 
-app.use('/', express.static(path.resolve(__dirname, '../client/')))
-app.use(express.static(path.resolve(__dirname, '../static')))
-app.use('/components', express.static(path.resolve(__dirname, '../client/components')))
-app.use('/css', express.static(path.resolve(__dirname, '../static/css')))
+// To get static files
+app.use('/', express.static(path.join(__dirname, '../static')))
+app.use('/css', express.static(path.join(__dirname, '../static/css')))
+app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
 
 // SETUP FOR DATABASE
 // TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.

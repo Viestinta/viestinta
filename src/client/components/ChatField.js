@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Message from './Message'
+import MessageList from './MessageList'
 
 export default class ChatField extends Component {
 
@@ -18,6 +18,7 @@ export default class ChatField extends Component {
   }
 
   render () {
+    /*
     console.log('In render in chatField')
     console.log('messages: ', this.state.messages)
 
@@ -31,10 +32,10 @@ export default class ChatField extends Component {
           text={message.text} />
       )
     })
-
+    */
     return (
       <div id='chat-field'>
-        { messages }
+        <MessageList messages={this.state.messages} />
       </div>
     )
   }

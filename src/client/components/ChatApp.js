@@ -4,6 +4,7 @@ import ChatBox from './ChatBox'
 import ChatField from './ChatField'
 import Header from './Header'
 import Login from './Login'
+import FeedbackBox from './FeedbackBox'
 
 export default class ChatApp extends Component {
     // At beginning there is no msg and the text-field is empty
@@ -12,12 +13,15 @@ export default class ChatApp extends Component {
     this.state = {
       messages: [],
       text: '',
-      socket: io.connect()
+      socket: io.connect(),
+      feedback: [0,0]
     }
 
     this.sendMessage = this.sendMessage.bind(this)
     this.join = this.join.bind(this)
     this.receiveMessage = this.receiveMessage.bind(this)
+    this.receiveFeedback = this.receiveFeedback.bind(this)
+    this.sendFeedback = this.sendFeedback.bind(this)
   }
 
   componentDidMount () {
@@ -43,6 +47,16 @@ export default class ChatApp extends Component {
     this.state.socket.emit('new-message', msg)
   }
 
+  receiveFeedback (feedback) {
+    console.log("Setting feedback")
+    this.setState({feedback: feedback})
+
+  }
+
+  sendFeedback (feedback) {
+    this.state.socket.emiit('new-feedback', feedback)
+  }
+
   render () {
     return (
       <div id='content'>
@@ -52,7 +66,11 @@ export default class ChatApp extends Component {
           messages={this.state.messages} />
         <ChatBox
           sendMessage={this.sendMessage} />
+        <FeedbackBox 
+          feedback={this.state.feedback}
+          sendFeedback={this.sendFeedback}/>
       </div>
+      
     )
   }
 }
