@@ -4,10 +4,15 @@ pipeline:
     when:
       event: [push,pull_request]
       branches: [master, react-start]
+    environment:
+      DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
+      NODE_ENV: test
     commands:
       - npm install --silent
       - npm install standard -g
-      - npm run test
+      - sleep 10
+      - npm start
+
   deploy:
     image: plugins/ssh
     when:
@@ -17,4 +22,17 @@ pipeline:
     port: 22014
     commands:
       - bash /scripts/deploy-viestinta-prod.sh
+
+services:
+    postgres:
+      image: postgres:9.6
+      container_name: viestinta_postgres
+      ports:
+        - "5432:5432"
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: viestintacentos
+        POSTGRES_DB: viestintadb_dev
+
+
 
