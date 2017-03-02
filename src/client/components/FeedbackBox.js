@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import socket from '../../server/socket'
 
 import FeedbackMenu from './FeedbackMenu'
 import FeedbackWindow from './FeedbackWindow'
@@ -9,7 +10,7 @@ export default class FeedbackBox extends Component {
     super(props)
     this.state = {
 			// [slow, fast]
-      feedback: props.feedback
+      feedback: [0,0]
     }
 
     this.onClick = this.onClick.bind(this)
@@ -24,6 +25,10 @@ export default class FeedbackBox extends Component {
     console.log('Fast in updateFeedback: ', feedback[1])
 
     this.state.feedback = feedback
+  }
+
+  updateFeedbackInterval () {
+    console.log('In updateFeedbackInterval')
   }
 
   onClick (feedback) {
@@ -47,7 +52,11 @@ export default class FeedbackBox extends Component {
     return (
       <div id='feedback'>
         <FeedbackMenu onClick={this.onClick} />
-        <FeedbackWindow slow={this.state.feedback[0]} fast={this.state.feedback[1]} />
+        <FeedbackWindow 
+          slow={this.state.feedback[0]}
+          fast={this.state.feedback[1]}
+          updateFeedbackInterval={this.updateFeedbackInterval}
+        />
       </div>
     )
   }

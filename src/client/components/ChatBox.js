@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import socket from '../../server/socket'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -16,6 +17,7 @@ const muiTheme = getMuiTheme({
   }
 })
 
+// Text input field
 export default class ChatBox extends Component {
 
   constructor (props) {
@@ -26,16 +28,21 @@ export default class ChatBox extends Component {
     }
     
     this.changeHandler = this.changeHandler.bind(this)
-    this.handleMessageSubmit = this.handleMessageSubmit.bind(this)
+    this.SendMessage = this.sendMessage.bind(this)
     this.cleanInput = this.cleanInput.bind(this)
 
   }
+  
+  componentDidMount () {
+    socket.on('send-message', this.sendMessage)
+  }
+
 
   cleanInput () {
     this.setState({text: ''})
   }
 
-  handleMessageSubmit (e) {
+  sendMessage () {
     e.preventDefault()
     console.log('In handle send')
     // Setting msg.text to written input
@@ -48,7 +55,7 @@ export default class ChatBox extends Component {
 
     console.log('Empty message field: ', this.state.text)
 
-    this.props.sendMessage(msg)
+    socket.emit('receive-message', msg)
   }
   // Listen and update field dynamically when something is written
   changeHandler (e) {

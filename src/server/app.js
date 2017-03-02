@@ -118,7 +118,7 @@ const feedback = db['Feedback']
 
 const userController = require('./database/controllers').user
 const messageController = require('./database/controllers').message
-const feedbackCOntroller = require('./database/controllers').feedback
+const feedbackController = require('./database/controllers').feedback
 
 user.sync({force: true}).then(function () {
   return user.create({
@@ -157,12 +157,28 @@ io.sockets.on('connection', function (socket) {
 
   // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
+    messageController.create({
+      // Save user
+      text: msg.text
+    })
     console.log('Message in new-message in app.js: ' + msg.text)
     io.sockets.emit('receive-message', msg)
   })
 
-  socket.on('test', function () {
-    console.log('Mounted')
+  socket.on('new-feedback', function (feedback) {
+    // TODO: save in database
+    feedbackController.create({
+      value: feedback
+    })
+    console.log('Received feedback in io.socket.on: ', feedback)
+    io.sockets.emit('receive-feedback', feedback)
+  })
+
+  // Called every x minuts
+  socket.on('updateFeedbackInterval', function () {
+    // Get feedback from database for past x minuts
+
+    io.sockets.emit('updateFeedbackInterval')
   })
 })
 
@@ -171,14 +187,4 @@ app.use('/', express.static(path.join(__dirname, '../static')))
 app.use('/css', express.static(path.join(__dirname, '../static/css')))
 app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
 
-// SETUP FOR DATABASE
-// TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
-
-const db = require('./database/models/index')
-
-const user = db['User']
-user.sync({force: true}).then(function () {
-  return user.create({
-    name: 'Pekka Foreleser'
-  })
-})
+module.exports = io

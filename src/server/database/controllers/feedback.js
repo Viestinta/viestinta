@@ -31,6 +31,18 @@ module.exports = {
             })
   },
 
+  // For last 5 min
+  calculate (req, res) {
+    return Feedback
+      .findAll({
+        // TODO: just use createdAt?
+        time: {
+          $lt: new Date()
+          $gt: new Date(new Date - 5 * 60000)
+        }
+      })
+  }
+
     // Delete an existing Feedback by the unique ID using model.destroy()
   delete (req, res) {
     Feedback.destroy({

@@ -6,8 +6,14 @@ module.exports = function (sequelize, DataTypes) {
 		// Definition of Feedback attributes
 
   var Feedback = sequelize.define('Feedback', {
-    tooFast: DataTypes.INTEGER,
-    tooSlow: DataTypes.INTEGER
+    time: {
+      type: DataTypes.DATE,
+      defaultValue: new Date()
+    },
+    value: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   }, {
 
 			// Definition of methods related to the feedback object
@@ -20,6 +26,7 @@ module.exports = function (sequelize, DataTypes) {
       },
 
       getterMethods: {
+        
 
       },
 

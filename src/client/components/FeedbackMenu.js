@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import socket from '../../server/socket'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -26,6 +27,16 @@ export default class FeedbackMenu extends Component {
     this.slowClick = this.slowClick.bind(this)
     this.fastClick = this.fastClick.bind(this)
   }
+
+  componentDidMount () {
+    socket.on('join', this.join)
+    socket.on('sendFeedback', this.receiveMessage)
+  }
+
+  sendFeedback (feedback) {
+    socket.emiit('new-feedback', feedback)
+  }
+
 
   slowClick () {
     const feedback = {'type': 'slow'}

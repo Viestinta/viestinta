@@ -1,10 +1,10 @@
 const Message = require('../models/index').Message
+
 // Controller for Message model
 
 module.exports = {
 
-    // Create a new Message using model.create()
-
+  // Create a new Message using model.create()
   create (req, res) {
     return Message.create({
       time: new Date().now(),
@@ -19,36 +19,37 @@ module.exports = {
         })
   },
 
-    // Edit an existing Message details using model.update()
+  // Edit an existing Message details using model.update()
   update (req, res) {
     return Message.update(req.body, {
       where: {
         id: req.params.id
       }
     })
-            .then(function (updatedRecords) {
-              res.status(200).json(updatedRecords)
-            })
-            .catch(function (error) {
-              res.status(500).json(error)
-            })
+    .then(function (updatedRecords) {
+      res.status(200).json(updatedRecords)
+    })
+    .catch(function (error) {
+      res.status(500).json(error)
+    })
   },
 
-    // Delete an existing Message by the unique ID using model.destroy()
+  // Delete an existing Message by the unique ID using model.destroy()
   delete (req, res) {
     return Message.destroy({
       where: {
         id: req.params.id
       }
     })
-            .then(function (deletedRecords) {
-              res.status(200).json(deletedRecords)
-            })
-            .catch(function (error) {
-              res.status(500).json(error)
-            })
+    .then(function (deletedRecords) {
+      res.status(200).json(deletedRecords)
+    })
+    .catch(function (error) {
+      res.status(500).json(error)
+    })
   },
 
+  // Retrive an existing Message by the unique ID 
   retrieve (req, res) {
     return Message
       .findById(req.params.messageId, {
