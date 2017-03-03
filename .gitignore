@@ -1,7 +1,3 @@
-*bundle.js
-npm-debug.log
-
-
 ### Linux ###
 *~
 
@@ -95,10 +91,14 @@ $RECYCLE.BIN/
 *.lnk
 
 #Pycharm settingsfile
-.idea/*
+.idea/
 workspace.xml
 
 # End of https://www.gitignore.io/api/linux,windows,node
-.idea/
+*config.json
+*bundle.js
+npm-debug.log
 src/server/database/migrations/
 src/server/database/seeders/
+
+
