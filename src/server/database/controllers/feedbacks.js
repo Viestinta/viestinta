@@ -25,39 +25,20 @@ module.exports = {
 
   // For last 5 min
   getLastInterval (req) {
-    return list = [
-      [
-        Feedback.count({
-          where: {
-            // TODO: just use createdAt?
-            /*time: {
-              // Set to 5 * MIN
-              $between: [new Date(), new Date(new Date - 5 * 1000)]
-            },
-            */
-            value: -1
-          }
-
-        }).then(function (result) {
-          console.log('[feedbacks] getLastInterval neg:', result)
-        })
-      ],
-      [
-        pos = Feedback.count({
-          where: {
-            // TODO: just use createdAt?
-            time: {
-              // Set to 5 * MIN
-              $between: [new Date(), new Date(new Date - 5 * 1000)]
-            },
-            value: 1
-          }
-
-        }).then(function (result) {
-          console.log('[feedbacks] getLastInterval pos:', result)
-        })
-      ]
-    ]
+    return Feedback.count({
+        where: {
+          // TODO: just use createdAt?
+          /*time: {
+            // Set to 5 * MIN
+            $between: [new Date(), new Date(new Date - 5 * 1000)]
+          },
+          */
+          value: -1
+        }
+      }).then(function (result) {
+        console.log('[feedbacks] getLastInterval neg:', result)
+        return result
+      })
   },
 
   getAllLecture (req) {

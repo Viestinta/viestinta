@@ -148,8 +148,8 @@ io.sockets.on('connect', function (socket) {
 
     // TODO: get x last messages in chat and send
     // TODO: get status of feedback and send
-  var feedback = feedbacksController.getLastInterval()
-  console.log('[app] connect: updateFeedbackInterval: ', feedback)
+  var feedback = feedbacksController.getLastInterval().then(function (result) { return result})
+  console.log('[app] connect: updateFeedbackInterval: ',  feedback)
   socket.emit('updateFeedbackInterval', feedback)
 })
 
