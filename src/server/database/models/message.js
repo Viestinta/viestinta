@@ -36,7 +36,7 @@ module.exports = function (sequelize, DataTypes) {
         Message.belongsTo(models.User, {
           onDelete: 'CASCADE',
           foreignKey: {
-            allowNull: false
+            allowNull: true
           }
         })
       }

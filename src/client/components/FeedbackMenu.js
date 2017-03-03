@@ -34,10 +34,11 @@ export default class FeedbackMenu extends Component {
 
   componentDidMount () {
     // Activate button every x min
-    this.interval = setInterval(activateButtons(), 100)
+    this.interval = setInterval(this.activateButtons, 5 * 6000)
   }
 
   activateButtons () {
+    console.log('[FeedbackMenu] activateButtons')
     this.setState({
       disabled: false
     })
@@ -48,7 +49,6 @@ export default class FeedbackMenu extends Component {
     this.setState({
       disabled: true
     })
-
   }
 
   fastClick () {
