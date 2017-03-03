@@ -1,3 +1,14 @@
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+    font-size: 13px;
+    line-height: 20px;
+
+    background: #2DAAE4;
+}
+
 #chat-app {
     position: absolute;
     margin: auto;
