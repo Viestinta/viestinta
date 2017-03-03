@@ -113,8 +113,8 @@ server.listen(app.get('port'), (err) => {
 const db = require('./database/models/index')
 
 const user = db['User']
-const message = db['Message']
-const feedback = db['Feedback']
+const messageObj = db['Message']
+const feedbackObj = db['Feedback']
 
 const userController = require('./database/controllers').user
 const messageController = require('./database/controllers').message
@@ -132,7 +132,8 @@ var io = require('socket.io')(server)
 
 // When a new user connects
 io.sockets.on('connect', function (socket) {
-  console.log('New client have connected in app')
+  console.log('[app] connect')
+
     // TODO: get x last messages in chat and send
     // TODO: get status of feedback and send
     // socket.emit('connect', "You are connected")
@@ -141,36 +142,40 @@ io.sockets.on('connect', function (socket) {
 // Listen for connections
 io.sockets.on('connection', function (socket) {
   // Reports when it finds a connection
-  console.log('Client connected')
+  console.log('[app] connection')
 
   // Wait for a message from the client for 'join'
   socket.on('join', function (data) {
-    console.log('New client have joined')
+    console.log('[app] join')
     socket.emit('messages', 'Hello from server')
   })
 
   // Wait for a message from the client for 'join'
   socket.on('leave', function (data) {
-    console.log('Client have left')
+    console.log('[app] left')
     socket.emit('messages', 'Goodbye from server')
   })
 
   // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
-    messageController.create({
-      // Save user
-      text: msg.text
+    console.log('[app] new-message: ' + msg)
+    messageObj.sync({force: true}).then(function () {
+      return messageObj.create({
+        text: msg.text
+      })
     })
-    console.log('Message in new-message in app.js: ' + msg.text)
     io.sockets.emit('receive-message', msg)
   })
 
+  // When somebody gives feedback
   socket.on('new-feedback', function (feedback) {
-    // TODO: save in database
-    feedbackController.create({
-      value: feedback
+    console.log('[app] new-feedback: ' + feedback)
+    feedbackObj.sync({force: true}).then(function () {
+      return feedbackObj.create({
+        value: feedback
+      })
     })
-    console.log('Received feedback in io.socket.on: ', feedback)
+    
     io.sockets.emit('receive-feedback', feedback)
   })
 
@@ -186,5 +191,3 @@ io.sockets.on('connection', function (socket) {
 app.use('/', express.static(path.join(__dirname, '../static')))
 app.use('/css', express.static(path.join(__dirname, '../static/css')))
 app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
-
-module.exports = io

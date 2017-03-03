@@ -23,37 +23,47 @@ export default class FeedbackMenu extends Component {
 
   constructor (props) {
     super(props)
+    this.state = {
+      disabled: false
+    }
 
     this.slowClick = this.slowClick.bind(this)
     this.fastClick = this.fastClick.bind(this)
+    this.activateButtons = this.activateButtons.bind(this)
   }
 
   componentDidMount () {
-    socket.on('join', this.join)
-    socket.on('sendFeedback', this.receiveMessage)
+    // Activate button every x min
+    this.interval = setInterval(activateButtons(), 100)
   }
 
-  sendFeedback (feedback) {
-    socket.emiit('new-feedback', feedback)
+  activateButtons () {
+    this.setState({
+      disabled: false
+    })
   }
-
 
   slowClick () {
-    const feedback = {'type': 'slow'}
-    this.props.onClick(feedback)
+    socket.emit('new-feedback', -1)
+    this.setState({
+      disabled: true
+    })
+
   }
 
   fastClick () {
-    const feedback = {'type': 'fast'}
-    this.props.onClick(feedback)
+    socket.emit('new-feedback', 1)
+    this.setState({
+      disabled: true
+    })
   }
 
   render () {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div id='feedbackMenuBar'>
-          <RaisedButton style={style} onTouchTap={this.slowClick} label='For tregt' />
-          <RaisedButton style={style} onTouchTap={this.fastClick} label='For fort' />
+          <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
+          <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
         </div>
       </MuiThemeProvider>
     )

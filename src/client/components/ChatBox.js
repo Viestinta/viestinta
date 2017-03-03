@@ -28,7 +28,7 @@ export default class ChatBox extends Component {
     }
     
     this.changeHandler = this.changeHandler.bind(this)
-    this.SendMessage = this.sendMessage.bind(this)
+    this.sendMessage = this.sendMessage.bind(this)
     this.cleanInput = this.cleanInput.bind(this)
 
   }
@@ -43,8 +43,7 @@ export default class ChatBox extends Component {
   }
 
   sendMessage () {
-    e.preventDefault()
-    console.log('In handle send')
+    console.log('[ChatBox] sendMessage')
     // Setting msg.text to written input
     var msg = {
       text: this.state.text
@@ -53,14 +52,13 @@ export default class ChatBox extends Component {
     // Emtpy input field
     this.setState({text: ''})
 
-    console.log('Empty message field: ', this.state.text)
-
-    socket.emit('receive-message', msg)
+    socket.emit('new-message', msg)
+    console.log("[ChatBox] After sending message")
   }
   // Listen and update field dynamically when something is written
   changeHandler (e) {
     this.setState({ text: e.target.value })
-    console.log('Changing state')
+    console.log('[ChatBox] changeHandler')
   }
 
   render () {
@@ -72,7 +70,7 @@ export default class ChatBox extends Component {
             onChange={this.changeHandler}
             value={this.state.text}
             />
-          <RaisedButton type='submit' onTouchTap={this.handleMessageSubmit} label="Send" />
+          <RaisedButton type='submit' onTouchTap={this.sendMessage} label="Send" />
         </div>
       </MuiThemeProvider>
     )
