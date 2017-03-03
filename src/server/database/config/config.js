@@ -1,4 +1,5 @@
 
+console.log("In config for sequelize")
 module.exports = {
   development: {
     'username': 'postgres',

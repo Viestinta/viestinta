@@ -31,7 +31,24 @@ module.exports = function (sequelize, DataTypes) {
         })
       },
 
+    },
+    /* 
+    getterMethods: {
+      getLastInterval: function() {
+        return Feedback.findAll({
+          where: {
+            // TODO: just use createdAt?
+            time: {
+              // Set to 5 * 60000
+              $between: [new Date(), new Date(newDate - 5 * 1000)]
+            }
+          }
+        }).then(function (result) {
+          console.log(result.count)
+        })
+      }
     }
+    */
   })
   return Feedback
 }

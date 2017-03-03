@@ -50,8 +50,11 @@ export default class FeedbackWindow extends Component {
     })
   }
 
-  updateFeedbackInterval () {
-
+  updateFeedbackInterval (feedbacks) {
+      console.log('[FeedbackWindow] updateFeedbackInterval')
+      this.setState({
+        feedback: feedbacks
+      })
   }
 
 

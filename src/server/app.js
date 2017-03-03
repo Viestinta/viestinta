@@ -113,19 +113,31 @@ server.listen(app.get('port'), (err) => {
 const db = require('./database/models/index')
 
 const user = db['User']
-const messageObj = db['Message']
-const feedbackObj = db['Feedback']
+//const messageObj = db['Message']
+//const feedbackObj = db['Feedback']
 
-const userController = require('./database/controllers').user
-const messageController = require('./database/controllers').message
-const feedbackController = require('./database/controllers').feedback
+const users = require('./database/controllers').users
+const messagesController = require('./database/controllers').messages
+const feedbacksController = require('./database/controllers').feedbacks
 
 user.sync({force: true}).then(function () {
   return user.create({
     name: 'Pekka Foreleser'
   })
 })
+/*
+messageObj.sync({force: true}).then(function () {
+  return messageObj.create({
+    text: "Just testing"
+  })
+})
 
+feedbackObj.sync({force: true}).then(function () {
+  return feedbackObj.create({
+    value: 0
+  })
+})
+*/
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
 var io = require('socket.io')(server)
@@ -136,7 +148,9 @@ io.sockets.on('connect', function (socket) {
 
     // TODO: get x last messages in chat and send
     // TODO: get status of feedback and send
-    // socket.emit('connect', "You are connected")
+  var feedback = feedbacksController.getLastInterval()
+  console.log('[app] connect: updateFeedbackInterval: ', feedback)
+  socket.emit('updateFeedbackInterval', feedback)
 })
 
 // Listen for connections
@@ -159,23 +173,18 @@ io.sockets.on('connection', function (socket) {
   // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg)
-    messageObj.sync({force: true}).then(function () {
-      return messageObj.create({
-        text: msg.text
-      })
-    })
+    messagesController.create(msg)
+    
     io.sockets.emit('receive-message', msg)
   })
 
   // When somebody gives feedback
   socket.on('new-feedback', function (feedback) {
     console.log('[app] new-feedback: ' + feedback)
-    feedbackObj.sync({force: true}).then(function () {
-      return feedbackObj.create({
-        value: feedback
-      })
+    feedbacksController.create({
+      value: feedback
     })
-    
+    console.log('[app] new-feedback: after')
     io.sockets.emit('receive-feedback', feedback)
   })
 

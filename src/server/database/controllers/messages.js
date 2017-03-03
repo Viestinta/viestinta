@@ -1,6 +1,6 @@
-const Message = require('../models/index').Message
-
 // Controller for Message model
+
+var Message = require('../models/index').Message
 
 module.exports = {
 
@@ -9,14 +9,13 @@ module.exports = {
     return Message.create({
       time: new Date().now(),
       text: req.body.text
-      console.log("Creating new message-object")
     })
-        .then(function (newMessage) {
-          res.status(200).json(newMessage)
-        })
-        .catch(function (error) {
-          res.status(500).json(error)
-        })
+    .then(function (newMessage) {
+      res.status(200).json(newMessage)
+    })
+    .catch(function (error) {
+      res.status(500).json(error)
+    })
   },
 
   // Edit an existing Message details using model.update()
