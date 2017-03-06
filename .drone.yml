@@ -11,7 +11,7 @@ pipeline:
       - npm install --silent
       - npm install standard -g
       - sleep 10
-      - npm start
+      - npm test-server
 
   deploy:
     image: plugins/ssh
