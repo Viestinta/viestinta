@@ -9,12 +9,14 @@ pipeline:
       NODE_ENV: test
       COVERALLS_REPO_TOKEN: $$COVERALLS_TOKEN
       COVERALLS_TOKEN: $$COVERALLS_TOKEN
+      CODECOV_TOKEN: $$CODECOV_TOKEN
+
     commands:
       - npm install --silent
       - npm install standard -g
-      - npm install coveralls -g
+      - npm install codecov -g
       - npm run test
-      - cat ./coverage/lcov.info | coveralls
+      - cat ./coverage/lcov.info | codecov
 
   deploy:
     image: plugins/ssh
