@@ -13,7 +13,6 @@ pipeline:
 
     commands:
       - cp -a /drone/node_modules /root
-      - rm -rf /drone/node_modules
       - npm install --depth=0 --quiet
       - npm install standard -g
       - npm install codecov -g
