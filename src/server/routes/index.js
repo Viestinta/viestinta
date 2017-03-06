@@ -4,8 +4,8 @@ const path = require('path')
 const passport = require('passport')
 
 const userController = require('./controllers').user
-const messageController = require('./controllers').message
-const feedbackCOntroller = require('./controllers').feedback
+const messagesController = require('./controllers').messages
+const feedbacskCOntroller = require('./controllers').feedbacks
 
 module.exports = (app) => {
   // Go to index.html
@@ -37,6 +37,11 @@ module.exports = (app) => {
 
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
+
+
+  // Related to database
+  app.post('/', messages)
+
 
   /**
   app.post('/api/todos', todosController.create)

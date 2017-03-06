@@ -32,6 +32,7 @@ module.exports = function (sequelize, DataTypes) {
     },
   }, {
     classMethods: {
+      /*
       assosiate: function(models) {
         Message.belongsTo(models.User, {
           onDelete: 'CASCADE',
@@ -39,8 +40,9 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
           }
         })
-      }
+      }*/
     }
   })
+
   return Message
 }

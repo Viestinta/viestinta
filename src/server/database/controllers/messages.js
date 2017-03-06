@@ -48,6 +48,21 @@ module.exports = {
     })
   },
 
+  //Get last 10
+  getLastTen (req, res) {
+    return Message.all({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(function (deletedRecords) {
+      res.status(200).json(deletedRecords)
+    })
+    .catch(function (error) {
+      res.status(500).json(error)
+    })
+  },
+
   // Retrive an existing Message by the unique ID 
   retrieve (req, res) {
     return Message

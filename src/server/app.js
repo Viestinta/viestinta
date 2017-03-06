@@ -113,31 +113,36 @@ server.listen(app.get('port'), (err) => {
 const db = require('./database/models/index')
 
 const user = db['User']
-//const messageObj = db['Message']
-//const feedbackObj = db['Feedback']
+const messageObj = db['Message']
+const feedbackObj = db['Feedback']
 
 const users = require('./database/controllers').users
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
 
+// Create tables, and drop them if they allready exists (force: true)
 user.sync({force: true}).then(function () {
   return user.create({
     name: 'Pekka Foreleser'
   })
 })
-/*
+
 messageObj.sync({force: true}).then(function () {
   return messageObj.create({
     text: "Just testing"
   })
+  
 })
 
-feedbackObj.sync({force: true}).then(function () {
+feedbackObj.sync().then(function () {
+  
   return feedbackObj.create({
-    value: 0
+    value: -1
   })
+
+
 })
-*/
+
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
 var io = require('socket.io')(server)
@@ -146,11 +151,18 @@ var io = require('socket.io')(server)
 io.sockets.on('connect', function (socket) {
   console.log('[app] connect')
 
-    // TODO: get x last messages in chat and send
-    // TODO: get status of feedback and send
-  var feedback = feedbacksController.getLastInterval().then(function (result) { return result})
-  console.log('[app] connect: updateFeedbackInterval: ',  feedback)
-  socket.emit('updateFeedbackInterval', feedback)
+  // feedbacksController.getAll()
+
+  // TODO: get x last messages in chat and send
+  // TODO: get status of feedback and send
+  var feedback = feedbacksController.getLastIntervalNeg().then(function(resultNeg) {
+    console.log("ResultNeg: ", resultNeg)
+    feedbacksController.getLastIntervalPos().then(function(resultPos) {
+      console.log("ResultPos: ", resultPos)
+      socket.emit('updateFeedbackInterval', [resultNeg, resultPos])
+      console.log("After emit: ", [resultNeg, resultPos])
+    })
+  })
 })
 
 // Listen for connections

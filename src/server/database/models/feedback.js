@@ -23,12 +23,12 @@ module.exports = function (sequelize, DataTypes) {
 				// Associations to other models
       associate: function (models) {
 				 // associations can be defined here
-         Feedback.belongsTo(models.User, {
+         /*Feedback.belongsTo(models.User, {
           onDelete: 'CASCADE',
           foreignKey: {
             allowNull: true
           }
-        })
+        })*/
       },
 
     },

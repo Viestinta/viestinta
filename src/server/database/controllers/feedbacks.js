@@ -3,13 +3,18 @@ const Feedback = require('../models/index').Feedback
 // Controller for Feedback model
 
 const MIN = 60000
+
 module.exports = {
 
   // Create a new Feedback using model.create()
   create (req) {
-    console.log('[feedbacks] create req: ', req.value)
+    console.log('[feedbacks] create req: ', req, "param: ", req.value)
+    console.log("Rec.body: ", req.body)
     return Feedback.create({
       value: req.value
+    })
+    .then(function (newFeedback) {
+      console.log("New feedback created with value", newFeedback.value)
     })
   },
 
@@ -24,25 +29,44 @@ module.exports = {
   },
 
   // For last 5 min
-  getLastInterval (req) {
+  getLastIntervalNeg () {    
     return Feedback.count({
         where: {
           // TODO: just use createdAt?
-          /*time: {
+          time: {
             // Set to 5 * MIN
-            $between: [new Date(), new Date(new Date - 5 * 1000)]
+            $between: [new Date(new Date - 5 * MIN), new Date()]
           },
-          */
+          
           value: -1
         }
-      }).then(function (result) {
-        console.log('[feedbacks] getLastInterval neg:', result)
-        return result
+      })
+  },
+
+  // For last 5 min
+  getLastIntervalPos () {    
+    return Feedback.count({
+        where: {
+          // TODO: just use createdAt?
+          time: {
+            // Set to 5 * MIN
+            $between: [new Date(new Date - 5 * MIN), new Date()]
+          },
+          
+          value: 1
+        }
+      })
+  },
+  
+  getAll() {
+    return Feedback.findAll()
+      .then(function (result) {
+        console.log(result)
       })
   },
 
   getAllLecture (req) {
-    return Feedback.findAll({
+    Feedback.findAll({
       where: {
         // TODO: just use createdAt?
         time: {       
