@@ -17,6 +17,9 @@ pipeline:
       - npm install codecov -g
       - npm run test
       - cat ./coverage/lcov.info | codecov
+      - npm run test-client
+    volumes:
+      - "/viestinta_cache/node_modules:/node_modules"
 
   deploy:
     image: plugins/ssh
@@ -38,6 +41,10 @@ services:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: viestintacentos
         POSTGRES_DB: viestintadb_dev
+
+cache:
+  mount:
+    - node_modules
 
 
 
