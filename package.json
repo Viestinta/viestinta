@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node src/server/app.js",
     "test-client": "node src/server/app.js && mocha --compilers js:babel-core/register ./src/client/test",
-    "test": "node src/server/app.js && nyc --check-coverage --lines 95 mocha src/test/server/**.js && instanbul-coveralls",
+    "test": "node src/server/app.js && nyc --check-coverage --lines 95 mocha src/test/server/**.js && istanbul-coveralls",
     "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",
     "webpack": "./node_modules/.bin/webpack"
