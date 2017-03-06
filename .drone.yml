@@ -12,13 +12,16 @@ pipeline:
       CODECOV_TOKEN: $$CODECOV_TOKEN
 
     commands:
-      - npm install --silent
+      - cp -a /drone/node_modules /root
+      - rm -rf /drone/node_modules
+      - npm install --depth=0 --quiet
       - npm install standard -g
       - npm install codecov -g
       - npm run test
       - cat ./coverage/lcov.info | codecov
+      - cp -a /root/node_modules /drone
     volumes:
-      - "/viestinta_cache/node_modules:./node_modules"
+      - "/drone/node_modules"
 
   deploy:
     image: plugins/ssh
@@ -43,7 +46,7 @@ services:
 
 cache:
   mount:
-    - node_modules
+    - /drone/node_modules
 
 
 
