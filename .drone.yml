@@ -19,7 +19,7 @@ pipeline:
       - cat ./coverage/lcov.info | codecov
       - npm run test-client
     volumes:
-      - "/viestinta_cache/node_modules:/node_modules"
+      - "/root/viestinta_cache/node_modules:/node_modules"
 
   deploy:
     image: plugins/ssh
