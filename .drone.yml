@@ -13,6 +13,8 @@ pipeline:
       - npm install standard -g
       - npm install istanbul-coveralls
       - npm run test
+      - cat ./coverage/lcov.info
+      - istanbul-coveralls
 
   deploy:
     image: plugins/ssh
