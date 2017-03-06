@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node src/server/app.js",
     "test-client": "node src/server/app.js && mocha --compilers js:babel-core/register ./src/client/test",
-    "test": "node src/server/app.js && nyc --check-coverage --lines 95 mocha src/test/server/**.js",
+    "test": "node src/server/app.js && nyc --check-coverage --lines 95 mocha src/test/server/**.js && instanbul-coveralls",
     "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",
     "webpack": "./node_modules/.bin/webpack"
@@ -78,6 +78,8 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "http": "0.0.0",
+    "istanbul": "^0.4.5",
+    "istanbul-coveralls": "^1.0.3",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
