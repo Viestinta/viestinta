@@ -55,6 +55,7 @@ export default class FeedbackWindow extends Component {
       this.setState({
         feedback: feedbacks
       })
+      console.log("Feedback: ", this.state.feedback)
   }
 
 

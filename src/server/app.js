@@ -159,10 +159,10 @@ io.sockets.on('connect', function (socket) {
     console.log("ResultNeg: ", resultNeg)
     feedbacksController.getLastIntervalPos().then(function(resultPos) {
       console.log("ResultPos: ", resultPos)
-      socket.emit('updateFeedbackInterval', [resultNeg, resultPos])
-      console.log("After emit: ", [resultNeg, resultPos])
+      socket.emit('update-feedback-interval', [resultNeg, resultPos])
     })
   })
+  console.log("[app] connect - After sending feedback in")
 })
 
 // Listen for connections
@@ -201,10 +201,14 @@ io.sockets.on('connection', function (socket) {
   })
 
   // Called every x minuts
-  socket.on('updateFeedbackInterval', function () {
+  socket.on('update-feedback-interval', function () {
     // Get feedback from database for past x minuts
-
-    io.sockets.emit('updateFeedbackInterval')
+    var feedback = feedbacksController.getLastIntervalNeg().then(function(resultNeg) {
+    feedbacksController.getLastIntervalPos().then(function(resultPos) {
+      io.sockets.emit('update-feedback-interval', [resultNeg, resultPos])
+    })
+  })
+    io.sockets.emit('update-feedback-interval')
   })
 })
 
