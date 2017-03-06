@@ -5,7 +5,7 @@ pipeline:
       event: [push,pull_request]
       branches: [master, react-start]
     environment:
-      DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
+      DATABASE_URL: 127.0.0.1:5432
       NODE_ENV: test
     commands:
       - npm install --silent
