@@ -1,6 +1,36 @@
 import React, { Component } from 'react'
 import socket from '../../server/socket'
+import Paper from 'material-ui/Paper';
+
 import Message from './Message'
+
+const styles = {
+
+  parent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+
+    maxWidth:   500,
+    maxHeight:  400,
+    width:      'auto',
+    height:     'auto',
+
+    padding: 15,
+
+    overflowY: 'auto',
+    minHeight: 0,
+  },
+
+  child: {
+    minHeight: 'auto',
+    width: '100%',
+
+    padding: 10,
+    margin: 5,
+    textAlign: 'left',
+  },
+};
 
 export default class MessageList extends Component {
 
@@ -40,9 +70,55 @@ export default class MessageList extends Component {
     })
 
     return (
-      <ul>
-        {list}
-      </ul>
+      <Paper zDepth={3} style={styles.parent}>
+        <Paper
+          zDepth={3} 
+          style={styles.child}
+        >
+          <h4>This is some text.</h4>
+        </Paper>
+        <Paper
+          zDepth={3} 
+          style={styles.child}
+        >
+          <h4>This is some more text.</h4>
+        </Paper>
+        <Paper
+          zDepth={3} 
+          style={styles.child}
+        >
+          <h4>This is some more text. With lots of words, 
+          to make the message really long, and this is only 
+          to see what happens.
+          This is some more text. With lots of words, 
+          to make the message really long, and this is only 
+          to see what happens.
+          </h4>
+        </Paper>
+        <Paper
+          zDepth={3} 
+          style={styles.child}
+        > 
+          <h4>Student:</h4>
+          <h4>This text also contains numbers 1-2-3-4.</h4>
+        </Paper>
+        <Paper
+          zDepth={3} 
+          style={styles.child}
+        > 
+          <h4>Student:</h4>
+          <h4>This text also contains numbers 1-2-3-4.</h4>
+        </Paper>
+        <Paper
+          zDepth={3} 
+          style={styles.child}
+        > 
+          <h4>Student:</h4>
+          <h4>This text also contains numbers 1-2-3-4.</h4>
+        </Paper>
+
+        
+      </Paper>
     );
   }
 
