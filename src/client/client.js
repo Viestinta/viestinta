@@ -5,7 +5,9 @@ import ChatApp from './components/ChatApp'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
+// Needed for onTouchTap
 injectTapEventPlugin();
+
 if (typeof window !== 'undefined') {
   ReactDOM.render(
     <ChatApp id='chat-app' />,
