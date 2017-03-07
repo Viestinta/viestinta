@@ -54,11 +54,11 @@ export default class ChatApp extends Component {
           <div style={styles.container}>
             <Header />
             <Login />
-            // List of messages
+            {/* List of messages */}
             <MessageList />
-            // Inputfield for user
+            {/* Inputfield for user */}
             <ChatBox />
-            // Sidebar with feedback-options
+            {/* Sidebar with feedback-options */}
             <FeedbackBox />
           </div>
         </MuiThemeProvider>
