@@ -16,6 +16,7 @@ const styles = {
         width: '100%',
         height: 80,
 
+        marginTop: 10,
         padding: 10,
     },
     textField: {

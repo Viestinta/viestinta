@@ -16,6 +16,7 @@ const styles = {
     width:      'auto',
     height:     'auto',
 
+    marginTop: 10,
     padding: 15,
 
     overflowY: 'auto',
