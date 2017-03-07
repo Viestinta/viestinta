@@ -3,19 +3,6 @@ import socket from '../../server/socket'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
-import {deepOrange500} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-
-
-import injectTapEventPlugin from 'react-tap-event-plugin';
-
-
-const muiTheme = getMuiTheme({
-  palette: {
-    accent1Color: deepOrange500,
-  }
-})
 
 // Text input field
 export default class ChatBox extends Component {
@@ -65,16 +52,14 @@ export default class ChatBox extends Component {
 
   render () {
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <div id='chat-box col-lg-6'>
-          <h3>Ny melding</h3>
-          <input
-            onChange={this.changeHandler}
-            value={this.state.text}
-            />
-          <RaisedButton type='submit' onTouchTap={this.handleMessageSubmit} label="Send" />
-        </div>
-      </MuiThemeProvider>
+      <div id='chat-box col-lg-6'>
+        <h3>Ny melding</h3>
+        <input
+          onChange={this.changeHandler}
+          value={this.state.text}
+          />
+        <RaisedButton type='submit' onTouchTap={this.handleMessageSubmit} label="Send" />
+      </div>
     )
   }
 }
