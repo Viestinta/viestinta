@@ -1,12 +1,22 @@
 html {
-  font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    min-height: 100%;
 }
 
 body {
     font-size: 13px;
     line-height: 20px;
 
-    background: #2DAAE4;
+    height: 100%;
+
+    background-repeat: no-repeat;
+    /* Maximum browser support */
+    background: -webkit-gradient(linear, center top, center bottom, from(#2DAAE4), to(#15729E));
+    background: -webkit-linear-gradient(#2DAAE4, #15729E);
+    background: -moz-linear-gradient(#2DAAE4, #15729E);
+    background: -o-linear-gradient(#2DAAE4, #15729E);
+    background: -ms-linear-gradient(#2DAAE4, #15729E);
+    background: linear-gradient(#2DAAE4, #15729E);    
 }
 
 #chat-app {
