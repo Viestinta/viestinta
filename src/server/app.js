@@ -127,16 +127,11 @@ user.sync({force: true}).then(function () {
   })
 })
 
-messageObj.sync({force: true}).then(function () {
-  return messageObj.create({
-    text: 'Just testing'
-  })
+messageObj.sync().then(function () {
 })
 
 feedbackObj.sync().then(function () {
-  return feedbackObj.create({
-    value: -1
-  })
+
 })
 
 // Create a connection
@@ -146,26 +141,16 @@ var io = require('socket.io')(server)
 // When a new user connects
 io.sockets.on('connect', function (socket) {
   console.log('[app] connect')
-
-  // feedbacksController.getAll()
-
-  // TODO: get x last messages in chat and send
-  // TODO: get status of feedback and send
-  var feedback = feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
-    console.log('ResultNeg: ', resultNeg)
+  // Get feedback status for last x min
+  feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
     feedbacksController.getLastIntervalPos().then(function (resultPos) {
-      console.log('ResultPos: ', resultPos)
       socket.emit('update-feedback-interval', [resultNeg, resultPos])
     })
   })
-
-  var lastTenMessages = messagesController.getLastTen().then(function (result) {
-    console.log('List of messages: ', result)
-    console.log('List of messages reversed: ', result.reverse())
-
+  // Get last 10 messages
+  messagesController.getLastTen().then(function (result) {
     socket.emit('last-ten-messages', result.reverse())
   })
-  console.log('[app] connect - After sending feedback in')
 })
 
 // Listen for connections
@@ -206,7 +191,7 @@ io.sockets.on('connection', function (socket) {
   // Called every x minuts
   socket.on('update-feedback-interval', function () {
     // Get feedback from database for past x minuts
-    var feedback = feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
+    feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
       feedbacksController.getLastIntervalPos().then(function (resultPos) {
         io.sockets.emit('update-feedback-interval', [resultNeg, resultPos])
       })
