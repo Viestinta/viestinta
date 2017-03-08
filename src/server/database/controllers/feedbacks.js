@@ -8,8 +8,6 @@ module.exports = {
 
   // Create a new Feedback using model.create()
   create (req) {
-    console.log('[feedbacks] create req: ', req, 'param: ', req.value)
-    console.log('Rec.body: ', req.body)
     return Feedback.create({
       value: req.value
     })

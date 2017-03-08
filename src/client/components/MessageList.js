@@ -10,11 +10,13 @@ export default class MessageList extends Component {
       messages: []
     }
 
-    this.receiveMessage = this.receiveMessage.bind(this)  
+    this.receiveMessage = this.receiveMessage.bind(this)
+    this.lastTenMessages = this.lastTenMessages.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
+    socket.on('last-ten-messages', this.lastTenMessages)
   }
 
   receiveMessage (msg) {
@@ -25,9 +27,17 @@ export default class MessageList extends Component {
     messages.push(msg)
     this.setState({ messages: messages })
   }
-  
-  render () {
 
+  lastTenMessages (msgList) {
+    console.log('lastTenMessages: ', msgList)
+
+    console.log('lastTenMessages reversed: ', msgList.reverse())
+    this.setState({
+      messages: msgList
+    })
+  }
+
+  render () {
     var list = this.state.messages.map((message, i) => {
       console.log('Looping trought messages in messageList')
 
@@ -43,7 +53,7 @@ export default class MessageList extends Component {
       <ul>
         {list}
       </ul>
-    );
+    )
   }
 
 }

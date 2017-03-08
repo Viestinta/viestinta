@@ -5,31 +5,19 @@ var Message = require('../models/index').Message
 module.exports = {
 
   // Create a new Message using model.create()
-  create (req, res) {
+  create (req) {
     return Message.create({
-      time: new Date().now(),
-      text: req.body.text
-    })
-    .then(function (newMessage) {
-      res.status(200).json(newMessage)
-    })
-    .catch(function (error) {
-      res.status(500).json(error)
+      time: new Date(),
+      text: req.text
     })
   },
 
   // Edit an existing Message details using model.update()
-  update (req, res) {
+  update (req) {
     return Message.update(req.body, {
       where: {
         id: req.params.id
       }
-    })
-    .then(function (updatedRecords) {
-      res.status(200).json(updatedRecords)
-    })
-    .catch(function (error) {
-      res.status(500).json(error)
     })
   },
 
@@ -40,30 +28,17 @@ module.exports = {
         id: req.params.id
       }
     })
-    .then(function (deletedRecords) {
-      res.status(200).json(deletedRecords)
-    })
-    .catch(function (error) {
-      res.status(500).json(error)
-    })
   },
 
-  //Get last 10
-  getLastTen (req, res) {
+  // Get last 10
+  getLastTen (req) {
     return Message.all({
-      where: {
-        id: req.params.id
-      }
-    })
-    .then(function (deletedRecords) {
-      res.status(200).json(deletedRecords)
-    })
-    .catch(function (error) {
-      res.status(500).json(error)
+      order: '"createdAt" DESC',
+      limit: 2
     })
   },
 
-  // Retrive an existing Message by the unique ID 
+  // Retrive an existing Message by the unique ID
   retrieve (req, res) {
     return Message
       .findById(req.params.messageId, {
