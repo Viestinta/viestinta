@@ -8,13 +8,13 @@ module.exports = {
 
   // Create a new Feedback using model.create()
   create (req) {
-    console.log('[feedbacks] create req: ', req, "param: ", req.value)
-    console.log("Rec.body: ", req.body)
+    console.log('[feedbacks] create req: ', req, 'param: ', req.value)
+    console.log('Rec.body: ', req.body)
     return Feedback.create({
       value: req.value
     })
     .then(function (newFeedback) {
-      console.log("New feedback created with value", newFeedback.value)
+      console.log('New feedback created with value', newFeedback.value)
     })
   },
 
@@ -25,40 +25,39 @@ module.exports = {
         id: req.params.id
       }
     })
-
   },
 
   // For last 5 min
-  getLastIntervalNeg () {    
+  getLastIntervalNeg () {
     return Feedback.count({
-        where: {
-          // TODO: just use createdAt?
-          time: {
+      where: {
+        // TODO: just use createdAt?
+        time: {
             // Set to 5 * MIN
-            $between: [new Date(new Date - 5 * MIN), new Date()]
-          },
-          
-          value: -1
-        }
-      })
+          $between: [new Date(new Date() - 5 * MIN), new Date()]
+        },
+
+        value: -1
+      }
+    })
   },
 
   // For last 5 min
-  getLastIntervalPos () {    
+  getLastIntervalPos () {
     return Feedback.count({
-        where: {
-          // TODO: just use createdAt?
-          time: {
-            // Set to 5 * MIN
-            $between: [new Date(new Date - 5 * MIN), new Date()]
-          },
-          
-          value: 1
-        }
-      })
+      where: {
+        // TODO: just use createdAt?
+        time: {
+          // Set to 5 * MIN
+          $between: [new Date(new Date() - 5 * MIN), new Date()]
+        },
+
+        value: 1
+      }
+    })
   },
-  
-  getAll() {
+
+  getAll () {
     return Feedback.findAll()
       .then(function (result) {
         console.log(result)
@@ -69,8 +68,8 @@ module.exports = {
     Feedback.findAll({
       where: {
         // TODO: just use createdAt?
-        time: {       
-          $between: [new Date(), new Date(new Date - 120 * MIN)]
+        time: {
+          $between: [new Date(), new Date(new Date() - 120 * MIN)]
         }
       }
     }).then(function (result) {
