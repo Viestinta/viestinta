@@ -1,9 +1,9 @@
-const user = require('../models/user')
-const feedback = require('../models/feedback')
-const message = require('../models/message')
+const users = require('./users')
+const feedbacks = require('./feedbacks')
+const messages = require('./messages')
 
 module.exports = {
-  user,
-  feedback,
-  message
+  users,
+  feedbacks,
+  messages
 }

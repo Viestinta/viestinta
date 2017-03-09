@@ -113,17 +113,25 @@ server.listen(app.get('port'), (err) => {
 const db = require('./database/models/index')
 
 const user = db['User']
-const message = db['Message']
-const feedback = db['Feedback']
+const messageObj = db['Message']
+const feedbackObj = db['Feedback']
 
-const userController = require('./database/controllers').user
-const messageController = require('./database/controllers').message
-const feedbackController = require('./database/controllers').feedback
+const users = require('./database/controllers').users
+const messagesController = require('./database/controllers').messages
+const feedbacksController = require('./database/controllers').feedbacks
 
+// Create tables, and drop them if they allready exists (force: true)
 user.sync({force: true}).then(function () {
   return user.create({
     name: 'Pekka Foreleser'
   })
+})
+
+messageObj.sync().then(function () {
+})
+
+feedbackObj.sync().then(function () {
+
 })
 
 // Create a connection
@@ -132,53 +140,63 @@ var io = require('socket.io')(server)
 
 // When a new user connects
 io.sockets.on('connect', function (socket) {
-  console.log('New client have connected in app')
-    // TODO: get x last messages in chat and send
-    // TODO: get status of feedback and send
-    // socket.emit('connect', "You are connected")
+  console.log('[app] connect')
+  // Get feedback status for last x min
+  feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
+    feedbacksController.getLastIntervalPos().then(function (resultPos) {
+      socket.emit('update-feedback-interval', [resultNeg, resultPos])
+    })
+  })
+  // Get last 10 messages
+  messagesController.getLastTen().then(function (result) {
+    socket.emit('last-ten-messages', result.reverse())
+  })
 })
 
 // Listen for connections
 io.sockets.on('connection', function (socket) {
   // Reports when it finds a connection
-  console.log('Client connected')
+  console.log('[app] connection')
 
   // Wait for a message from the client for 'join'
   socket.on('join', function (data) {
-    console.log('New client have joined')
+    console.log('[app] join')
     socket.emit('messages', 'Hello from server')
   })
 
   // Wait for a message from the client for 'join'
   socket.on('leave', function (data) {
-    console.log('Client have left')
+    console.log('[app] left')
     socket.emit('messages', 'Goodbye from server')
   })
 
   // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
-    messageController.create({
-      // Save user
-      text: msg.text
-    })
-    console.log('Message in new-message in app.js: ' + msg.text)
+    console.log('[app] new-message: ' + msg)
+    messagesController.create(msg)
+
     io.sockets.emit('receive-message', msg)
   })
 
+  // When somebody gives feedback
   socket.on('new-feedback', function (feedback) {
-    // TODO: save in database
-    feedbackController.create({
+    console.log('[app] new-feedback: ' + feedback)
+    feedbacksController.create({
       value: feedback
     })
-    console.log('Received feedback in io.socket.on: ', feedback)
+    console.log('[app] new-feedback: after')
     io.sockets.emit('receive-feedback', feedback)
   })
 
   // Called every x minuts
-  socket.on('updateFeedbackInterval', function () {
+  socket.on('update-feedback-interval', function () {
     // Get feedback from database for past x minuts
-
-    io.sockets.emit('updateFeedbackInterval')
+    feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
+      feedbacksController.getLastIntervalPos().then(function (resultPos) {
+        io.sockets.emit('update-feedback-interval', [resultNeg, resultPos])
+      })
+    })
+    io.sockets.emit('update-feedback-interval')
   })
 })
 
@@ -186,5 +204,3 @@ io.sockets.on('connection', function (socket) {
 app.use('/', express.static(path.join(__dirname, '../static')))
 app.use('/css', express.static(path.join(__dirname, '../static/css')))
 app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
-
-module.exports = io

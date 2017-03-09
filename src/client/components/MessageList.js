@@ -41,11 +41,13 @@ export default class MessageList extends Component {
       messages: []
     }
 
-    this.receiveMessage = this.receiveMessage.bind(this)  
+    this.receiveMessage = this.receiveMessage.bind(this)
+    this.lastTenMessages = this.lastTenMessages.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
+    socket.on('last-ten-messages', this.lastTenMessages)
   }
 
   receiveMessage (msg) {
@@ -56,71 +58,36 @@ export default class MessageList extends Component {
     messages.push(msg)
     this.setState({ messages: messages })
   }
-  
-  render () {
 
+  lastTenMessages (msgList) {
+    console.log('lastTenMessages: ', msgList)
+    this.setState({
+      messages: msgList
+    })
+  }
+
+  render () {
     var list = this.state.messages.map((message, i) => {
       console.log('Looping trought messages in messageList')
 
+      var time = message.time
+      // console.log('Date: ', date)
+      // var time = date.format('dd.MM.yyyy HH:mm')
+      // console.log('Time: ', time)
       return (
         <Message
           key={i}
+          time={time}
           text={message.text}
         />
       )
     })
 
     return (
-      <Paper zDepth={3} style={styles.parent}>
-        <Paper
-          zDepth={3} 
-          style={styles.child}
-        >
-          <h4>This is some text.</h4>
-        </Paper>
-        <Paper
-          zDepth={3} 
-          style={styles.child}
-        >
-          <h4>This is some more text.</h4>
-        </Paper>
-        <Paper
-          zDepth={3} 
-          style={styles.child}
-        >
-          <h4>This is some more text. With lots of words, 
-          to make the message really long, and this is only 
-          to see what happens.
-          This is some more text. With lots of words, 
-          to make the message really long, and this is only 
-          to see what happens.
-          </h4>
-        </Paper>
-        <Paper
-          zDepth={3} 
-          style={styles.child}
-        > 
-          <h4>Student:</h4>
-          <h4>This text also contains numbers 1-2-3-4.</h4>
-        </Paper>
-        <Paper
-          zDepth={3} 
-          style={styles.child}
-        > 
-          <h4>Student:</h4>
-          <h4>This text also contains numbers 1-2-3-4.</h4>
-        </Paper>
-        <Paper
-          zDepth={3} 
-          style={styles.child}
-        > 
-          <h4>Student:</h4>
-          <h4>This text also contains numbers 1-2-3-4.</h4>
-        </Paper>
-
-        
-      </Paper>
-    );
+      <ul>
+        {list}
+      </ul>
+    )
   }
 
 }
