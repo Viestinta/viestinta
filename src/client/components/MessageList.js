@@ -84,9 +84,9 @@ export default class MessageList extends Component {
     })
 
     return (
-      <ul>
+      <Paper zDepth={3} style={styles.parent}>
         {list}
-      </ul>
+      </Paper>
     )
   }
 
