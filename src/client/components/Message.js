@@ -1,7 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
-import Schedule from 'material-ui/svg-icons/action/schedule';
+import ActionSchedule from 'material-ui/svg-icons/action/schedule';
 
 const styles = {
 	child: {
@@ -29,7 +29,7 @@ export default class Message extends React.Component {
           style={styles.time}
           label={<span style={{fontSize: '12px'}}>{this.props.time}</span>}
           disabled={true}
-          icon={<Schedule style={{width: '18px', height: '18px', margin: '0px'}}/>}
+          icon={<ActionSchedule style={{width: '18px', height: '18px', margin: '0px'}}/>}
         />
     	</Paper>
     )
