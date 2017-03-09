@@ -19,6 +19,7 @@ const path = require('path')
 const PDStrategy = require('passport-openid-connect').Strategy
 // const User = require('passport-openid-connect').User
 
+require('./routes')
 // ///////////////////////////////////////////////////
 // Initial Server Setup
 // ///////////////////////////////////////////////////
@@ -70,6 +71,7 @@ app.use(passport.session())
 
 // URL-specifications
 // Go to index.html
+
 app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
 app.get('/user', (req, res) => {
   if (req.user) {
@@ -103,6 +105,11 @@ server.listen(app.get('port'), (err) => {
   if (err) throw err
   console.log('Node app is running on port', app.get('port'))
 })
+
+  // To get static files
+app.use('/', express.static(path.join(__dirname, '../static')))
+app.use('/css', express.static(path.join(__dirname, '../static/css')))
+app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
 
 // ///////////////////////////////////////////////////
 // Setup for database
@@ -200,7 +207,8 @@ io.sockets.on('connection', function (socket) {
   })
 })
 
-// To get static files
-app.use('/', express.static(path.join(__dirname, '../static')))
-app.use('/css', express.static(path.join(__dirname, '../static/css')))
-app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
+module.exports = {
+  app: app,
+  express: express,
+  server: server
+}

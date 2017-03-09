@@ -8,6 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     time: {
       type: DataTypes.DATE,
       defaultValue: new Date(),
+      // Return date and/or clock in a nice format
       get: function () {
         var date = new Date(this.getDataValue('time'))
         // var string = date.getDay() + '.' + date.getMonth() + '.' + date.getYear()
@@ -17,10 +18,10 @@ module.exports = function (sequelize, DataTypes) {
           hours = '0' + date.getHours()
         }
         var mins = date.getMinutes()
-        if (date.getMinutes().len() < 10) {
+        if (date.getMinutes() < 10) {
           mins = '0' + date.getMinutes()
         }
-        return hours + mins
+        return hours + ':' + mins
       }
     },
     text: {
@@ -33,9 +34,12 @@ module.exports = function (sequelize, DataTypes) {
         }
       }
     },
-    // user: {
-    // }
-    // lecture: {}
+    /*
+    user: {
+      type:
+    }
+    lecture: {}
+    */
     votesUp: {
       type: DataTypes.INTEGER,
       defaultValue: 0
@@ -56,9 +60,6 @@ module.exports = function (sequelize, DataTypes) {
         }),
         // Add lecture
       } */
-    },
-    instanceMethods: {
-
     }
   })
 

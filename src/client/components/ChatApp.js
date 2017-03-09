@@ -31,7 +31,6 @@ export default class ChatApp extends Component {
         <ChatBox />
         <FeedbackBox />
       </div>
-      
     )
   }
 }

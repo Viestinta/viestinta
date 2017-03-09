@@ -57,21 +57,16 @@ module.exports = {
 
   getAll () {
     return Feedback.findAll()
-      .then(function (result) {
-        console.log(result)
-      })
   },
 
-  getAllLecture (req) {
-    Feedback.findAll({
+  getAllToLecture (req) {
+    return Feedback.findAll({
       where: {
-        // TODO: just use createdAt?
-        time: {
+        createdAt: {
           $between: [new Date(), new Date(new Date() - 120 * MIN)]
         }
+        // TODO connect to lecture
       }
-    }).then(function (result) {
-      console.log(result.count)
     })
   },
 
@@ -79,7 +74,7 @@ module.exports = {
   delete (req) {
     Feedback.destroy({
       where: {
-        id: req.params.id
+        id: req.id
       }
     })
   }

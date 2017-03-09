@@ -1,11 +1,13 @@
-  // URL-specifications
 
 const path = require('path')
 const passport = require('passport')
+const db = require('./database/models/index')
 
-const userController = require('./controllers').user
-const messagesController = require('./controllers').messages
-const feedbacskCOntroller = require('./controllers').feedbacks
+const app = require('./app')
+
+// ///////////////////////////////////////////////////
+// Routing
+// ///////////////////////////////////////////////////
 
 module.exports = (app) => {
   // Go to index.html
@@ -38,6 +40,13 @@ module.exports = (app) => {
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
-  // Related to database
-  app.post('/', messages
+  app.server.listen(app.get('port'), (err) => {
+    if (err) throw err
+    console.log('Node app is running on port', app.get('port'))
+  })
+
+  // To get static files
+  app.use('/', app.express.static(path.join(__dirname, '../static')))
+  app.use('/css', app.express.static(path.join(__dirname, '../static/css')))
+  app.use('/icons', app.express.static(path.join(__dirname, '../static/icons')))
 }
