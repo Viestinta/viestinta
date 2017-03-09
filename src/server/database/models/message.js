@@ -17,10 +17,10 @@ module.exports = function (sequelize, DataTypes) {
           hours = '0' + date.getHours()
         }
         var mins = date.getMinutes()
-        if (date.getMinutes().len() < 10) {
+        if (date.getMinutes() < 10) {
           mins = '0' + date.getMinutes()
         }
-        return hours + mins
+        return hours + ":" + mins
       }
     },
     text: {
