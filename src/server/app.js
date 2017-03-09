@@ -23,6 +23,7 @@ const PDStrategy = require('passport-openid-connect').Strategy
 // Initial Server Setup
 // ///////////////////////////////////////////////////
 
+
 nconf.argv()
   .env('__')
   .file({ file: path.resolve(__dirname, './etc/config.json') })
@@ -99,10 +100,12 @@ app.get('/connect', (req, res) => {
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
-server.listen(app.get('port'), (err) => {
-  if (err) throw err
-  console.log('Node app is running on port', app.get('port'))
-})
+if (process.env.NODE_ENV !== "test"){
+  server.listen(app.get('port'), (err) => {
+    if (err) throw err
+    console.log('Node app is running on port', app.get('port'))
+  })
+}
 
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
@@ -144,7 +147,9 @@ app.use('/css', express.static(path.resolve(__dirname, '../static/css')))
 // SETUP FOR DATABASE
 // TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
 
+
 const db = require('./database/models/index')
+
 
 const user = db['User']
 user.sync({force: true}).then(function () {
