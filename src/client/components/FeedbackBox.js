@@ -19,8 +19,7 @@ export default class FeedbackBox extends Component {
 
 	// Receiving updated feedback values
   updateFeedback (feedback) {
-    console.log('In updateFeedback')
-    console.log('Feedback: ', feedback)
+    console.log('In updateFeedback:', feedback)
 
     this.state.feedback = feedback
   }
@@ -31,13 +30,9 @@ export default class FeedbackBox extends Component {
 
   onClick (feedback) {
     console.log('In onClick')
-    const feedbackList = this.state.feedback
-    console.log('This.feedbackList: ', feedbackList)
     if (feedback.type === 'slow') {
-      console.log('Slower please')
       feedbackList[0] = feedbackList[0] + 1
     } else if (feedback.type === 'fast') {
-      console.log('Faster please')
       feedbackList[1] = feedbackList[1] + 1
     } else {
       console.log('No valid type for buttonClick')

@@ -22,8 +22,8 @@ module.exports = {
   },
 
   // Delete an existing Message by the unique ID using model.destroy()
-  delete (req, res) {
-    return Message.destroy({
+  delete (req) {
+    Message.destroy({
       where: {
         id: req.params.id
       }
@@ -33,13 +33,13 @@ module.exports = {
   // Get last 10
   getLastTen (req) {
     return Message.all({
-      order: '"createdAt" DESC',
-      limit: 2
+      order: '"time" DESC',
+      limit: 10
     })
   },
 
   // Retrive an existing Message by the unique ID
-  retrieve (req, res) {
+  retrieve (req) {
     return Message
       .findById(req.params.messageId, {
         include: [{
@@ -47,14 +47,5 @@ module.exports = {
           as: 'message'
         }]
       })
-      .then(message => {
-        if (!message) {
-          return res.status(404).send({
-            message: 'Message Not Found'
-          })
-        }
-        return res.status(200).send(message)
-      })
-      .catch(error => res.status(400).send(error))
   }
 }

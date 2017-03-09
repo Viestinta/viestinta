@@ -4,7 +4,7 @@ export default class Message extends React.Component {
   render () {
     return (
       <div id='message'>
-        ( this.props.createdAt }) - { this.props.text }
+        ( {this.props.time }) - { this.props.text }
       </div>
     )
   }

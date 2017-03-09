@@ -30,8 +30,6 @@ export default class MessageList extends Component {
 
   lastTenMessages (msgList) {
     console.log('lastTenMessages: ', msgList)
-
-    console.log('lastTenMessages reversed: ', msgList.reverse())
     this.setState({
       messages: msgList
     })
@@ -41,9 +39,14 @@ export default class MessageList extends Component {
     var list = this.state.messages.map((message, i) => {
       console.log('Looping trought messages in messageList')
 
+      var time = message.time
+      // console.log('Date: ', date)
+      // var time = date.format('dd.MM.yyyy HH:mm')
+      // console.log('Time: ', time)
       return (
         <Message
           key={i}
+          time={time}
           text={message.text}
         />
       )

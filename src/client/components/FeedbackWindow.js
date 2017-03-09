@@ -18,15 +18,14 @@ export default class FeedbackWindow extends Component {
 
   tick () {
     console.log('[FeedbackWindow] In tick')
-    /*
+
     var minsElapsed = this.state.minsElapsed + 1
     this.setState({
       minsElapsed: minsElapsed
     })
-    //if (this.state.minsElapsed == 5) {
-    //  this.state.updateFeedbackInterval()
-    //}
-    */
+    if (this.state.minsElapsed === 5) {
+      this.state.updateFeedbackInterval()
+    }
   }
 
   componentDidMount () {
@@ -55,7 +54,6 @@ export default class FeedbackWindow extends Component {
     this.setState({
       feedback: feedbacks
     })
-    console.log('Feedback: ', this.state.feedback)
   }
 
   render () {
