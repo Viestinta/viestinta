@@ -81,14 +81,14 @@ export default class ChatBox extends Component {
                 multiLine={true}
                 rows={1}
                 rowsMax={2}
+                onChange={this.changeHandler}
+                value={this.state.text}                
             />    
             <RaisedButton
                 style={styles.btn}
                 primary={true}
                 label='Send'
-                onChange={this.changeHandler}
-                value={this.state.text}                
-                onTouchTap={this.handleMessageSubmit}
+                onTouchTap={this.sendMessage}
             />
         </Paper>
     )
