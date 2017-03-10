@@ -82,7 +82,9 @@ describe('Test suite 2: Message model', function () {
     it('Get function returns string identical to testTime', function (done) {
       db['Message']
         .findOrCreate({
-         where: {time:testDate},
+         where: {
+           text:testString,
+           time:testDate},
          attributes: ['time']
       })
       // Then compare that messages's variables to the variables given
