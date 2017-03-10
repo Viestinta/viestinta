@@ -53,7 +53,10 @@ describe('Test suite 1: User model', function () {
 var testString = testStringGenerator(30, s)
 
 var testTime = "17:04:16"
-var testDate = new Date(Date.parse('Thu, 01 Jan 1970 17:04:16 GMT'))
+var testDate = new Date()
+testDate.setHours(17)
+testDate.setMinutes(4)
+testDate.setSeconds(16)
 
 describe('Test suite 2: Message model', function () {
 
