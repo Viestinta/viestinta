@@ -52,9 +52,9 @@ describe('Test suite 1: User model', function () {
 
 var testString = testStringGenerator(30, s)
 
-var testTime = "17:04"
+var testTime = "07:04"
 var testDate = new Date()
-testDate.setHours(17)
+testDate.setHours(7)
 testDate.setMinutes(4)
 
 describe('Test suite 2: Message model', function () {
