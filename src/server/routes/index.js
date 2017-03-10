@@ -39,5 +39,5 @@ module.exports = (app) => {
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
   // Related to database
-  app.post('/', messages
+  app.post('/', messages)
 }
