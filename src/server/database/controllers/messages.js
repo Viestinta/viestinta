@@ -16,7 +16,7 @@ module.exports = {
   update (req) {
     return Message.update(req.body, {
       where: {
-        id: req.params.id
+        id: req.id
       }
     })
   },
@@ -25,7 +25,7 @@ module.exports = {
   delete (req) {
     Message.destroy({
       where: {
-        id: req.params.id
+        id: req.id
       }
     })
   },
@@ -35,6 +35,15 @@ module.exports = {
     return Message.all({
       order: '"time" DESC',
       limit: 10
+    })
+  },
+
+  // Get all to a specific lecture
+  getAllToLecture (req) {
+    return Message.findAll({
+      where: {
+        lectureId: req.lectureId
+      }
     })
   },
 
