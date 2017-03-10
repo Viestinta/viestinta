@@ -1,18 +1,27 @@
-// Controller for Message model
+// Controller for Lecture model
 
 var Lecture = require('../models/index').Lecture
 
 module.exports = {
 
-  // Create a new Message using model.create()
+  /**
+   * @description Create a new Lecture using model.create()
+   * @param req
+   */
   create (req) {
     return Lecture.create({
-      time: new Date(),
-      text: req.text
+      startDate: new Date(req.startDate),
+      endDate: new Date(req.endDate),
+      location: req.loc,
+      description: req.description
     })
   },
 
-  // Edit an existing Message details using model.update()
+  /**
+   * @description Edit an existing Lecture details using model.update()
+   * @param req
+   * @returns {*|Progress|Promise.<Array.<affectedCount, affectedRows>>|ReactWrapper|ShallowWrapper}
+   */
   update (req) {
     return Lecture.update(req.body, {
       where: {
@@ -21,8 +30,11 @@ module.exports = {
     })
   },
 
-  // Delete an existing Message by the unique ID using model.destroy()
-  delete (req, res) {
+  /**
+   * @description Delete an existing Lecture by the unique ID using model.destroy()
+   * @param req
+   */
+  delete (req) {
     return Lecture.destroy({
       where: {
         id: req.params.id
@@ -30,27 +42,35 @@ module.exports = {
     })
   },
 
-  // Get last 10
-  getAll (req) {
-    return Lecture.all({})
+  /**
+   * @description Get all lectures
+   * @returns {*}
+   */
+  getAll () {
+    return Lecture.findAll()
   },
 
-  // Retrive an existing Message by the unique ID
+  /**
+   * @description Retrive an existing Lecture by the unique ID
+   * @param req
+   * @param res
+   * @returns {Promise.<T>}
+   */
   retrieve (req, res) {
     return Lecture
-      .findById(req.params.messageId, {
+      .findById(req.params.id, {
         include: [{
           model: Lecture,
           as: 'lecture'
         }]
       })
-      .then(message => {
-        if (!message) {
+      .then(lecture => {
+        if (!lecture) {
           return res.status(404).send({
-            message: 'Message Not Found'
+            message: 'Lecture Not Found'
           })
         }
-        return res.status(200).send(message)
+        return res.status(200).send(lecture)
       })
       .catch(error => res.status(400).send(error))
   }
