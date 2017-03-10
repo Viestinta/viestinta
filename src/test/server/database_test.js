@@ -56,19 +56,18 @@ var testTime = "17:04"
 var testDate = new Date()
 testDate.setHours(17)
 testDate.setMinutes(4)
-testDate.setSeconds(16)
 
 describe('Test suite 2: Message model', function () {
 
   /**
-   * @description Test for local message
+   * @description Test for create message
    */
   describe('Database creation for message: ' + testString, function () {
     it('Text in Message object in database is identical to testString', function (done) {
       // Access database and create the message if it doesn't exist
       db['Message']
         .findOrCreate({
-          where: {text:text},
+          where: {text: testString},
           attributes: ['text']
         })
         // Then compare that messages's variables to the variables given
@@ -80,14 +79,17 @@ describe('Test suite 2: Message model', function () {
         })
     })
   })
-
+  /**
+   * @description Test for message get time
+   */
   describe('Get formatted time from message model: ' + testTime, function () {
     it('Get function returns string identical to testTime', function (done) {
       db['Message']
         .findOrCreate({
          where: {
            text:testString,
-           time:testDate},
+           time:testDate
+         },
          attributes: ['time']
       })
       // Then compare that messages's variables to the variables given
