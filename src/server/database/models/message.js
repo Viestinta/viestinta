@@ -8,6 +8,23 @@ module.exports = function (sequelize, DataTypes) {
     time: {
       type: DataTypes.DATE,
       defaultValue: new Date(),
+      get: function () {
+        var date = new Date(this.getDataValue('time'))
+        // var string = date.getDay() + '.' + date.getMonth() + '.' + date.getYear()
+
+        var hours = date.getHours()
+        if (date.getHours() < 10) {
+          hours = '0' + date.getHours()
+        }else{
+
+        }
+        var mins = date.getMinutes()
+        if (date.getMinutes() < 10) {
+          mins = '0' + date.getMinutes()
+        }
+        return hours + ":" + mins
+      }
+
     },
     text: {
       type: DataTypes.STRING,
@@ -32,6 +49,7 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     classMethods: {
+
       /*
       assosiate: function(models) {
         Message.belongsTo(models.User, {
@@ -44,24 +62,7 @@ module.exports = function (sequelize, DataTypes) {
       } */
     },
     instanceMethods: {
-      time: {
-        get: function () {
-          var date = new Date(this.getDataValue('time'))
-          // var string = date.getDay() + '.' + date.getMonth() + '.' + date.getYear()
 
-          var hours = date.getHours()
-          if (date.getHours() < 10) {
-            hours = '0' + date.getHours()
-          }else{
-
-          }
-          var mins = date.getMinutes()
-          if (date.getMinutes() < 10) {
-            mins = '0' + date.getMinutes()
-          }
-          return hours + ":" + mins
-        }
-      }
     }
   })
 
