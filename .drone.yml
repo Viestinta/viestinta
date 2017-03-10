@@ -1,13 +1,27 @@
 pipeline:
   test: 
-    image: node:7.5.0
+    image: viestinta/node:viestinta-test
     when:
       event: [push,pull_request]
       branches: [master, react-start]
+    environment:
+      DATABASE_URL: postgres://postgres:viestintacentos@127.0.0.1:5432
+      NODE_ENV: test
+      COVERALLS_REPO_TOKEN: $$COVERALLS_TOKEN
+      COVERALLS_TOKEN: $$COVERALLS_TOKEN
+      CODECOV_TOKEN: $$CODECOV_TOKEN
+
     commands:
-      - npm install --silent
+      - cp -a /drone/node_modules /root
+      - npm install --depth=0 --quiet
       - npm install standard -g
+      - npm install codecov -g
       - npm run test
+      - cat ./coverage/lcov.info | codecov
+      - cp -a /root/node_modules /drone
+    volumes:
+      - "/drone/node_modules"
+
   deploy:
     image: plugins/ssh
     when:
@@ -17,4 +31,21 @@ pipeline:
     port: 22014
     commands:
       - bash /scripts/deploy-viestinta-prod.sh
+
+services:
+    postgres:
+      image: postgres:9.6
+      container_name: viestinta_postgres
+      ports:
+        - "5432:5432"
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: viestintacentos
+        POSTGRES_DB: viestintadb_dev
+
+cache:
+  mount:
+    - /drone/node_modules
+
+
 

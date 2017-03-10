@@ -23,6 +23,7 @@ const PDStrategy = require('passport-openid-connect').Strategy
 // Initial Server Setup
 // ///////////////////////////////////////////////////
 
+
 nconf.argv()
   .env('__')
   .file({ file: path.resolve(__dirname, './etc/config.json') })
@@ -99,10 +100,12 @@ app.get('/connect', (req, res) => {
 app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
 app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
-server.listen(app.get('port'), (err) => {
-  if (err) throw err
-  console.log('Node app is running on port', app.get('port'))
-})
+if (process.env.NODE_ENV !== "test"){
+  server.listen(app.get('port'), (err) => {
+    if (err) throw err
+    console.log('Node app is running on port', app.get('port'))
+  })
+}
 
 // ///////////////////////////////////////////////////
 // Setup for database
