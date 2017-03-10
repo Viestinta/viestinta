@@ -93,7 +93,7 @@ describe('Test suite 2: Message model', function () {
       // Then compare that messages's variables to the variables given
 
         .spread(function (message, created) {
-          assert.equal(testTime, message.time.get)
+          assert.equal(testTime, message.get('time'))
           message.destroy()
           done()
         })
