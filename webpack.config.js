@@ -4,7 +4,7 @@ module.exports = {
   entry: './src/client/client.js',
 
   output: {
-    filename: './src/client/bundle.js' // path: path.resolve(__dirname, 'dist')
+    filename: './src/static/bundle.js' // path: path.resolve(__dirname, 'dist')
   },
 
   devServer: {

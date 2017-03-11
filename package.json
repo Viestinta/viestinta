@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node src/server/app.js",
     "test-client": "node src/server/app.js && mocha --compilers js:babel-core/register ./src/client/test",
-    "test": "node src/server/app.js && nyc --check-coverage --lines 95 mocha src/test/server/**.js && nyc report --reporter=text-lcov > ./coverage/lcov.info",
+    "test": "node src/server/app.js && nyc --check-coverage --lines 60 mocha src/test/server/**.js && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",
     "webpack": "./node_modules/.bin/webpack"
@@ -57,8 +57,10 @@
     "passport-openid-connect": "^0.1.0",
     "path": "^0.12.7",
     "pg": "^6.1.2",
+    "pg-hstore": "^2.3.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-tap-event-plugin": "^2.0.1",
     "sequelize": "^3.30.2",
     "sequelize-cli": "^2.5.1",
     "socket.io-client": "^1.7.3",
@@ -80,6 +82,7 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "http": "0.0.0",
+    "material-ui": "^0.17.0",
     "istanbul": "^0.4.5",
     "istanbul-coveralls": "^1.0.3",
     "mocha": "^3.2.0",

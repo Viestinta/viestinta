@@ -66,7 +66,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // ///////////////////////////////////////////////////
-// Main App
+// Routing
 // ///////////////////////////////////////////////////
 
 // URL-specifications
@@ -107,53 +107,103 @@ if (process.env.NODE_ENV !== "test"){
   })
 }
 
-// Create a connection
-// var socket = io.connect('http://localhost::8000')
-var io = require('socket.io')(server)
+// ///////////////////////////////////////////////////
+// Setup for database
+// ///////////////////////////////////////////////////
 
-// Listen for connections
-io.sockets.on('connection', function (socket) {
-  // Reports when it finds a connection
-  console.log('Client connected')
-
-  // Wait for a message from the client for 'join'
-  socket.on('join', function (data) {
-    console.log('New client have joined')
-    socket.emit('messages', 'Hello from server')
-  })
-
-  // Wait for a message from the client for 'join'
-  socket.on('leave', function (data) {
-    console.log('Client have left')
-    socket.emit('messages', 'Goodbye from server')
-  })
-
-  // When a new message is sendt from somebody
-  socket.on('new-message', function (msg) {
-    console.log('Message in new-message in app.js: ' + msg.text)
-    io.sockets.emit('receive-message', msg)
-  })
-
-  socket.on('test', function () {
-    console.log('Mounted')
-  })
-})
-
-app.use('/', express.static(path.resolve(__dirname, '../client/')))
-app.use(express.static(path.resolve(__dirname, '../static')))
-app.use('/components', express.static(path.resolve(__dirname, '../client/components')))
-app.use('/css', express.static(path.resolve(__dirname, '../static/css')))
-
-// SETUP FOR DATABASE
 // TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
-
 
 const db = require('./database/models/index')
 
-
 const user = db['User']
+const messageObj = db['Message']
+const feedbackObj = db['Feedback']
+
+const users = require('./database/controllers').users
+const messagesController = require('./database/controllers').messages
+const feedbacksController = require('./database/controllers').feedbacks
+
+// Create tables, and drop them if they allready exists (force: true)
 user.sync({force: true}).then(function () {
   return user.create({
     name: 'Pekka Foreleser'
   })
 })
+
+messageObj.sync().then(function () {
+})
+
+feedbackObj.sync().then(function () {
+
+})
+
+// Create a connection
+// var socket = io.connect('http://localhost::8000')
+var io = require('socket.io')(server)
+
+// When a new user connects
+io.sockets.on('connect', function (socket) {
+  console.log('[app] connect')
+  // Get feedback status for last x min
+  feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
+    feedbacksController.getLastIntervalPos().then(function (resultPos) {
+      socket.emit('update-feedback-interval', [resultNeg, resultPos])
+    })
+  })
+  // Get last 10 messages
+  messagesController.getLastTen().then(function (result) {
+    socket.emit('last-ten-messages', result.reverse())
+  })
+})
+
+// Listen for connections
+io.sockets.on('connection', function (socket) {
+  // Reports when it finds a connection
+  console.log('[app] connection')
+
+  // Wait for a message from the client for 'join'
+  socket.on('join', function (data) {
+    console.log('[app] join')
+    socket.emit('messages', 'Hello from server')
+  })
+
+  // Wait for a message from the client for 'join'
+  socket.on('leave', function (data) {
+    console.log('[app] left')
+    socket.emit('messages', 'Goodbye from server')
+  })
+
+  // When a new message is sendt from somebody
+  socket.on('new-message', function (msg) {
+    console.log('[app] new-message: ' + msg)
+    messagesController.create(msg)
+
+    io.sockets.emit('receive-message', msg)
+  })
+
+  // When somebody gives feedback
+  socket.on('new-feedback', function (feedback) {
+    console.log('[app] new-feedback: ' + feedback)
+    feedbacksController.create({
+      value: feedback
+    })
+    console.log('[app] new-feedback: after')
+    io.sockets.emit('receive-feedback', feedback)
+  })
+
+  // Called every x minuts
+  socket.on('update-feedback-interval', function () {
+    // Get feedback from database for past x minuts
+    feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
+      feedbacksController.getLastIntervalPos().then(function (resultPos) {
+        io.sockets.emit('update-feedback-interval', [resultNeg, resultPos])
+      })
+    })
+    io.sockets.emit('update-feedback-interval')
+  })
+})
+
+// To get static files
+app.use('/', express.static(path.join(__dirname, '../static')))
+app.use('/css', express.static(path.join(__dirname, '../static/css')))
+app.use('/icons', express.static(path.join(__dirname, '../static/icons')))

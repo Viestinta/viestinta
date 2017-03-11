@@ -1,5 +1,34 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import socket from '../../server/socket';
 
+import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+
+const styles = {
+    parent: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+
+        maxWidth: 500,
+        width: '100%',
+        height: 80,
+
+        marginTop: 10,
+        padding: 10,
+    },
+    textField: {
+        width: '100%',
+        marginRight: 5,
+    },
+    btn: {
+
+    },
+};
+
+// Text input field
 export default class ChatBox extends Component {
 
   constructor (props) {
@@ -8,19 +37,24 @@ export default class ChatBox extends Component {
     this.state = {
       text: ''
     }
-
+    
     this.changeHandler = this.changeHandler.bind(this)
-    this.handleMessageSubmit = this.handleMessageSubmit.bind(this)
+    this.sendMessage = this.sendMessage.bind(this)
     this.cleanInput = this.cleanInput.bind(this)
+
   }
+  
+  componentDidMount () {
+    socket.on('send-message', this.sendMessage)
+  }
+
 
   cleanInput () {
     this.setState({text: ''})
   }
 
-  handleMessageSubmit (e) {
-    e.preventDefault()
-    console.log('In handle send')
+  sendMessage () {
+    console.log('[ChatBox] sendMessage')
     // Setting msg.text to written input
     var msg = {
       text: this.state.text
@@ -29,26 +63,34 @@ export default class ChatBox extends Component {
     // Emtpy input field
     this.setState({text: ''})
 
-    console.log('Empty message field: ', this.state.text)
-
-    this.props.sendMessage(msg)
+    socket.emit('new-message', msg)
+    console.log("[ChatBox] After sending message")
   }
   // Listen and update field dynamically when something is written
   changeHandler (e) {
     this.setState({ text: e.target.value })
-    console.log('Changing state')
+    console.log('[ChatBox] changeHandler')
   }
 
   render () {
     return (
-      <div id='chat-box col-lg-6'>
-        <h3>Ny melding</h3>
-        <input
-          onChange={this.changeHandler}
-          value={this.state.text} />
-        <button type='submit' value='Send' onClick={this.handleMessageSubmit}>Send</button>
-
-      </div>
+        <Paper zDepth={3} style={styles.parent}>
+            <TextField
+                style={styles.textField}
+                hintText='Skriv ny melding her.'
+                multiLine={true}
+                rows={1}
+                rowsMax={2}
+                onChange={this.changeHandler}
+                value={this.state.text}                
+            />    
+            <RaisedButton
+                style={styles.btn}
+                primary={true}
+                label='Send'
+                onTouchTap={this.sendMessage}
+            />
+        </Paper>
     )
   }
 }
