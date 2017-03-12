@@ -1,9 +1,7 @@
-
+const express = require('express')
 const path = require('path')
 const passport = require('passport')
 const db = require('./database/models/index')
-
-const app = require('./app')
 
 // ///////////////////////////////////////////////////
 // Routing
@@ -40,13 +38,8 @@ module.exports = (app) => {
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
-  app.server.listen(app.get('port'), (err) => {
-    if (err) throw err
-    console.log('Node app is running on port', app.get('port'))
-  })
-
   // To get static files
-  app.use('/', app.express.static(path.join(__dirname, '../static')))
-  app.use('/css', app.express.static(path.join(__dirname, '../static/css')))
-  app.use('/icons', app.express.static(path.join(__dirname, '../static/icons')))
+  app.use('/', express.static(path.join(__dirname, '../static')))
+  app.use('/css', express.static(path.join(__dirname, '../static/css')))
+  app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
 }

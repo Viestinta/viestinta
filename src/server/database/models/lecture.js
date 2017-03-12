@@ -33,6 +33,8 @@ module.exports = function (sequelize, DataTypes) {
       associate: function(models) {
 
         //Lecture has a set of messages
+        // Should only be associated in message and feedback
+        /*
         Lecture.hasMany(models.Message, {
           onDelete: 'CASCADE',
           foreignKey: {
@@ -47,7 +49,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
           }
         })
-
+        */
         //Admin for lecture
         Lecture.belongsTo(models.User, {
           foreignKey: {

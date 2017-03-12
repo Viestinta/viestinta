@@ -9,7 +9,7 @@ module.exports = {
   // Create a new Feedback using model.create()
   create (req) {
     return Feedback.create({
-      value: req.value
+      value: req.value,
     })
     .then(function (newFeedback) {
       console.log('New feedback created with value', newFeedback.value)

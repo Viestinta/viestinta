@@ -19,7 +19,7 @@ const path = require('path')
 const PDStrategy = require('passport-openid-connect').Strategy
 // const User = require('passport-openid-connect').User
 
-require('./routes')
+const router = require('./routes') 
 // ///////////////////////////////////////////////////
 // Initial Server Setup
 // ///////////////////////////////////////////////////
@@ -69,47 +69,12 @@ app.use(passport.session())
 // Routing
 // ///////////////////////////////////////////////////
 
-// URL-specifications
-// Go to index.html
-
-app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
-app.get('/user', (req, res) => {
-  if (req.user) {
-    res.json({user: req.user})
-  } else {
-    res.status(404)
-  }
-})
-
-app.get('/connect', (req, res) => {
-  if (req.user) {
-    let userinfo = req.user.data
-    db['User'].findOrCreate({
-      where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
-    })
-          .spread(function (user, created) {
-            console.log(user)
-          })
-        .catch((err) => {
-          console.error(err)
-        })
-  } else {
-    res.status(403)
-  }
-})
-
-app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
-app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
+router(app)
 
 server.listen(app.get('port'), (err) => {
-  if (err) throw err
-  console.log('Node app is running on port', app.get('port'))
-})
-
-  // To get static files
-app.use('/', express.static(path.join(__dirname, '../static')))
-app.use('/css', express.static(path.join(__dirname, '../static/css')))
-app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
+    if (err) throw err
+    console.log('Node app is running on port', app.get('port'))
+  })
 
 // ///////////////////////////////////////////////////
 // Setup for database
@@ -120,12 +85,15 @@ app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
 const db = require('./database/models/index')
 
 const user = db['User']
-const messageObj = db['Message']
-const feedbackObj = db['Feedback']
+const message = db['Message']
+const feedback = db['Feedback']
+const lecture = db['Lecture']
 
 const users = require('./database/controllers').users
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
+const lecturesController = require('./database/controllers').lectures
+
 
 // Create tables, and drop them if they allready exists (force: true)
 user.sync({force: true}).then(function () {
@@ -134,10 +102,14 @@ user.sync({force: true}).then(function () {
   })
 })
 
-messageObj.sync().then(function () {
+message.sync().then(function () {
 })
 
-feedbackObj.sync().then(function () {
+feedback.sync().then(function () {
+
+})
+
+lecture.sync().then(function () {
 
 })
 
@@ -207,8 +179,3 @@ io.sockets.on('connection', function (socket) {
   })
 })
 
-module.exports = {
-  app: app,
-  express: express,
-  server: server
-}
