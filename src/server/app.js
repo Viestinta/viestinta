@@ -85,20 +85,20 @@ server.listen(app.get('port'), (err) => {
 const db = require('./database/models/index')
 
 const user = db['User']
+const lecture = db['Lecture']
 const message = db['Message']
 const feedback = db['Feedback']
-const lecture = db['Lecture']
 
-const users = require('./database/controllers').users
+const usersController = require('./database/controllers').users
+const lecturesController = require('./database/controllers').lectures
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
-const lecturesController = require('./database/controllers').lectures
 
 
 // Create tables, and drop them if they allready exists (force: true)
-user.sync({force: true}).then(function () {
+user.sync().then(function () {
   return user.create({
-    name: 'Pekka Foreleser'
+    name: 'Pekka'
   })
 })
 
@@ -110,6 +110,12 @@ feedback.sync().then(function () {
 })
 
 lecture.sync().then(function () {
+  lecture.create({
+    name: 'TDT4145-1'
+  }),
+  lecture.create({
+    name: 'TDT4140-3'
+  })
 
 })
 
@@ -118,29 +124,65 @@ lecture.sync().then(function () {
 var io = require('socket.io')(server)
 
 // When a new user connects
-io.sockets.on('connect', function (socket) {
-  console.log('[app] connect')
-  // Get feedback status for last x min
-  feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
-    feedbacksController.getLastIntervalPos().then(function (resultPos) {
-      socket.emit('update-feedback-interval', [resultNeg, resultPos])
-    })
-  })
-  // Get last 10 messages
-  messagesController.getLastTen().then(function (result) {
-    socket.emit('last-ten-messages', result.reverse())
-  })
-})
-
-// Listen for connections
 io.sockets.on('connection', function (socket) {
   // Reports when it finds a connection
   console.log('[app] connection')
 
-  // Wait for a message from the client for 'join'
-  socket.on('join', function (data) {
-    console.log('[app] join')
-    socket.emit('messages', 'Hello from server')
+  socket.on('login', function (data) {
+    console.log('[app] login')
+    // Set user
+    //socket.set('user', user)
+    
+    usersController.retriveByName('Pekka').then(function (user) {
+      console.log("User: ", user.name)
+      socket.user = user
+    })
+
+    // Hardcoding to choose a lecture 
+    lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
+      console.log("Lecture: ", lecture.name)
+      socket.lecture = lecture
+
+      console.log("Before getting feedback")
+      // Get feedback status for last x min
+      feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+        feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
+          socket.emit('update-feedback-interval', [resultNeg, resultPos])
+        })
+      })
+
+      console.log("Before getting messages")
+      // Get last 10 messages
+      messagesController.getLastTen(lecture).then(function (result) {
+        socket.emit('last-ten-messages', result.reverse())
+      })
+    })
+    
+  })
+
+  socket.on('create-lecture', function (lecture) {
+    console.log('[app] create-lecture')
+
+    // TODO: missing
+  })
+
+  socket.on('choose-lecture', function (lecture) {
+    console.log('[app] choose-lecture')
+
+    lectures.Controller.retriveByName('TDT4145-1').then(function (result) {
+      console.log("Lecture: ", result.name)
+      socket.lecture = lecture
+      // Get feedback status for last x min
+      feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+        feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
+          socket.emit('update-feedback-interval', [resultNeg, resultPos])
+        })
+      })
+      // Get last 10 messages
+      messagesController.getLastTen(lecture).then(function (result) {
+        socket.emit('last-ten-messages', result.reverse())
+      })
+    })
   })
 
   // Wait for a message from the client for 'join'
@@ -152,7 +194,10 @@ io.sockets.on('connection', function (socket) {
   // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg)
-    messagesController.create(msg)
+    messagesController.create(msg).then(function (result) {
+      //result.setUser(socket.user)
+      result.setLecture(socket.lecture)
+    })
 
     io.sockets.emit('receive-message', msg)
   })
@@ -162,6 +207,9 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] new-feedback: ' + feedback)
     feedbacksController.create({
       value: feedback
+    }).then(function (result) {
+
+      result.setLecture(socket.lecture)
     })
     console.log('[app] new-feedback: after')
     io.sockets.emit('receive-feedback', feedback)
@@ -178,4 +226,3 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('update-feedback-interval')
   })
 })
-

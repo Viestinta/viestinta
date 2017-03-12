@@ -4,6 +4,9 @@ module.exports = function (sequelize, DataTypes) {
 
   // Definition of Lecture attributes
   let Lecture = sequelize.define('Lecture', {
+    name: {
+      type: DataTypes.STRING
+    },
     startDate: {
       type: DataTypes.DATE,
       defaultValue: new Date()
@@ -32,17 +35,16 @@ module.exports = function (sequelize, DataTypes) {
 
       associate: function(models) {
 
-        //Lecture has a set of messages
         // Should only be associated in message and feedback
+        
+        //Lecture has a set of messages
         /*
         Lecture.hasMany(models.Message, {
-          onDelete: 'CASCADE',
-          foreignKey: {
-            allowNull: true
-          }
+          as: 'Messages'
         })
-
+        */
         //Lecture has a set of feedbacks
+        /*
         Lecture.hasMany(models.Feedback, {
           onDelete: 'CASCADE',
           foreignKey: {
@@ -51,18 +53,21 @@ module.exports = function (sequelize, DataTypes) {
         })
         */
         //Admin for lecture
+        /*
         Lecture.belongsTo(models.User, {
           foreignKey: {
             allowNull: false
           }
         })
-
+        /*
         //Connected users
         Lecture.hasMany(models.User, {
           foreignKey: {
+            //field: userId,
             allowNull: true
           }
         })
+        */
         //Lecture has a connected course
         /*Lecture.belongsTo(models.Course, {
          foreignKey: {

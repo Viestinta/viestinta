@@ -21,20 +21,13 @@ module.exports = function (sequelize, DataTypes) {
 
       // Associations to other models
       associate: function (models) {
-        Feedback.belongsTo(models.User, {
-          onDelete: 'CASCADE',
-          foreignKey: {
-            field: 'lectureId',
-            allowNull: true
-          }
-        }),
+        
         Feedback.belongsTo(models.Lecture, {
-          onDelete: 'CASCADE',
           foreignKey: {
-            field: 'lectureId',
             allowNull: true
           }
-        }) 
+        })
+        
       }
 
     }

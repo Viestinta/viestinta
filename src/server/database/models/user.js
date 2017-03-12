@@ -5,7 +5,7 @@
 module.exports = function (sequelize, DataTypes) {
     // Definition of User attributes
 
-  var User = sequelize.define('User', {
+  const User = sequelize.define('User', {
     name: DataTypes.STRING,
     student_id: DataTypes.INTEGER,
     email: DataTypes.STRING,
@@ -19,13 +19,11 @@ module.exports = function (sequelize, DataTypes) {
 
         // Associations to other models
       associate: function (models) {
-            // associations can be defined here
-      },
-
-      getterMethods: {
-      },
-
-      setterMethods: {
+        
+        User.hasMany(models.Message, {
+          foreignKey: 'messageId',
+          as: 'messages'
+        })
       }
     }
   })

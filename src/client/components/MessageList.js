@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import socket from '../../server/socket'
+import socket from '../socket'
 import Message from './Message'
 
 export default class MessageList extends Component {

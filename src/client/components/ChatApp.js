@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import socket from '../../server/socket'
+import socket from '../socket'
 
 import ChatBox from './ChatBox'
 import MessageList from './MessageList'
@@ -11,15 +11,19 @@ export default class ChatApp extends Component {
     // At beginning there is no msg and the text-field is empty
   constructor (props) {
     super(props)
+
+    this.login = this.login.bind(this)
   }
 
   componentDidMount () {
-    socket.on('join', this.join)
+
+    this.login()
   }
 
-  join () {
-    console.log('join')
-    socket.emit('join', 'Hello world from client')
+  login () {
+    console.log('[ChatApp] login')
+    socket.emit('login')
+    console.log('[ChatApp] afterLogin')
   }
 
   render () {

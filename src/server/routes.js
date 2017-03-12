@@ -24,12 +24,12 @@ module.exports = (app) => {
       db['User'].findOrCreate({
         where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
       })
-            .spread(function (user, created) {
-              console.log(user)
-            })
-          .catch((err) => {
-            console.error(err)
-          })
+      .spread(function (user, created) {
+        console.log(user)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
     } else {
       res.status(403)
     }

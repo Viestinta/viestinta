@@ -34,12 +34,6 @@ module.exports = function (sequelize, DataTypes) {
         }
       }
     },
-    /*
-    user: {
-      type:
-    }
-    lecture: {}
-    */
     votesUp: {
       type: DataTypes.INTEGER,
       defaultValue: 0
@@ -50,23 +44,17 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     classMethods: {
-      
-      assosiate: function(models) {
+      associate: function (models) {
+        
         Message.belongsTo(models.User, {
-          onDelete: 'CASCADE',
-          foreignKey: {
-            field: 'userId',
-            allowNull: true
-          }
-        }),
-        Message.belongsTo(models.Lecture, {
-          onDelete: 'CASCADE',
-          foreignKey: {
-            field: 'lectureId',
-            allowNull: true
-          }
+          foreignKey: 'user',
+          onDelete: 'CASCADE'
         })
-      } 
+        Message.belongsTo(models.Lecture, {
+          foreignKey: 'lecture',
+          onDelete: 'CASCADE'
+        })
+      }
     }
   })
 

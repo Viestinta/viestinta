@@ -31,19 +31,32 @@ module.exports = {
   },
 
   // Get last 10
-  getLastTen (req) {
-    return Message.all({
+  getLastTen (lecture) {
+    return Message.findAll({
+      where: {
+        'Lecture.name': lecture
+      },
+      include: [
+        {model: Lecture, as: Lecture.tableName}
+      ],
       order: '"time" DESC',
       limit: 10
     })
   },
 
   // Get all to a specific lecture
-  getAllToLecture (req) {
+  getAllToLecture (lecture) {
     return Message.findAll({
       where: {
-        lectureId: req.lectureId
-      }
+        'Lecture.name': lecture
+      },
+      include: [
+        {model: Lecture, 
+          where: {
+            name: lecture.name
+          }
+        }
+      ]
     })
   },
 

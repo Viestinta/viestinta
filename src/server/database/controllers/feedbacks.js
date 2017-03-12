@@ -11,9 +11,6 @@ module.exports = {
     return Feedback.create({
       value: req.value,
     })
-    .then(function (newFeedback) {
-      console.log('New feedback created with value', newFeedback.value)
-    })
   },
 
   // Edit an existing Feedback details using model.update()
@@ -26,30 +23,36 @@ module.exports = {
   },
 
   // For last 5 min
-  getLastIntervalNeg () {
+  getLastIntervalNeg (lecture) {
     return Feedback.count({
       where: {
+        'Lecture.name': lecture,
         // TODO: just use createdAt?
         time: {
             // Set to 5 * MIN
           $between: [new Date(new Date() - 5 * MIN), new Date()]
         },
-
+        include: [
+          {model: Lecture, as: Lecture.tableName}
+        ],
         value: -1
       }
     })
   },
 
   // For last 5 min
-  getLastIntervalPos () {
+  getLastIntervalPos (lecture) {
     return Feedback.count({
       where: {
+        'Lecture.name': lecture,
         // TODO: just use createdAt?
         time: {
           // Set to 5 * MIN
           $between: [new Date(new Date() - 5 * MIN), new Date()]
         },
-
+        include: [
+          {model: Lecture, as: Lecture.tableName}
+        ],
         value: 1
       }
     })

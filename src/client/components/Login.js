@@ -1,23 +1,31 @@
-import React from 'react'
+import React, {Component } from 'react'
+import socket from '../socket'
 
-const Login = React.createClass({
-  getInitialState () {
-    return {
-      // Empty username and password fields in the beginning
-      username: '',
-      password: ''
-    }
-  },
+export default class Login extends Component {
+  
+  constructor (props) {
+    super(props)
+
+    this.login = this.login.bind(this)
+  }
+
+  componentDidMount() {
+    socket.on('login', this.login)
+  }
+
+  login () {
+    socket.emit('login')
+  }
 
   render () {
     return (
       <div id='login'>
-        <form action='/login'>
-          <button type='btn btn-submit' value='Log In'>Log In</button>
+        <form action="">
+          <button type='btn btn-submit' value='Log In' onClick={this.login}>
+            Log In
+          </button>
         </form>
       </div>
     )
   }
-})
-
-export default Login
+}
