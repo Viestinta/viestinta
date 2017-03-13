@@ -62,6 +62,22 @@ describe('Test suite: Message create', function () {
 		})  
   })
 
-  // TODO: set user to message
+  // TODO:  failing
+  describe('Set user to message: TestUser', function () {
+		it('Lecture to Message object in database is lecture set', function (done) {
+		
+	    db['Message'].create({
+		    text: 'Hello world'
+		  }).then(function (message) {
+				db['User'].create({}).then( function (lecture) {
+		      message.setUser(user)
+			  	assert.equal(message.userId, user.id)
+		      done()
+		      message.destroy()
+		      lecture.destroy()
+		    })
+			})
+		})  
+  })
 
 })
