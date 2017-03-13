@@ -103,6 +103,7 @@ user.sync().then(function () {
 })
 
 message.sync().then(function () {
+
 })
 
 feedback.sync().then(function () {
@@ -135,29 +136,28 @@ io.sockets.on('connection', function (socket) {
     
     usersController.retriveByName('Pekka').then(function (user) {
       console.log("User: ", user.name)
+      // Save user in socket-connection
       socket.user = user
     })
 
     // Hardcoding to choose a lecture 
     lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
       console.log("Lecture: ", lecture.name)
+      // Save lecture in socket-connection
       socket.lecture = lecture
 
       console.log("Before getting feedback")
       // Get feedback status for last x min
-      /*
+      
       feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
         feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
           socket.emit('update-feedback-interval', [resultNeg, resultPos])
         })
       })
-      */
+      
       console.log("Before getting messages")
-      // Get last 10 messages
-      // TODO: change back to lastTen
+      // Get all messages to that lecture
       messagesController.getAllToLecture(lecture).then(function (result) {
-      //lecturesController.getAllMessages('TDT4145-1').then(function(result) {
-        console.log("Last ten messages: ", result)
         socket.emit('last-ten-messages', result.reverse())
       })
     })
@@ -174,7 +174,6 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] choose-lecture')
 
     lectures.Controller.retriveByName('TDT4145-1').then(function (result) {
-      console.log("Lecture: ", result.name)
       socket.lecture = lecture
       // Get feedback status for last x min
       feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
@@ -212,7 +211,7 @@ io.sockets.on('connection', function (socket) {
     feedbacksController.create({
       value: feedback
     }).then(function (result) {
-
+      // Create association between feedback and lecture
       result.setLecture(socket.lecture)
     })
     console.log('[app] new-feedback: after')

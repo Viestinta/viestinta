@@ -42,7 +42,7 @@ module.exports = function (sequelize, DataTypes) {
         Lecture.hasMany(models.Message, {
           as: 'messages'
         })
-        */        
+                
         //Lecture has a set of feedbacks 
         Lecture.hasMany(models.Feedback, {
           onDelete: 'CASCADE',
@@ -50,7 +50,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
           }
         })
-        
+        */
         //Admin for lecture
         /*
         Lecture.belongsTo(models.User, {

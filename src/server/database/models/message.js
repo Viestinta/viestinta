@@ -44,20 +44,18 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     classMethods: {
+
+          
       associate: function (models) {
-        /*
+        console.log("Setting message rel"),
         Message.belongsTo(models.User, {
           as: 'user',
-          foreignKey: {
-            name: 'userid',
-            allowNull: true
-          },
+          foreignKey: 'userId',
           onDelete: 'CASCADE'
         }),
-        */
         Message.belongsTo(models.Lecture, {
           as: 'lecture',
-          foreignKey: 'id',
+          foreignKey: 'lectureId',
           onDelete: 'CASCADE'
         })
       }

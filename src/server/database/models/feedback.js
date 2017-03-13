@@ -20,12 +20,11 @@ module.exports = function (sequelize, DataTypes) {
     classMethods: {
 
       // Associations to other models
-      associate: function (models) {
-        
+      associate: function (models) {      
         Feedback.belongsTo(models.Lecture, {
-          foreignKey: {
-            allowNull: true
-          }
+          as: 'lecture',
+          foreignKey: 'lectureId',
+          onDelete: 'CASCADE'
         })
         
       }

@@ -35,24 +35,8 @@ module.exports = {
   getLastTen (lecture) {
     return Message.findAll({
       where: {
-        '$lecture.id$': lecture.name
+        lectureId: lecture.id
       },
-      include: [{
-        model: Lecture,
-        as: 'lecture'
-        /*
-        where: {
-          lecture: lecture.id
-        }*/
-      }],
-      /*
-      where: {
-        'Lecture.name': lecture
-      },
-      include: [
-        {model: Lecture, as: Lecture.tableName}
-      ],
-      */
       order: '"time" DESC',
       limit: 10
     })
@@ -60,10 +44,9 @@ module.exports = {
 
   // Get all to a specific lecture
   getAllToLecture (lecture) {
-    console.log("LectureId: ", lecture.id)
     return Message.findAll({
       where: {
-        lecture: lecture.id
+        lectureId: lecture.id
       }
     })
   },

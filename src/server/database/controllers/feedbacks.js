@@ -28,15 +28,12 @@ module.exports = {
   getLastIntervalNeg (lecture) {
     return Feedback.count({
       where: {
-        'Lecture.name': lecture.name,
+        lectureId: lecture.id,
         // TODO: just use createdAt?
         time: {
             // Set to 5 * MIN
           $between: [new Date(new Date() - 5 * MIN), new Date()]
         },
-        include: [
-          {model: Lecture, as: Lecture.tableName}
-        ],
         value: -1
       }
     })
@@ -45,16 +42,13 @@ module.exports = {
   // For last 5 min
   getLastIntervalPos (lecture) {
     return Feedback.count({
-      where: {
-        'Lecture.name': lecture.name,
+     where: {
+        lectureId: lecture.id,
         // TODO: just use createdAt?
         time: {
           // Set to 5 * MIN
           $between: [new Date(new Date() - 5 * MIN), new Date()]
         },
-        include: [
-          {model: Lecture, as: Lecture.tableName}
-        ],
         value: 1
       }
     })
