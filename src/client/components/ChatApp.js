@@ -19,7 +19,7 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         paddingTop: 0,
-        height: 'auto',
+        height: '100%',
     },
     element: {
         display: 'flex',

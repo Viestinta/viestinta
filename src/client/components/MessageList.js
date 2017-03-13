@@ -25,11 +25,11 @@ const styles = {
   },
 
   child: {
-    minHeight: 'auto',
+    height: 500,
     width: '100%',
 
-    padding: 10,
-    margin: 5,
+    padding: 0,
+    margin: 0,
     textAlign: 'left',
   },
 };
@@ -86,7 +86,7 @@ export default class MessageList extends Component {
 
     return (
       <Paper zDepth={3} style={styles.parent}>
-        <List>
+        <List style={styles.child}>
           {list}
         </List>
       </Paper>
