@@ -200,9 +200,8 @@ io.sockets.on('connection', function (socket) {
     messagesController.create(msg).then(function (result) {
       //result.setUser(socket.user)
       result.setLecture(socket.lecture)
-    })
-
-    io.sockets.emit('receive-message', msg)
+      io.sockets.emit('receive-message', result)
+    }) 
   })
 
   // When somebody gives feedback
@@ -213,9 +212,8 @@ io.sockets.on('connection', function (socket) {
     }).then(function (result) {
       // Create association between feedback and lecture
       result.setLecture(socket.lecture)
+      io.sockets.emit('receive-feedback', result)
     })
-    console.log('[app] new-feedback: after')
-    io.sockets.emit('receive-feedback', feedback)
   })
 
   // Called every x minuts
