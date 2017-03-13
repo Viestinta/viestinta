@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import socket from '../../server/socket'
 import Paper from 'material-ui/Paper';
+import {List} from 'material-ui/List';
 
 import Message from './Message'
 
@@ -85,7 +86,9 @@ export default class MessageList extends Component {
 
     return (
       <Paper zDepth={3} style={styles.parent}>
-        {list}
+        <List>
+          {list}
+        </List>
       </Paper>
     )
   }
