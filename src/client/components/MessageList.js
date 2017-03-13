@@ -18,7 +18,7 @@ const styles = {
     height:     '100%',
 
     marginTop: 10,
-    padding: 15,
+    paddingRight: 20,
 
     overflowY: 'auto',
     minHeight: 0,

@@ -9,15 +9,23 @@ const styles = {
 		minHeight: 'auto',
 		width: '100%',
 
-		padding: 10,
-		margin: 5,
+		padding: '0px',
+		margin: '10px',
 		textAlign: 'left',
 	},
+  listItem: {
+    paddingTop: '20px',
+    paddingSide: '10px',
+    paddingBottom: '10px',
+
+    borderRadius: '2px',
+  },
   time: {
     fontSize: '13px',
     lineHeight: '13px',
     height: '18px',
     textAlign: 'left',
+    marginTop: '20px',
   },
 }
 
