@@ -34,7 +34,8 @@ export default class FeedbackMenu extends Component {
 
   componentDidMount () {
     // Activate button every x min
-    this.interval = setInterval(this.activateButtons, 5 * 6000)
+    // TODO: set to 5 x 6000 after testing
+    this.interval = setInterval(this.activateButtons, 3000)
   }
 
   activateButtons () {
