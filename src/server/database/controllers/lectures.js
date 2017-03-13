@@ -1,6 +1,7 @@
 // Controller for Lecture model
 
 var Lecture = require('../models/index').Lecture
+var Message = require('../models/index').Message
 
 module.exports = {
 
@@ -80,6 +81,18 @@ module.exports = {
       where: {
         name: name
       }
+    })
+  },
+
+  getAllMessages (lecture) {
+    return Lecture.findAll({
+      where: {
+        id: lecture.id
+      },
+      include: [
+      {
+        model: Message, as: 'messages'
+      }]
     })
   }
 }

@@ -1,5 +1,7 @@
 const Feedback = require('../models/index').Feedback
 
+const Lecture = require('../models/index').Lecture
+
 // Controller for Feedback model
 
 const MIN = 60000
@@ -26,7 +28,7 @@ module.exports = {
   getLastIntervalNeg (lecture) {
     return Feedback.count({
       where: {
-        'Lecture.name': lecture,
+        'Lecture.name': lecture.name,
         // TODO: just use createdAt?
         time: {
             // Set to 5 * MIN
@@ -44,7 +46,7 @@ module.exports = {
   getLastIntervalPos (lecture) {
     return Feedback.count({
       where: {
-        'Lecture.name': lecture,
+        'Lecture.name': lecture.name,
         // TODO: just use createdAt?
         time: {
           // Set to 5 * MIN

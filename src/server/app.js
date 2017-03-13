@@ -145,15 +145,19 @@ io.sockets.on('connection', function (socket) {
 
       console.log("Before getting feedback")
       // Get feedback status for last x min
+      /*
       feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
         feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
           socket.emit('update-feedback-interval', [resultNeg, resultPos])
         })
       })
-
+      */
       console.log("Before getting messages")
       // Get last 10 messages
-      messagesController.getLastTen(lecture).then(function (result) {
+      // TODO: change back to lastTen
+      messagesController.getAllToLecture(lecture).then(function (result) {
+      //lecturesController.getAllMessages('TDT4145-1').then(function(result) {
+        console.log("Last ten messages: ", result)
         socket.emit('last-ten-messages', result.reverse())
       })
     })

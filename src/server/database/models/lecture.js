@@ -40,18 +40,17 @@ module.exports = function (sequelize, DataTypes) {
         //Lecture has a set of messages
         /*
         Lecture.hasMany(models.Message, {
-          as: 'Messages'
+          as: 'messages'
         })
-        */
-        //Lecture has a set of feedbacks
-        /*
+        */        
+        //Lecture has a set of feedbacks 
         Lecture.hasMany(models.Feedback, {
           onDelete: 'CASCADE',
           foreignKey: {
             allowNull: true
           }
         })
-        */
+        
         //Admin for lecture
         /*
         Lecture.belongsTo(models.User, {

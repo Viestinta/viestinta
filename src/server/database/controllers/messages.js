@@ -1,6 +1,7 @@
 // Controller for Message model
 
-var Message = require('../models/index').Message
+const Message = require('../models/index').Message
+const Lecture = require('../models/index').Lecture
 
 module.exports = {
 
@@ -34,11 +35,24 @@ module.exports = {
   getLastTen (lecture) {
     return Message.findAll({
       where: {
+        '$lecture.id$': lecture.name
+      },
+      include: [{
+        model: Lecture,
+        as: 'lecture'
+        /*
+        where: {
+          lecture: lecture.id
+        }*/
+      }],
+      /*
+      where: {
         'Lecture.name': lecture
       },
       include: [
         {model: Lecture, as: Lecture.tableName}
       ],
+      */
       order: '"time" DESC',
       limit: 10
     })
@@ -46,17 +60,11 @@ module.exports = {
 
   // Get all to a specific lecture
   getAllToLecture (lecture) {
+    console.log("LectureId: ", lecture.id)
     return Message.findAll({
       where: {
-        'Lecture.name': lecture
-      },
-      include: [
-        {model: Lecture, 
-          where: {
-            name: lecture.name
-          }
-        }
-      ]
+        lecture: lecture.id
+      }
     })
   },
 
