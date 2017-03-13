@@ -2,38 +2,66 @@
 var pg = require('pg')
 delete pg.native
 
-var User = require('./models/').User
-var Lecture = require('./models/').Lecture
-var Message = require('./models/').Message
 var assert = require('assert')
-var db = require('./models/index')
+var db = require('../../server/database/models/index')
 
 // Test for database message creation
 describe('Test suite: Message create', function () {
   
-  db[Message].create({
-    text: 'Hello world'
-  }).then(function (message) {
-    it('Text to Message object in database is identical to text set', function (done) {
-      assert.equal(message.text, 'Hello world')
-      done()
-    })
+	describe('Database creation for message: Hello World', function () {
+  
+	  it('Text in Message object in database is identical to "Hello world"', function (done) {
+		  db['Message'].create({
+		    text: 'Hello world'
+		  }).then(function (message) {
+		    assert.equal(message.text, 'Hello world')
+		  	done()
+				message.destroy()
+		  })
+		})
+	})
 
-    it('Date to Message object in database is now', function (done) {
-      assert.equal(message.time, new Date())
-      done()
-    })
+  var hours = new Date().getHours()
+	  if (hours < 10) {
+	    hours = '0' + hours
+	  }else{
 
-    db[Lecture].create({}).then( function (lecture) {
+	  }
+	  var mins = new Date().getMinutes()
+	  if (mins < 10) {
+	    mins = '0' + mins
+	  }
 
-      message.setLecture(lecture)
+	describe('Get formatted time from message model: ' + hours + ':' + mins, function () {
+	  
+		it('Date to Message object in database is correct' , function (done) {
+		  db['Message'].create({
+		    text: 'Hello world'
+		  }).then(function (message) {	
+			  assert.equal(message.time, hours + ":" + mins)
+			  done()
+			  message.destroy()
+		  })
+		})
+	})
 
-      it('Lecture to Message object in database is lecture set', function (done) {
-        assert.equal(message.lectureId, lecture.id)
-        done()
-      })
-    })
+	// TODO: failing
+	describe('Set lecture to message: ' + hours + ':' + mins, function () {
+		it('Lecture to Message object in database is lecture set', function (done) {
+		
+	    db['Message'].create({
+		    text: 'Hello world'
+		  }).then(function (message) {
+				db['Lecture'].create({}).then( function (lecture) {
+		      message.setLecture(lecture)
+			  	assert.equal(message.lectureId, lecture.id)
+		      done()
+		      message.destroy()
+		    })
+			})
+		})  
+  })
 
-    message.destroy()
-  }
+  // TODO: set user to message
+
 })

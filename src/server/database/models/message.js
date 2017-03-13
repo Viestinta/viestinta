@@ -48,9 +48,6 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     classMethods: {
           
-      associate: function (models) {
-
-      /*
       assosiate: function(models) {
         Message.belongsTo(models.User, {
           as: 'user',

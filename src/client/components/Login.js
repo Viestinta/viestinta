@@ -1,6 +1,5 @@
 import React, {Component } from 'react'
 import socket from '../socket'
-import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
 export default class Login extends Component {
