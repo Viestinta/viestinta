@@ -4,6 +4,12 @@ import FlatButton from 'material-ui/FlatButton';
 import ActionSchedule from 'material-ui/svg-icons/action/schedule';
 import {ListItem} from 'material-ui/List';
 
+import {grey400} from 'material-ui/styles/colors';
+import IconButton from 'material-ui/IconButton';
+import ActionThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+
 const styles = {
 	container: {
 		minHeight: 'auto',
@@ -29,6 +35,23 @@ const styles = {
   },
 }
 
+const iconButtonElement = (
+  <IconButton
+    touch={true}
+    tooltip="stem"
+    tooltipPosition="bottom-left"
+  >
+    <ActionThumbsUpDown color={grey400} />
+  </IconButton>
+);
+
+const rightIconMenu = (
+  <IconMenu iconButtonElement={iconButtonElement}>
+    <MenuItem>Stem opp</MenuItem>
+    <MenuItem>Stem ned</MenuItem>
+  </IconMenu>
+);
+
 export default class Message extends React.Component {
   render () {
     const timestamp = (
@@ -45,6 +68,7 @@ export default class Message extends React.Component {
           style={styles.listItem}
           primaryText={this.props.text}
           secondaryText={timestamp}
+          rightIconButton={rightIconMenu}
         />
     	</Paper>
     )
