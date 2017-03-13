@@ -1,6 +1,3 @@
-/**
- * Created by jacob on 20.02.17.
- */
 // Hack for pg issues
 var pg = require('pg')
 delete pg.native
@@ -67,26 +64,56 @@ describe('Test suite: User create', function () {
   test2Array.forEach(function (arrElement, callback) {
     describe('Database test for name: ' + arrElement[0] + ' ' + arrElement[1], function () {
       it('Name to User object in database is identical to name generated', function (done) {
-                // Access database and create the user if it doesn't exist
+        // Access database and create the user if it doesn't exist
         db['User']
-                    .findOrCreate({
-                      where: {firstName: arrElement[0], lastName: arrElement[1]},
-                      attributes: ['id', 'firstName', 'lastName']
-                    })
+          .findOrCreate({
+            where: {firstName: arrElement[0], lastName: arrElement[1]},
+            attributes: ['id', 'firstName', 'lastName']
+          })
 
-                    // Then compare that user's variables to the variables given
-                    .spread(function (user, created) {
-                      assert.equal(
-                        arrElement[0] + ' ' + arrElement[1],
-                        user.firstName + ' ' + user.lastName
-                    )
+          // Then compare that user's variables to the variables given
+          .spread(function (user, created) {
+            assert.equal(
+              arrElement[0] + ' ' + arrElement[1],
+              user.firstName + ' ' + user.lastName
+          )
 
-                    // Delete the user from the database
-                      user.destroy()
-                      done()
-                    })
+          // Delete the user from the database
+            user.destroy()
+            done()
+          })
       })
     })
   })
+})
+
+// Test for database message creation
+describe('Test suite: Message create', function () {
+  
+  db[Message].create({
+    text: 'Hello world'
+  }).then(function (message) {
+    it('Text to Message object in database is identical to text set', function (done) {
+      assert.equal(message.text, 'Hello world')
+      done()
+    })
+
+    it('Date to Message object in database is now', function (done) {
+      assert.equal(message.time, new Date())
+      done()
+    })
+
+    db[Lecture].create({}).then( function (lecture) {
+
+      message.setLecture(lecture)
+
+      it('Lecture to Message object in database is lecture set', function (done) {
+        assert.equal(message.lectureId, lecture.id)
+        done()
+      })
+    })
+
+    message.destroy()
+  }
 })
 

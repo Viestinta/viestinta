@@ -22,7 +22,6 @@ module.exports = function (sequelize, DataTypes) {
       // Associations to other models
       associate: function (models) {      
         Feedback.belongsTo(models.Lecture, {
-          as: 'lecture',
           foreignKey: 'lectureId',
           onDelete: 'CASCADE'
         })
