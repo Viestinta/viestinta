@@ -1,0 +1,13 @@
+
+{
+  "http": {
+  "port": 8000
+  },
+    "dataporten": {
+    "issuerHost": "https://auth.dataporten.no/",
+    "client_id": "",
+    "client_secret": "",
+    "redirect_uri": "http://localhost:8000/callback",
+    "scope": "groups longterm openid userid email profile userid-feide"
+  }
+}

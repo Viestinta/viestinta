@@ -1,58 +1,67 @@
 import React, { Component } from 'react'
+import socket from '../../server/socket'
 
+// Theme
+import {deepOrange500} from 'material-ui/styles/colors'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
+// Components
 import ChatBox from './ChatBox'
-import ChatField from './ChatField'
+import MessageList from './MessageList'
 import Header from './Header'
 import Login from './Login'
+import FeedbackBox from './FeedbackBox'
+
+const styles = {
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingTop: 0,
+        height: 'auto',
+    },
+    element: {
+        display: 'flex',
+    }
+};
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: '#ec7c2f', // Orange
+    accent1Color:  '#2daae4', // Blue
+  }
+})
 
 export default class ChatApp extends Component {
     // At beginning there is no msg and the text-field is empty
   constructor (props) {
     super(props)
-    this.state = {
-      messages: [],
-      text: '',
-      socket: io.connect()
-    }
-
-    this.sendMessage = this.sendMessage.bind(this)
-    this.join = this.join.bind(this)
-    this.receiveMessage = this.receiveMessage.bind(this)
   }
 
   componentDidMount () {
-    this.state.socket.on('join', this.join)
-    this.state.socket.on('send-message', this.sendMessage)
-    this.state.socket.on('receive-message', this.receiveMessage)
+    socket.on('join', this.join)
   }
 
   join () {
     console.log('join')
-    this.state.socket.emit('join', 'Hello world from client')
-  }
-
-  receiveMessage (msg) {
-    console.log('receiveMessage: ', msg.text)
-    this.state.messages.push(msg)
-    this.setState({ messages: this.state.messages })
-  }
-
-  // When a message is submitted
-  sendMessage (msg) {
-    console.log('sendMessage: ', msg.text)
-    this.state.socket.emit('new-message', msg)
+    socket.emit('join', 'Hello world from client')
   }
 
   render () {
     return (
-      <div id='content'>
-        <Header />
-        <Login />
-        <ChatField
-          messages={this.state.messages} />
-        <ChatBox
-          sendMessage={this.sendMessage} />
-      </div>
+        <MuiThemeProvider muiTheme={muiTheme}>
+          <div style={styles.container}>
+            <Header />
+            <Login />
+            {/* List of messages */}
+            <MessageList />
+            {/* Inputfield for user */}
+            <ChatBox />
+            {/* Sidebar with feedback-options */}
+            <FeedbackBox />
+          </div>
+        </MuiThemeProvider>
     )
   }
 }
