@@ -1,6 +1,37 @@
 import React, { Component } from 'react'
 import socket from '../socket'
+import Paper from 'material-ui/Paper';
+
 import Message from './Message'
+
+const styles = {
+
+  parent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+
+    maxWidth:   500,
+    maxHeight:  400,
+    width:      '100%',
+    height:     '100%',
+
+    marginTop: 10,
+    padding: 15,
+
+    overflowY: 'auto',
+    minHeight: 0,
+  },
+
+  child: {
+    minHeight: 'auto',
+    width: '100%',
+
+    padding: 10,
+    margin: 5,
+    textAlign: 'left',
+  },
+};
 
 export default class MessageList extends Component {
 
@@ -53,9 +84,9 @@ export default class MessageList extends Component {
     })
 
     return (
-      <ul>
+      <Paper zDepth={3} style={styles.parent}>
         {list}
-      </ul>
+      </Paper>
     )
   }
 

@@ -42,4 +42,6 @@ module.exports = (app) => {
   app.use('/', express.static(path.join(__dirname, '../static')))
   app.use('/css', express.static(path.join(__dirname, '../static/css')))
   app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
+
+  // Related to database
 }

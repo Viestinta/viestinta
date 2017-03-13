@@ -16,11 +16,11 @@ services:
 
   nodejs:
     build: .
-    image: nodetest:viestinta
+    image: node:viestinta
     container_name: viestinta_node
     depends_on:
       - postgres
-    command: bash -c "./wait-for-postgres.sh -- && ./node_modules/.bin/webpack && npm start"
+    command: bash -c "npm install && ./node_modules/.bin/webpack && sleep 5 && npm start"
 
     links:
       - postgres

@@ -12,18 +12,16 @@ const Sequelize = require('sequelize')
 
 const basename = path.basename(module.filename)
 const env = process.env.NODE_ENV || 'development'
-const config = require(path.join(__dirname, '/../config/config.js'))[env]
+
 let db = {}
 
-var sequelize = new Sequelize(process.env['DATABASE_URL'])
-
-/*if (config.use_env_variable) {
-  var sequelize = new Sequelize(process.env[config.use_env_variable])
-} else {
-  var sequelize = new Sequelize(config.database, config.username, config.password, config)
+if (process.env['DATABASE_URL']) {
+  var options = {}
+  if (process.env.NODE_ENV == "test"){
+    options = {logging: false}
+  }
+  var sequelize = new Sequelize(process.env['DATABASE_URL'], options)
 }
-*/
-
 
 fs
   .readdirSync(__dirname)
@@ -52,12 +50,6 @@ sequelize
     .catch(function (err) {
       console.log('Unable to connect to the database:', err)
     })
-/*
-function logExceptOnTest(string) {
-    if (process.env.NODE_ENV !== 'test') {
-        console.log(string);
-    }
-}
-*/
+
 module.exports = db
 

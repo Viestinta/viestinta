@@ -16,13 +16,16 @@ module.exports = function (sequelize, DataTypes) {
         var hours = date.getHours()
         if (date.getHours() < 10) {
           hours = '0' + date.getHours()
+        }else{
+
         }
         var mins = date.getMinutes()
         if (date.getMinutes() < 10) {
           mins = '0' + date.getMinutes()
         }
-        return hours + ':' + mins
+        return hours + ":" + mins
       }
+
     },
     text: {
       type: DataTypes.STRING,
@@ -44,10 +47,11 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     classMethods: {
-
           
       associate: function (models) {
-        console.log("Setting message rel"),
+
+      /*
+      assosiate: function(models) {
         Message.belongsTo(models.User, {
           as: 'user',
           foreignKey: 'userId',

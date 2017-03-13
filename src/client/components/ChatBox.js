@@ -1,21 +1,32 @@
 import React, { Component } from 'react'
 import socket from '../socket'
 
-import RaisedButton from 'material-ui/RaisedButton'
+import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import {deepOrange500} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+const styles = {
+    parent: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
 
+        maxWidth: 500,
+        width: '100%',
+        height: 80,
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
+        marginTop: 10,
+        padding: 10,
+    },
+    textField: {
+        width: '100%',
+        marginRight: 5,
+    },
+    btn: {
 
-
-const muiTheme = getMuiTheme({
-  palette: {
-    accent1Color: deepOrange500,
-  }
-})
+    },
+};
 
 // Text input field
 export default class ChatBox extends Component {
@@ -63,16 +74,23 @@ export default class ChatBox extends Component {
 
   render () {
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <div id='chat-box col-lg-6'>
-          <h3>Ny melding</h3>
-          <input
-            onChange={this.changeHandler}
-            value={this.state.text}
+        <Paper zDepth={3} style={styles.parent}>
+            <TextField
+                style={styles.textField}
+                hintText='Skriv ny melding her.'
+                multiLine={true}
+                rows={1}
+                rowsMax={2}
+                onChange={this.changeHandler}
+                value={this.state.text}                
+            />    
+            <RaisedButton
+                style={styles.btn}
+                primary={true}
+                label='Send'
+                onTouchTap={this.sendMessage}
             />
-          <RaisedButton type='submit' onTouchTap={this.sendMessage} label="Send" />
-        </div>
-      </MuiThemeProvider>
+        </Paper>
     )
   }
 }

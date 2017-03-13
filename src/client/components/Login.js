@@ -1,5 +1,7 @@
 import React, {Component } from 'react'
 import socket from '../socket'
+import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class Login extends Component {
   
@@ -19,12 +21,14 @@ export default class Login extends Component {
 
   render () {
     return (
-      <div id='login'>
-        <form action="">
-          <button type='btn btn-submit' value='Log In' onClick={this.login}>
-            Log In
-          </button>
-        </form>
+      <div>
+        <RaisedButton
+            backgroundColor="#be1527"
+            labelColor="#ffffff"
+            href="/login"
+            label="Logg inn"
+            icon={<img src="images/feide_100px_white.png" style={{width: 20, height: 'auto'}}/>}
+        />
       </div>
     )
   }
