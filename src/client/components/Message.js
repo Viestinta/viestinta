@@ -81,6 +81,12 @@ export default class Message extends React.Component {
         <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.voteDown}>Stem ned</MenuItem>
       </IconMenu>
     )
+    const voteMenu = (
+      <IconMenu iconButtonElement={iconButtonElement} style={{display: 'flex', selfAlign: 'flex-end'}}>
+        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.voteUp}>Stem opp</MenuItem>
+        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.voteDown}>Stem ned</MenuItem>
+      </IconMenu>
+    )
     const timestamp = (
       <FlatButton 
         style={styles.time}
@@ -89,12 +95,19 @@ export default class Message extends React.Component {
         icon={<ActionSchedule style={{width: '18px', height: '18px', margin: '0px'}}/>}
       />
     )
+    const footer = (
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: '24px'}}>
+        <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
+        <p>{this.props.time}</p>
+        {voteMenu}
+      </div>
+    )
     return (
     	<Paper zDepth={3} style={styles.container}>
     		<ListItem
           style={styles.listItem}
           primaryText={this.props.text}
-          secondaryText={timestamp}
+          secondaryText={footer}
           rightIconButton={rightIconMenu}
         />
     	</Paper>

@@ -20,7 +20,7 @@ services:
     container_name: viestinta_node
     depends_on:
       - postgres
-    command: bash -c "npm install && ./node_modules/.bin/webpack && sleep 5 && npm start"
+    command: bash -c "npm install --no-bin-links && ./node_modules/.bin/webpack && sleep 5 && npm start"
 
     links:
       - postgres
