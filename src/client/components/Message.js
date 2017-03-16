@@ -45,15 +45,40 @@ const iconButtonElement = (
   </IconButton>
 );
 
-const rightIconMenu = (
-  <IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>Stem opp</MenuItem>
-    <MenuItem>Stem ned</MenuItem>
-  </IconMenu>
-);
 
 export default class Message extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      text: '',
+      voteEnabled: true
+    }
+
+    this.voteUp = this.voteUp.bind(this)
+    this.voteDown = this.voteDown.bind(this)
+  }
+
+  voteUp () {
+    console.log('Voted: up')
+    this.setState({
+      voteEnabled: false
+    })
+  }
+
+  voteDown () {
+    console.log('Voted: down')
+    this.setState({
+      voteEnabled: false
+    })
+  }
+
   render () {
+    const rightIconMenu = (
+      <IconMenu iconButtonElement={iconButtonElement}>
+        <MenuItem onTouchTap={this.voteUp}>Stem opp</MenuItem>
+        <MenuItem onTouchTap={this.voteDown}>Stem ned</MenuItem>
+      </IconMenu>
+    )
     const timestamp = (
       <FlatButton 
         style={styles.time}
