@@ -28,22 +28,25 @@ const styles = {
 
     borderRadius: '2px',
   },
-  time: {
-    fontSize: '13px',
-    lineHeight: '13px',
-    height: '18px',
-    textAlign: 'left',
+  footer: {
+    display: 'flex', 
+    flexDirection: 'row', 
+    justifyContent: 'flex-start', 
+    alignItems: 'center',
+
+    height: '24px',
     marginTop: '20px',
   },
 }
 
 const iconButtonElement = (
+const iconButtonVote = (
   <IconButton
     touch={true}
     tooltip="stem"
     tooltipPosition="bottom-left"
   >
-    <ActionThumbsUpDown color={grey400} />
+    <ActionThumbsUpDown/>
   </IconButton>
 );
 
@@ -82,21 +85,13 @@ export default class Message extends React.Component {
       </IconMenu>
     )
     const voteMenu = (
-      <IconMenu iconButtonElement={iconButtonElement} style={{display: 'flex', selfAlign: 'flex-end'}}>
-        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.voteUp}>Stem opp</MenuItem>
-        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.voteDown}>Stem ned</MenuItem>
+      <IconMenu iconButtonElement={iconButtonVote} style={{selfAlign: 'flex-end'}}>
+        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp}>Stem opp</MenuItem>
+        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown}>Stem ned</MenuItem>
       </IconMenu>
     )
-    const timestamp = (
-      <FlatButton 
-        style={styles.time}
-        label={<span style={{fontSize: '12px'}}>{this.props.time}</span>}
-        disabled={true}
-        icon={<ActionSchedule style={{width: '18px', height: '18px', margin: '0px'}}/>}
-      />
-    )
     const footer = (
-      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: '24px'}}>
+      <div style={styles.footer}>
         <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
         <p>{this.props.time}</p>
         {voteMenu}
