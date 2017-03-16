@@ -49,10 +49,14 @@ export default class FeedbackMenu extends Component {
 
   render () {
     return (
-        <div id='feedbackMenuBar'>
-          <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
-          <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
-        </div>
+      <div id='feedbackMenuBar'>
+        <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
+        <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
+      </div>
     )
   }
+}
+
+FeedbackMenu.propTypes = {
+  onClick: React.PropTypes.func
 }

@@ -17,7 +17,7 @@ let db = {}
 
 if (process.env['DATABASE_URL']) {
   var options = {}
-  if (process.env.NODE_ENV == "test"){
+  if (process.env.NODE_ENV === 'test') {
     options = {logging: false}
   }
   var sequelize = new Sequelize(process.env['DATABASE_URL'], options)

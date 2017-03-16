@@ -209,14 +209,12 @@ io.sockets.on('connection', function (socket) {
 
   // When a new message is sendt from somebody
   socket.on('new-voting-message', function (id, value) {
-    console.log('[app] new-message: ' + msg)
+    console.log('[app] new-voting-message: ' + value)
     messagesController.vote({
       msgId: id,
       value: value
     }).then(function (result) {
-      // result.setUser(socket.user)
-      result.setLecture(socket.lecture)
-      io.sockets.emit('receive-message', result)
+      io.sockets.emit('updated-message', result)
     })
   })
 

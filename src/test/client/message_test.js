@@ -10,6 +10,12 @@ import ChatBox from '../../client/components/ChatBox'
 
 const should = require('should')
 
+var socketURL = 'http://127.0.0.1:8000'
+
+var options = {
+  transports: ['websocket'],
+  'force new connection': true
+}
 
 // Create Message component
 describe('MessageComponent', function () {
@@ -23,17 +29,17 @@ describe('MessageComponent', function () {
 
 // Send message
 describe('SendMessage', function () {
-
   // Create a message instance
   const chatBox = render(<ChatBox text='Hello world' />)
 
-  // Send to app.js trought 
-  chatBox.sendMessage()
+  it('Should be able to send message', function () {
+    // Send to app.js trought
+    chatBox.sendMessage()
+  })
 
-  // Receive message in app.js
+  it('Should be able to receive message in app.js', function () {
 
-  //
-  
+  })
 })
 
 // Receive message

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import socket from '../socket'
-import Paper from 'material-ui/Paper';
+import Paper from 'material-ui/Paper'
 
 import Message from './Message'
 
@@ -11,16 +11,16 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
 
-    maxWidth:   500,
-    maxHeight:  400,
-    width:      '100%',
-    height:     '100%',
+    maxWidth: 500,
+    maxHeight: 400,
+    width: '100%',
+    height: '100%',
 
     marginTop: 10,
     padding: 15,
 
     overflowY: 'auto',
-    minHeight: 0,
+    minHeight: 0
   },
 
   child: {
@@ -29,9 +29,9 @@ const styles = {
 
     padding: 10,
     margin: 5,
-    textAlign: 'left',
-  },
-};
+    textAlign: 'left'
+  }
+}
 
 export default class MessageList extends Component {
 
@@ -71,9 +71,6 @@ export default class MessageList extends Component {
       console.log('Looping trought messages in messageList')
 
       var time = message.time
-      // console.log('Date: ', date)
-      // var time = date.format('dd.MM.yyyy HH:mm')
-      // console.log('Time: ', time)
       return (
         <Message
           key={i}
