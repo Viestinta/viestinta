@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import socket from '../../server/socket'
 
 // Theme
-import {deepOrange500} from 'material-ui/styles/colors'
+import {orange800} from 'material-ui/styles/colors'
+import {blue500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -28,8 +29,8 @@ const styles = {
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: '#ec7c2f', // Orange
-    accent1Color:  '#2daae4', // Blue
+    primary1Color: orange800,
+    accent1Color:  blue500,
   }
 })
 
