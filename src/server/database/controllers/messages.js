@@ -60,5 +60,15 @@ module.exports = {
           as: 'message'
         }]
       })
+  },
+
+  vote (req) {
+    var msg = Message.findById(req.id).then(function (result) {
+      if (req.value === -1) {
+        msg.votesDown ++
+      } else {
+        msg.votesUp ++
+      }
+    })
   }
 }

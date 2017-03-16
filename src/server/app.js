@@ -19,11 +19,10 @@ const path = require('path')
 const PDStrategy = require('passport-openid-connect').Strategy
 // const User = require('passport-openid-connect').User
 
-const router = require('./routes') 
+const router = require('./routes')
 // ///////////////////////////////////////////////////
 // Initial Server Setup
 // ///////////////////////////////////////////////////
-
 
 nconf.argv()
   .env('__')
@@ -73,10 +72,10 @@ app.use(passport.session())
 router(app)
 
 server.listen(app.get('port'), (err) => {
-    if (err) throw err
-    console.log('Node app is running on port', app.get('port'))
-  })
-if (process.env.NODE_ENV !== "test"){
+  if (err) throw err
+  console.log('Node app is running on port', app.get('port'))
+})
+if (process.env.NODE_ENV !== 'test') {
   server.listen(app.get('port'), (err) => {
     if (err) throw err
     console.log('Node app is running on port', app.get('port'))
@@ -101,7 +100,6 @@ const lecturesController = require('./database/controllers').lectures
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
 
-
 // Create tables, and drop them if they allready exists (force: true)
 user.sync().then(function () {
   return user.create({
@@ -124,7 +122,6 @@ lecture.sync().then(function () {
   lecture.create({
     name: 'TDT4140-3'
   })
-
 })
 
 // Create a connection
@@ -139,36 +136,35 @@ io.sockets.on('connection', function (socket) {
   socket.on('login', function (data) {
     console.log('[app] login')
     // Set user
-    //socket.set('user', user)
-    
+    // socket.set('user', user)
+
     usersController.retriveByName('Pekka').then(function (user) {
-      console.log("User: ", user.name)
+      console.log('User: ', user.name)
       // Save user in socket-connection
       socket.user = user
     })
 
-    // Hardcoding to choose a lecture 
+    // Hardcoding to choose a lecture
     lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
-      console.log("Lecture: ", lecture.name)
+      console.log('Lecture: ', lecture.name)
       // Save lecture in socket-connection
       socket.lecture = lecture
 
-      console.log("Before getting feedback")
+      console.log('Before getting feedback')
       // Get feedback status for last x min
-      
+
       feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
         feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
           socket.emit('update-feedback-interval', [resultNeg, resultPos])
         })
       })
-      
-      console.log("Before getting messages")
+
+      console.log('Before getting messages')
       // Get all messages to that lecture
       messagesController.getAllToLecture(lecture).then(function (result) {
         socket.emit('last-ten-messages', result.reverse())
       })
     })
-    
   })
 
   socket.on('create-lecture', function (lecture) {
@@ -205,10 +201,23 @@ io.sockets.on('connection', function (socket) {
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg)
     messagesController.create(msg).then(function (result) {
-      //result.setUser(socket.user)
+      // result.setUser(socket.user)
       result.setLecture(socket.lecture)
       io.sockets.emit('receive-message', result)
-    }) 
+    })
+  })
+
+  // When a new message is sendt from somebody
+  socket.on('new-voting-message', function (id, value) {
+    console.log('[app] new-message: ' + msg)
+    messagesController.vote({
+      msgId: id,
+      value: value
+    }).then(function (result) {
+      // result.setUser(socket.user)
+      result.setLecture(socket.lecture)
+      io.sockets.emit('receive-message', result)
+    })
   })
 
   // When somebody gives feedback
