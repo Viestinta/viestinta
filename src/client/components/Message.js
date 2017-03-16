@@ -59,18 +59,18 @@ export default class Message extends React.Component {
       voteEnabled: true
     }
 
-    this.voteUp = this.voteUp.bind(this)
-    this.voteDown = this.voteDown.bind(this)
+    this.handleVoteUp = this.handleVoteUp.bind(this)
+    this.handleVoteDown = this.handleVoteDown.bind(this)
   }
 
-  voteUp () {
+  handleVoteUp () {
     console.log('Voted: up')
     this.setState({
       voteEnabled: false
     })
   }
 
-  voteDown () {
+  handleVoteDown () {
     console.log('Voted: down')
     this.setState({
       voteEnabled: false
