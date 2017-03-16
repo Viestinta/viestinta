@@ -5,6 +5,7 @@ import ActionSchedule from 'material-ui/svg-icons/action/schedule';
 import {ListItem} from 'material-ui/List';
 
 import {grey400} from 'material-ui/styles/colors';
+import {orange800} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ActionThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
@@ -60,13 +61,22 @@ const iconButtonVote = (
   </IconButton>
 );
 
+const iconVoteUp = (
+  <ActionThumbUp color={orange800} style={{margin: '12px'}}/>
+);
+
+const iconVoteDown = (
+  <ActionThumbDown color={orange800} style={{margin: '12px'}}/> 
+);
+
 
 export default class Message extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       text: '',
-      voteEnabled: true
+      voteEnabled: true,
+      voteUp: true,
     }
 
     this.handleVoteUp = this.handleVoteUp.bind(this)
@@ -75,15 +85,18 @@ export default class Message extends React.Component {
 
   handleVoteUp () {
     console.log('Voted: up')
+    /* TODO: Send vote up to database*/
     this.setState({
-      voteEnabled: false
+      voteEnabled: false,
     })
   }
 
   handleVoteDown () {
     console.log('Voted: down')
+    /* TODO: Send vote up to database*/
     this.setState({
-      voteEnabled: false
+      voteEnabled: false,
+      voteUp: false,
     })
   }
 
@@ -104,7 +117,7 @@ export default class Message extends React.Component {
       <div style={styles.footer}>
         <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
         <p>{this.props.time}</p>
-        {voteMenu}
+        {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
       </div>
     )
     return (
