@@ -6,6 +6,7 @@ import {ListItem} from 'material-ui/List';
 
 import {grey400} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ActionThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
@@ -39,7 +40,16 @@ const styles = {
   },
 }
 
-const iconButtonElement = (
+const iconButtonMore = (
+  <IconButton
+    touch={true}
+    tooltip="mer"
+    tooltipPosition="bottom-left"
+  >
+    <MoreVertIcon color={grey400} />
+  </IconButton>
+);
+
 const iconButtonVote = (
   <IconButton
     touch={true}
@@ -79,9 +89,9 @@ export default class Message extends React.Component {
 
   render () {
     const rightIconMenu = (
-      <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.voteUp}>Stem opp</MenuItem>
-        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.voteDown}>Stem ned</MenuItem>
+      <IconMenu iconButtonElement={iconButtonMore}>
+        <MenuItem>Lagre</MenuItem>
+        <MenuItem>Slett</MenuItem>
       </IconMenu>
     )
     const voteMenu = (
