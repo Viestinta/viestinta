@@ -13,6 +13,7 @@ import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import Snackbar from 'material-ui/Snackbar';
 
 const styles = {
 	container: {
@@ -77,10 +78,13 @@ export default class Message extends React.Component {
       text: '',
       voteEnabled: true,
       voteUp: true,
+      open: false,
+      actionInfo: '',
     }
 
     this.handleVoteUp = this.handleVoteUp.bind(this)
     this.handleVoteDown = this.handleVoteDown.bind(this)
+    this.handleRequestClose = this.handleRequestClose.bind(this)
   }
 
   handleVoteUp () {
@@ -88,6 +92,8 @@ export default class Message extends React.Component {
     /* TODO: Send vote up to database*/
     this.setState({
       voteEnabled: false,
+      open: true,
+      actionInfo: 'Stemte melding opp.'
     })
   }
 
@@ -97,6 +103,14 @@ export default class Message extends React.Component {
     this.setState({
       voteEnabled: false,
       voteUp: false,
+      open: true,
+      actionInfo: 'Stemte melding ned.'
+    })
+  }
+
+  handleRequestClose () {
+    this.setState({
+      open: false
     })
   }
 
@@ -127,6 +141,13 @@ export default class Message extends React.Component {
           primaryText={this.props.text}
           secondaryText={footer}
           rightIconButton={rightIconMenu}
+        />
+        <Snackbar
+          style={{textAlign: 'center'}}
+          open={this.state.open}
+          message={this.state.actionInfo}
+          autoHideDuration={2000}
+          onRequestClose={this.handleRequestClose}
         />
     	</Paper>
     )
