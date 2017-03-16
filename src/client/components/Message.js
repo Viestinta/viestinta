@@ -7,6 +7,8 @@ import {ListItem} from 'material-ui/List';
 import {grey400} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import ActionThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
+import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
+import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
@@ -75,8 +77,8 @@ export default class Message extends React.Component {
   render () {
     const rightIconMenu = (
       <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem onTouchTap={this.voteUp}>Stem opp</MenuItem>
-        <MenuItem onTouchTap={this.voteDown}>Stem ned</MenuItem>
+        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.voteUp}>Stem opp</MenuItem>
+        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.voteDown}>Stem ned</MenuItem>
       </IconMenu>
     )
     const timestamp = (
