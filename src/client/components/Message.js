@@ -141,7 +141,6 @@ export default class Message extends React.Component {
           style={styles.listItem}
           primaryText={this.props.text}
           secondaryText={footer}
-          rightIconButton={rightIconMenu}
         />
         <Snackbar
           style={{textAlign: 'center'}}
