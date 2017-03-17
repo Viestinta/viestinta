@@ -42,16 +42,6 @@ const styles = {
   },
 }
 
-const iconButtonMore = (
-  <IconButton
-    touch={true}
-    tooltip="mer"
-    tooltipPosition="bottom-left"
-  >
-    <MoreVertIcon color={grey400} />
-  </IconButton>
-);
-
 const iconButtonVote = (
   <IconButton
     touch={true}
@@ -70,6 +60,16 @@ const iconVoteDown = (
   <ActionThumbDown color={orange800} style={{margin: '12px'}}/> 
 );
 
+/* This icon is not yet in use */
+const iconButtonMore = (
+  <IconButton
+    touch={true}
+    tooltip="mer"
+    tooltipPosition="bottom-left"
+  >
+    <MoreVertIcon color={grey400} />
+  </IconButton>
+);
 
 export default class Message extends React.Component {
   constructor (props) {
@@ -115,12 +115,6 @@ export default class Message extends React.Component {
   }
 
   render () {
-    const rightIconMenu = (
-      <IconMenu iconButtonElement={iconButtonMore}>
-        <MenuItem>Lagre</MenuItem>
-        <MenuItem>Slett</MenuItem>
-      </IconMenu>
-    )
     const voteMenu = (
       <IconMenu iconButtonElement={iconButtonVote}>
         <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp}>Stem opp</MenuItem>
@@ -133,6 +127,13 @@ export default class Message extends React.Component {
         <p style={{flexBasis: '82%'}}>{this.props.time}</p>
         {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
       </div>
+    )
+    /* This menu is not yet in use */
+    const rightIconMenu = (
+      <IconMenu iconButtonElement={iconButtonMore}>
+        <MenuItem>Lagre</MenuItem>
+        <MenuItem>Slett</MenuItem>
+      </IconMenu>
     )
     return (
     	<Paper zDepth={3} style={styles.container}>
