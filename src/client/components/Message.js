@@ -34,7 +34,7 @@ const styles = {
   footer: {
     display: 'flex', 
     flexDirection: 'row', 
-    justifyContent: 'flex-start', 
+    justifyContent: 'space-between', 
     alignItems: 'center',
 
     height: '24px',
@@ -122,7 +122,7 @@ export default class Message extends React.Component {
       </IconMenu>
     )
     const voteMenu = (
-      <IconMenu iconButtonElement={iconButtonVote} style={{selfAlign: 'flex-end'}}>
+      <IconMenu iconButtonElement={iconButtonVote}>
         <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp}>Stem opp</MenuItem>
         <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown}>Stem ned</MenuItem>
       </IconMenu>
@@ -130,7 +130,7 @@ export default class Message extends React.Component {
     const footer = (
       <div style={styles.footer}>
         <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
-        <p>{this.props.time}</p>
+        <p style={{flexBasis: '82%'}}>{this.props.time}</p>
         {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
       </div>
     )
