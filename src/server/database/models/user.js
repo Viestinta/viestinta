@@ -5,7 +5,7 @@
 module.exports = function (sequelize, DataTypes) {
     // Definition of User attributes
 
-  const User = sequelize.define('User', {
+  var User = sequelize.define('User', {
     name: DataTypes.STRING,
     student_id: DataTypes.INTEGER,
     email: DataTypes.STRING,
