@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import socket from '../socket'
+import socket from '../../server/socket'
 import Paper from 'material-ui/Paper'
+import {List} from 'material-ui/List'
 
 import Message from './Message'
 
@@ -17,21 +18,21 @@ const styles = {
     height: '100%',
 
     marginTop: 10,
-    padding: 15,
+    paddingRight: 20,
 
     overflowY: 'auto',
     minHeight: 0
   },
 
   child: {
-    minHeight: 'auto',
+    height: 500,
     width: '100%',
 
-    padding: 10,
-    margin: 5,
+    padding: 0,
+    margin: 0,
     textAlign: 'left'
   }
-}
+};
 
 export default class MessageList extends Component {
 
@@ -82,7 +83,9 @@ export default class MessageList extends Component {
 
     return (
       <Paper zDepth={3} style={styles.parent}>
-        {list}
+        <List style={styles.child}>
+          {list}
+        </List>
       </Paper>
     )
   }

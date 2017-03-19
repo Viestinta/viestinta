@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import socket from '../socket'
 
 // Theme
-import { deepOrange500 } from 'material-ui/styles/colors'
+import {orange800} from 'material-ui/styles/colors'
+import {blue500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -14,22 +15,22 @@ import Login from './Login'
 import FeedbackBox from './FeedbackBox'
 
 const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: 0,
-    height: 'auto'
-  },
-  element: {
-    display: 'flex'
-  }
-}
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingTop: 0,
+        height: '100%'
+    },
+    element: {
+        display: 'flex'
+    }
+};
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: '#ec7c2f', // Orange
-    accent1Color: '#2daae4' // Blue
+    primary1Color: orange800,
+    accent1Color:  blue500
   }
 })
 
