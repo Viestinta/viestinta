@@ -71,10 +71,6 @@ app.use(passport.session())
 
 router(app)
 
-server.listen(app.get('port'), (err) => {
-  if (err) throw err
-  console.log('Node app is running on port', app.get('port'))
-})
 if (process.env.NODE_ENV !== 'test') {
   server.listen(app.get('port'), (err) => {
     if (err) throw err
