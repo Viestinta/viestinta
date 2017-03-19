@@ -279,3 +279,17 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('update-feedback-interval')
   })
 })
+
+
+// ///////////////////////////////////////////////////
+// Routing
+// ///////////////////////////////////////////////////
+
+router(app)
+
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(app.get('port'), (err) => {
+    if (err) throw err
+    console.log('Node app is running on port', app.get('port'))
+  })
+}
