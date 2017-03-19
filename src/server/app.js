@@ -97,6 +97,15 @@ const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
 
 // Create tables, and drop them if they allready exists (force: true)
+lecture.sync().then(function () {
+  lecture.create({
+    name: 'TDT4145-1'
+  }),
+  lecture.create({
+    name: 'TDT4140-3'
+  })
+})
+
 user.sync().then(function () {
   return user.create({
     name: 'Pekka'
@@ -111,14 +120,7 @@ feedback.sync().then(function () {
 
 })
 
-lecture.sync().then(function () {
-  lecture.create({
-    name: 'TDT4145-1'
-  }),
-  lecture.create({
-    name: 'TDT4140-3'
-  })
-})
+
 
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
