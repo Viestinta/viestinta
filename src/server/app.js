@@ -97,6 +97,13 @@ const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
 
 // Create tables, and drop them if they allready exists (force: true)
+
+user.sync().then(function () {
+  return user.create({
+    name: 'Pekka'
+  })
+})
+
 lecture.sync().then(function () {
   lecture.create({
     name: 'TDT4145-1'
@@ -106,11 +113,7 @@ lecture.sync().then(function () {
   })
 })
 
-user.sync().then(function () {
-  return user.create({
-    name: 'Pekka'
-  })
-})
+
 
 message.sync().then(function () {
 
