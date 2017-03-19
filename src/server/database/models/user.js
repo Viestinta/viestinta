@@ -19,11 +19,6 @@ module.exports = function (sequelize, DataTypes) {
 
         // Associations to other models
       associate: function (models) {
-        
-        User.hasMany(models.Message, {
-          foreignKey: 'messageId'
-        })
-        
       }
     }
   })
