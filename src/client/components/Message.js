@@ -37,6 +37,6 @@ export default class Message extends React.Component {
 }
 
 // Defines the proptypes it needs
-Messages.propTypes = {
+Message.propTypes = {
   text: React.PropTypes.string
 }
