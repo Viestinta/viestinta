@@ -43,13 +43,22 @@ db.sequelize = sequelize
 db.Sequelize = Sequelize
 
 sequelize
-    .authenticate()
-    .then(function (auth) {
-      console.log('Connection has been established successfully.')
-    })
-    .catch(function (err) {
-      console.log('Unable to connect to the database:', err)
-    })
+  .authenticate()
+  .then(function (auth) {
+    console.log('Connection has been established successfully.')
+  })
+  .catch(function (err) {
+    console.log('Unable to connect to the database:', err)
+  })
+
+
+sequelize
+  .sync({ force: true })
+  .then(function(err) {
+    console.log('It worked!');
+  }, function (err) {
+    console.log('An error occurred while creating the table:', err);
+  })
 
 module.exports = db
 

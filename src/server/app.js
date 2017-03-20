@@ -69,46 +69,9 @@ app.use(passport.session())
 // Routing
 // ///////////////////////////////////////////////////
 
-//router(app)
+router(app)
 
-module.exports = (app) => {
-  // Go to index.html
-  app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
-  app.get('/user', (req, res) => {
-    if (req.user) {
-      res.json({user: req.user})
-    } else {
-      res.status(404)
-    }
-  })
-
-  app.get('/connect', (req, res) => {
-    if (req.user) {
-      let userinfo = req.user.data
-      db['User'].findOrCreate({
-        where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
-      })
-      .spread(function (user, created) {
-        console.log(user)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-    } else {
-      res.status(403)
-    }
-  })
-
-  app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
-  app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
-
-  // To get static files
-  app.use('/', express.static(path.join(__dirname, '../static')))
-  app.use('/css', express.static(path.join(__dirname, '../static/css')))
-  app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
-
-  // Related to database
-}
+// Related to database
 
 if (process.env.NODE_ENV !== 'test') {
   server.listen(app.get('port'), (err) => {
@@ -135,33 +98,6 @@ const lecturesController = require('./database/controllers').lectures
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
 
-// Create tables, and drop them if they allready exists (force: true)
-
-user.sync({force: true}).then(function () {
-  return user.create({
-    name: 'Pekka'
-  })
-})
-
-lecture.sync({force: true}).then(function () {
-  lecture.create({
-    name: 'TDT4145-1'
-  }),
-  lecture.create({
-    name: 'TDT4140-3'
-  })
-})
-
-message.sync({force: true}).then(function () {
-
-})
-
-feedback.sync({force: true}).then(function () {
-
-})
-
-
-
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
 var io = require('socket.io')(server)
@@ -173,35 +109,49 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('login', function (data) {
     console.log('[app] login')
-    // Set user
-    // socket.set('user', user)
 
-    usersController.retriveByName('Pekka').then(function (user) {
-      console.log('User: ', user.name)
-      // Save user in socket-connection
-      socket.user = user
+    //Create test user
+    user.create({name: 'Pekka'})
+    .then(function () {
+      // Set user
+      // socket.set('user', user)
+      usersController.retriveByName('Pekka').then(function (user) {
+        console.log('User: ', user.name)
+        // Save user in socket-connection
+
+      })
     })
 
-    // Hardcoding to choose a lecture
-    lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
-      console.log('Lecture: ', lecture.name)
-      // Save lecture in socket-connection
-      socket.lecture = lecture
+    //Create test lecture
+    lecture.create({
+      name: 'TDT4145-1'
+    }).then(function () {
+      lecture.create({
+        name: 'TDT4140-3'
+      })
+    }).then(function () {
+      // Hardcoding to choose a lecture
+      lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
+        console.log('Lecture: ', lecture.name)
+        // Save lecture in socket-connection
+        socket.lecture = lecture
 
-      console.log('Before getting feedback')
-      // Get feedback status for last x min
+        console.log('Before getting feedback')
+        // Get feedback status for last x min
 
-      feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
-        feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
-          socket.emit('update-feedback-interval', [resultNeg, resultPos])
+        feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+          feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
+            socket.emit('update-feedback-interval', [resultNeg, resultPos])
+          })
+        })
+
+        console.log('Before getting messages')
+        // Get all messages to that lecture
+        messagesController.getAllToLecture(lecture).then(function (result) {
+          socket.emit('last-ten-messages', result.reverse())
         })
       })
 
-      console.log('Before getting messages')
-      // Get all messages to that lecture
-      messagesController.getAllToLecture(lecture).then(function (result) {
-        socket.emit('last-ten-messages', result.reverse())
-      })
     })
   })
 

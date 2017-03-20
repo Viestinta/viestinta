@@ -25,7 +25,7 @@ module.exports = (app) => {
         where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
       })
       .spread(function (user, created) {
-        console.log(user)
+        console.log("Created user:", user.name)
       })
       .catch((err) => {
         console.error(err)
