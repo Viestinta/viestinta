@@ -8,8 +8,11 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 
 const styles = {
 	img: {
-		maxHeight: '40px',
+		maxHeight: '40px'
 	},
+	appBar: {
+		backgroundColor: '#1565C0'
+	}
 };
 
 const logo = (
@@ -21,7 +24,7 @@ const logo = (
 const rightMenu = (
 	<IconMenu
 		iconButtonElement={
-		<IconButton><NavigationMenu /></IconButton>
+		<IconButton iconStyle={{fill: '#F8B133'}}><NavigationMenu/></IconButton>
 		}
 		targetOrigin={{horizontal: 'right', vertical: 'top'}}
 		anchorOrigin={{horizontal: 'right', vertical: 'top'}}
