@@ -49,11 +49,11 @@ module.exports = function (sequelize, DataTypes) {
     classMethods: {
 
       associate: function (models) {
-        Message.belongsTo(models.User, {
+        Message.belongsTo(models.Users, {
           foreignKey: 'userId',
           onDelete: 'CASCADE'
         }),
-        Message.belongsTo(models.Lecture, {
+        Message.belongsTo(models.Lectures, {
           foreignKey: 'lectureId',
           onDelete: 'CASCADE'
         })
