@@ -16,9 +16,8 @@ module.exports = function (sequelize, DataTypes) {
         var hours = date.getHours()
         if (date.getHours() < 10) {
           hours = '0' + date.getHours()
-        } else {
-
         }
+
         var mins = date.getMinutes()
         if (date.getMinutes() < 10) {
           mins = '0' + date.getMinutes()

@@ -1,9 +1,5 @@
 // Hack for pg issues
-var pg = require('pg')
-delete pg.native
-
 const path = require('path')
-const User = require('../../server/database/models/').User
 const assert = require('assert')
 const db = require('../../server/database/models/index')
 

@@ -46,18 +46,20 @@ sequelize
   .authenticate()
   .then(function (auth) {
     console.log('Connection has been established successfully.')
+  }).then(function () {
+  sequelize
+    .sync()
+    .then(function(err) {
+      console.log('Database sync complete')
+    }, function (err) {
+      console.log('An error occurred while creating the table:', err);
+    })
   })
   .catch(function (err) {
     console.log('Unable to connect to the database:', err)
   })
 
-sequelize
-  .sync({ force: true })
-  .then(function(err) {
-    console.log('It worked!');
-  }, function (err) {
-    console.log('An error occurred while creating the table:', err);
-  })
+
 
 module.exports = db
 
