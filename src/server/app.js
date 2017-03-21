@@ -19,10 +19,10 @@ const path = require('path')
 const PDStrategy = require('passport-openid-connect').Strategy
 // const User = require('passport-openid-connect').User
 
+const router = require('./routes')
 // ///////////////////////////////////////////////////
 // Initial Server Setup
 // ///////////////////////////////////////////////////
-
 
 nconf.argv()
   .env('__')
@@ -69,38 +69,11 @@ app.use(passport.session())
 // Routing
 // ///////////////////////////////////////////////////
 
-// URL-specifications
-// Go to index.html
-app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
-app.get('/user', (req, res) => {
-  if (req.user) {
-    res.json({user: req.user})
-  } else {
-    res.status(404)
-  }
-})
+router(app)
 
-app.get('/connect', (req, res) => {
-  if (req.user) {
-    let userinfo = req.user.data
-    db['User'].findOrCreate({
-      where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
-    })
-          .spread(function (user, created) {
-            console.log(user)
-          })
-        .catch((err) => {
-          console.error(err)
-        })
-  } else {
-    res.status(403)
-  }
-})
+// Related to database
 
-app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
-app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
-
-if (process.env.NODE_ENV !== "test"){
+if (process.env.NODE_ENV !== 'test') {
   server.listen(app.get('port'), (err) => {
     if (err) throw err
     console.log('Node app is running on port', app.get('port'))
@@ -116,55 +89,94 @@ if (process.env.NODE_ENV !== "test"){
 const db = require('./database/models/index')
 
 const user = db['User']
-const messageObj = db['Message']
-const feedbackObj = db['Feedback']
+const lecture = db['Lecture']
+const message = db['Message']
+const feedback = db['Feedback']
 
-const users = require('./database/controllers').users
+const usersController = require('./database/controllers').users
+const lecturesController = require('./database/controllers').lectures
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
-
-// Create tables, and drop them if they allready exists (force: true)
-user.sync({force: true}).then(function () {
-  return user.create({
-    name: 'Pekka Foreleser'
-  })
-})
-
-messageObj.sync().then(function () {
-})
-
-feedbackObj.sync().then(function () {
-
-})
 
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
 var io = require('socket.io')(server)
 
 // When a new user connects
-io.sockets.on('connect', function (socket) {
-  console.log('[app] connect')
-  // Get feedback status for last x min
-  feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
-    feedbacksController.getLastIntervalPos().then(function (resultPos) {
-      socket.emit('update-feedback-interval', [resultNeg, resultPos])
-    })
-  })
-  // Get last 10 messages
-  messagesController.getLastTen().then(function (result) {
-    socket.emit('last-ten-messages', result.reverse())
-  })
-})
-
-// Listen for connections
 io.sockets.on('connection', function (socket) {
   // Reports when it finds a connection
   console.log('[app] connection')
 
-  // Wait for a message from the client for 'join'
-  socket.on('join', function (data) {
-    console.log('[app] join')
-    socket.emit('messages', 'Hello from server')
+  socket.on('login', function (data) {
+    console.log('[app] login')
+
+    //Create test user
+    user.create({name: 'Pekka'})
+    .then(function () {
+      // Set user
+      // socket.set('user', user)
+      usersController.retriveByName('Pekka').then(function (user) {
+        console.log('User: ', user.name)
+        // Save user in socket-connection
+
+      })
+    })
+
+    //Create test lecture
+    lecture.create({
+      name: 'TDT4145-1'
+    }).then(function () {
+      lecture.create({
+        name: 'TDT4140-3'
+      })
+    }).then(function () {
+      // Hardcoding to choose a lecture
+      lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
+        console.log('Lecture: ', lecture.name)
+        // Save lecture in socket-connection
+        socket.lecture = lecture
+
+        console.log('Before getting feedback')
+        // Get feedback status for last x min
+
+        feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+          feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
+            socket.emit('update-feedback-interval', [resultNeg, resultPos])
+          })
+        })
+
+        console.log('Before getting messages')
+        // Get all messages to that lecture
+        messagesController.getAllToLecture(lecture).then(function (result) {
+          socket.emit('last-ten-messages', result.reverse())
+        })
+      })
+
+    })
+  })
+
+  socket.on('create-lecture', function (lecture) {
+    console.log('[app] create-lecture')
+
+    // TODO: missing
+  })
+
+  socket.on('choose-lecture', function (lecture) {
+    console.log('[app] choose-lecture')
+
+    lectures.Controller.retriveByName('TDT4145-1').then(function (result) {
+      socket.lecture = lecture
+      // Get feedback status for last x min
+      feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+        feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
+          socket.emit('update-feedback-interval', [resultNeg, resultPos])
+        })
+      })
+      // Get last 10 messages
+      messagesController.getLastTen(lecture).then(function (result) {
+        socket.emit('last-ten-messages', result.reverse())
+      })
+    })
   })
 
   // Wait for a message from the client for 'join'
@@ -176,9 +188,22 @@ io.sockets.on('connection', function (socket) {
   // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg)
-    messagesController.create(msg)
+    messagesController.create(msg).then(function (result) {
+      // result.setUser(socket.user)
+      result.setLecture(socket.lecture)
+      io.sockets.emit('receive-message', result)
+    })
+  })
 
-    io.sockets.emit('receive-message', msg)
+  // When a new message is sendt from somebody
+  socket.on('new-voting-message', function (id, value) {
+    console.log('[app] new-voting-message: ' + value)
+    messagesController.vote({
+      msgId: id,
+      value: value
+    }).then(function (result) {
+      io.sockets.emit('updated-message', result)
+    })
   })
 
   // When somebody gives feedback
@@ -186,9 +211,11 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] new-feedback: ' + feedback)
     feedbacksController.create({
       value: feedback
+    }).then(function (result) {
+      // Create association between feedback and lecture
+      result.setLecture(socket.lecture)
+      io.sockets.emit('receive-feedback', result)
     })
-    console.log('[app] new-feedback: after')
-    io.sockets.emit('receive-feedback', feedback)
   })
 
   // Called every x minuts
@@ -203,7 +230,16 @@ io.sockets.on('connection', function (socket) {
   })
 })
 
-// To get static files
-app.use('/', express.static(path.join(__dirname, '../static')))
-app.use('/css', express.static(path.join(__dirname, '../static/css')))
-app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
+
+// ///////////////////////////////////////////////////
+// Routing
+// ///////////////////////////////////////////////////
+
+router(app)
+
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(app.get('port'), (err) => {
+    if (err) throw err
+    console.log('Node app is running on port', app.get('port'))
+  })
+}

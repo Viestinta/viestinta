@@ -17,7 +17,7 @@ let db = {}
 
 if (process.env['DATABASE_URL']) {
   var options = {}
-  if (process.env.NODE_ENV == "test"){
+  if (process.env.NODE_ENV === 'test') {
     options = {logging: false}
   }
   var sequelize = new Sequelize(process.env['DATABASE_URL'], options)
@@ -43,13 +43,23 @@ db.sequelize = sequelize
 db.Sequelize = Sequelize
 
 sequelize
-    .authenticate()
-    .then(function (auth) {
-      console.log('Connection has been established successfully.')
+  .authenticate()
+  .then(function (auth) {
+    console.log('Connection has been established successfully.')
+  }).then(function () {
+  sequelize
+    .sync()
+    .then(function(err) {
+      console.log('Database sync complete')
+    }, function (err) {
+      console.log('An error occurred while creating the table:', err);
     })
-    .catch(function (err) {
-      console.log('Unable to connect to the database:', err)
-    })
+  })
+  .catch(function (err) {
+    console.log('Unable to connect to the database:', err)
+  })
+
+
 
 module.exports = db
 

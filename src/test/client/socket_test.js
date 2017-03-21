@@ -7,15 +7,6 @@ import { it, describe } from 'mocha'
 import Message from '../../client/components/Message'
 const should = require('should')
 
-describe('MessageComponent', function () {
-  // Create a message object
-  it('Should be able to create message component', function () {
-    const message = render(<Message text='Hello world' />)
-
-    assert.equal(message.text(), 'Hello world')
-  })
-})
-
 // Testing socket.io
 describe('Socket.io', function () {
   var socketURL = 'http://127.0.0.1:8000'

@@ -1,11 +1,11 @@
-  // URL-specifications
-
+const express = require('express')
 const path = require('path')
 const passport = require('passport')
+const db = require('./database/models/index')
 
-const userController = require('./controllers').user
-const messagesController = require('./controllers').messages
-const feedbacskCOntroller = require('./controllers').feedbacks
+// ///////////////////////////////////////////////////
+// Routing
+// ///////////////////////////////////////////////////
 
 module.exports = (app) => {
   // Go to index.html
@@ -24,12 +24,12 @@ module.exports = (app) => {
       db['User'].findOrCreate({
         where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
       })
-            .spread(function (user, created) {
-              console.log(user)
-            })
-          .catch((err) => {
-            console.error(err)
-          })
+      .spread(function (user, created) {
+        console.log("Created user:", user.name)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
     } else {
       res.status(403)
     }
@@ -38,6 +38,10 @@ module.exports = (app) => {
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
+  // To get static files
+  app.use('/', express.static(path.join(__dirname, '../static')))
+  app.use('/css', express.static(path.join(__dirname, '../static/css')))
+  app.use('/icons', express.static(path.join(__dirname, '../static/icons')))
+
   // Related to database
-  app.post('/', messages)
 }

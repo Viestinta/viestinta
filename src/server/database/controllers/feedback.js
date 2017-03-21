@@ -1,5 +1,7 @@
 const Feedback = require('../models/index').Feedback
 
+const Lecture = require('../models/index').Lecture
+
 // Controller for Feedback model
 
 const MIN = 60000
@@ -9,10 +11,7 @@ module.exports = {
   // Create a new Feedback using model.create()
   create (req) {
     return Feedback.create({
-      value: req.value
-    })
-    .then(function (newFeedback) {
-      console.log('New feedback created with value', newFeedback.value)
+      value: req.value,
     })
   },
 
@@ -26,30 +25,30 @@ module.exports = {
   },
 
   // For last 5 min
-  getLastIntervalNeg () {
+  getLastIntervalNeg (lecture) {
     return Feedback.count({
       where: {
+        lectureId: lecture.id,
         // TODO: just use createdAt?
         time: {
             // Set to 5 * MIN
           $between: [new Date(new Date() - 5 * MIN), new Date()]
         },
-
         value: -1
       }
     })
   },
 
   // For last 5 min
-  getLastIntervalPos () {
+  getLastIntervalPos (lecture) {
     return Feedback.count({
-      where: {
+     where: {
+        lectureId: lecture.id,
         // TODO: just use createdAt?
         time: {
           // Set to 5 * MIN
           $between: [new Date(new Date() - 5 * MIN), new Date()]
         },
-
         value: 1
       }
     })
@@ -57,21 +56,16 @@ module.exports = {
 
   getAll () {
     return Feedback.findAll()
-      .then(function (result) {
-        console.log(result)
-      })
   },
 
-  getAllLecture (req) {
-    Feedback.findAll({
+  getAllToLecture (req) {
+    return Feedback.findAll({
       where: {
-        // TODO: just use createdAt?
-        time: {
+        createdAt: {
           $between: [new Date(), new Date(new Date() - 120 * MIN)]
         }
+        // TODO connect to lecture
       }
-    }).then(function (result) {
-      console.log(result.count)
     })
   },
 
@@ -79,7 +73,7 @@ module.exports = {
   delete (req) {
     Feedback.destroy({
       where: {
-        id: req.params.id
+        id: req.id
       }
     })
   }

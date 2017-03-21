@@ -1,5 +1,5 @@
+// Hack for pg issues
 const path = require('path')
-const User = require('../../server/database/models/').User
 const assert = require('assert')
 const db = require('../../server/database/models/index')
 
@@ -46,60 +46,3 @@ describe('Test suite 1: User model', function () {
     })
   })
 })
-
-
-/**TEST 2 MESSAGE MODEL**/
-
-var testString = testStringGenerator(30, s)
-
-var testTime = "07:04"
-var testDate = new Date()
-testDate.setHours(7)
-testDate.setMinutes(4)
-
-describe('Test suite 2: Message model', function () {
-
-  /**
-   * @description Test for create message
-   */
-  describe('Database creation for message: ' + testString, function () {
-    it('Text in Message object in database is identical to testString', function (done) {
-      // Access database and create the message if it doesn't exist
-      db['Message']
-        .findOrCreate({
-          where: {text: testString},
-          attributes: ['text']
-        })
-        // Then compare that messages's variables to the variables given
-
-        .spread(function (message, created) {
-          assert.equal(testString, message.text)
-          message.destroy()
-          done()
-        })
-    })
-  })
-  /**
-   * @description Test for message get time
-   */
-  describe('Get formatted time from message model: ' + testTime, function () {
-    it('Get function returns string identical to testTime', function (done) {
-      db['Message']
-        .findOrCreate({
-         where: {
-           text:testString,
-           time:testDate
-         },
-         attributes: ['time']
-      })
-      // Then compare that messages's variables to the variables given
-
-        .spread(function (message, created) {
-          assert.equal(testTime, message.get('time'))
-          message.destroy()
-          done()
-        })
-    })
-  })
-})
-
