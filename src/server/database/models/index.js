@@ -51,7 +51,6 @@ sequelize
     console.log('Unable to connect to the database:', err)
   })
 
-
 sequelize
   .sync({ force: true })
   .then(function(err) {
