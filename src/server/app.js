@@ -20,9 +20,11 @@ const PDStrategy = require('passport-openid-connect').Strategy
 // const User = require('passport-openid-connect').User
 
 const router = require('./routes')
+
 // ///////////////////////////////////////////////////
 // Initial Server Setup
 // ///////////////////////////////////////////////////
+
 
 nconf.argv()
   .env('__')
@@ -40,6 +42,7 @@ nconf.argv()
     }
   })
 
+
 const app = express()
 const server = require('http').createServer(app)
 
@@ -50,11 +53,30 @@ app.set('port', 8000)
 app.use(cookieparser())
 app.use(bodyparser.urlencoded({extended: true}))
 app.use(bodyparser.json())
-app.use(session({
+
+
+// ///////////////////////////////////////////////////
+// ExpressJS session setup
+// ///////////////////////////////////////////////////
+
+var sess = {
   secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
   resave: false,
-  saveUninitialized: false
-}))
+  saveUninitialized: false,
+  cookie: {}
+}
+
+//Enable secure cookies for production env, using HTTPS
+if (app.get('env') === 'production') {
+  sess.cookie.secure = true
+}
+
+app.use(session(sess))
+
+
+// ///////////////////////////////////////////////////
+// Passport/Dataporten setup
+// ///////////////////////////////////////////////////
 
 var pd = new PDStrategy(nconf.get('dataporten'))
 
@@ -65,14 +87,14 @@ passport.deserializeUser(PDStrategy.deserializeUser)
 app.use(passport.initialize())
 app.use(passport.session())
 
+
 // ///////////////////////////////////////////////////
 // Routing
 // ///////////////////////////////////////////////////
 
 router(app)
 
-// Related to database
-
+// Prevent NodeJS container from locking into listen when running in test env
 if (process.env.NODE_ENV !== 'test') {
   server.listen(app.get('port'), (err) => {
     if (err) throw err
@@ -80,11 +102,10 @@ if (process.env.NODE_ENV !== 'test') {
   })
 }
 
-// ///////////////////////////////////////////////////
-// Setup for database
-// ///////////////////////////////////////////////////
 
-// TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
+// ///////////////////////////////////////////////////
+// SocketIO setup
+// ///////////////////////////////////////////////////
 
 const db = require('./database/models/index')
 
@@ -229,17 +250,3 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('update-feedback-interval')
   })
 })
-
-
-// ///////////////////////////////////////////////////
-// Routing
-// ///////////////////////////////////////////////////
-
-router(app)
-
-if (process.env.NODE_ENV !== 'test') {
-  server.listen(app.get('port'), (err) => {
-    if (err) throw err
-    console.log('Node app is running on port', app.get('port'))
-  })
-}
