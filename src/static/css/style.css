@@ -10,13 +10,11 @@ body {
     height: 100%;
 
     background-repeat: no-repeat;
-
-    background-color: #E0E0E0;
     /* Maximum browser support */
-    /*background: -webkit-gradient(linear, center top, center bottom, from(#2DAAE4), to(#15729E));
-    background: -webkit-linear-gradient(#2DAAE4, #15729E);
-    background: -moz-linear-gradient(#2DAAE4, #15729E);
-    background: -o-linear-gradient(#2DAAE4, #15729E);
-    background: -ms-linear-gradient(#2DAAE4, #15729E);
-    background: linear-gradient(#2DAAE4, #15729E);*/    
+    background: -webkit-gradient(linear, center top, center bottom, from(#64b5f6), to(#1976D2));
+    background: -webkit-linear-gradient(#64b5f6, #1976D2);
+    background: -moz-linear-gradient(#64b5f6, #1976D2);
+    background: -o-linear-gradient(#64b5f6, #1976D2);
+    background: -ms-linear-gradient(#64b5f6, #1976D2);
+    background: linear-gradient(#64b5f6, #1976D2);    
 }
