@@ -7,18 +7,20 @@
 // Include Statments
 // ///////////////////////////////////////////////////
 
+
 const express = require('express')
 const passport = require('passport')
 const bodyparser = require('body-parser')
 const cookieparser = require('cookie-parser')
+
 const session = require('express-session')
-// const morgan = require('morgan')
+const redis = require("redis").createClient('6379', 'redis')
+const RedisStore = require("connect-redis")(session)
+
 const nconf = require('nconf')
-
 const path = require('path')
-const PDStrategy = require('passport-openid-connect').Strategy
-// const User = require('passport-openid-connect').User
 
+const PDStrategy = require('passport-openid-connect').Strategy
 const router = require('./routes')
 
 // ///////////////////////////////////////////////////
@@ -44,6 +46,7 @@ nconf.argv()
 
 
 const app = express()
+
 const server = require('http').createServer(app)
 
 app.set('view options', { pretty: true })
@@ -56,13 +59,14 @@ app.use(bodyparser.json())
 
 
 // ///////////////////////////////////////////////////
-// ExpressJS session setup
+// Redis and ExpressJS session setup
 // ///////////////////////////////////////////////////
 
 var sess = {
   secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
+  store: new RedisStore({ host: 'redis', port: 6379, client: redis }),
   cookie: {}
 }
 
@@ -70,6 +74,10 @@ var sess = {
 if (app.get('env') === 'production') {
   sess.cookie.secure = true
 }
+
+redis.on('connect', function () {
+  console.log("Redis connected")
+})
 
 app.use(session(sess))
 
@@ -104,7 +112,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 
 // ///////////////////////////////////////////////////
-// SocketIO setup
+// Setup for SocketIO
 // ///////////////////////////////////////////////////
 
 const db = require('./database/models/index')
@@ -250,3 +258,7 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('update-feedback-interval')
   })
 })
+
+
+module.exports = redis
+

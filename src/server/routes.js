@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const passport = require('passport')
 const db = require('./database/models/index')
+const redis = require('../server/app.js')
 
 // ///////////////////////////////////////////////////
 // Routing
@@ -9,7 +10,14 @@ const db = require('./database/models/index')
 
 module.exports = (app) => {
   // Go to index.html
-  app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
+  app.get('/', (req, res) => {
+    if(req.user){
+      req.session.user = req.user
+      console.log("Session" + req.session)
+    }
+
+    res.sendFile(path.resolve(__dirname, '../client/index.html'))
+  })
   app.get('/user', (req, res) => {
     if (req.user) {
       res.status(200)
@@ -17,10 +25,14 @@ module.exports = (app) => {
     } else {
       res.status(404)
     }
+    redis.get('"sess:' + req.session.id + '"', function(err, result){
+      console.log("Get session: " + util.inspect(result,{ showHidden: true, depth: null }));
+    });
   })
 
   app.get('/connect', (req, res) => {
     if (req.user) {
+      req.session.user = req.user
       let userinfo = req.user.data
       db['User'].findOrCreate({
         where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}

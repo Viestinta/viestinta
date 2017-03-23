@@ -16,7 +16,7 @@ const env = process.env.NODE_ENV || 'development'
 let db = {}
 
 if (process.env['DATABASE_URL']) {
-  var options = {}
+  var options = {loggin: false}
   if (process.env.NODE_ENV === 'test') {
     options = {logging: false}
   }
