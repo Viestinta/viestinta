@@ -35,7 +35,7 @@ module.exports = {
   getLastTen (lecture) {
     return Message.findAll({
       where: {
-        lectureId: lecture.id
+        LectureId: lecture.id
       },
       order: '"time" DESC',
       limit: 10
@@ -46,7 +46,7 @@ module.exports = {
   getAllToLecture (lecture) {
     return Message.findAll({
       where: {
-        lectureId: lecture.id
+        LectureId: lecture.id
       }
     })
   },
@@ -54,7 +54,7 @@ module.exports = {
   // Retrive an existing Message by the unique ID
   retrieve (req) {
     return Message
-      .findById(req.params.messageId, {
+      .findById(req.params.MessageId, {
         include: [{
           model: Message,
           as: 'message'

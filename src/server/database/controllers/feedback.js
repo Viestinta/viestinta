@@ -28,7 +28,7 @@ module.exports = {
   getLastIntervalNeg (lecture) {
     return Feedback.count({
       where: {
-        lectureId: lecture.id,
+        LectureId: lecture.id,
         // TODO: just use createdAt?
         time: {
             // Set to 5 * MIN
@@ -43,7 +43,7 @@ module.exports = {
   getLastIntervalPos (lecture) {
     return Feedback.count({
      where: {
-        lectureId: lecture.id,
+        LectureId: lecture.id,
         // TODO: just use createdAt?
         time: {
           // Set to 5 * MIN
