@@ -46,7 +46,10 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     classMethods: {
-
+      /**
+       * @description Associations to User model and Lecture model
+       * @param models
+       */
       associate: function (models) {
         Message.belongsTo(models.User, {
           onDelete: 'CASCADE'

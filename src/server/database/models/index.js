@@ -4,8 +4,8 @@
 // Setup for Sequalize connection
 // ///////////////////////////////////////////////////
 
-// exports db object with all relevant references to models
 
+// Constants declarations
 const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
@@ -13,16 +13,23 @@ const Sequelize = require('sequelize')
 const basename = path.basename(module.filename)
 const env = process.env.NODE_ENV || 'development'
 
+
+// Dictionary to store references to the models
 let db = {}
 
+//Use the DATABASE_URL String in the environment to connect to the database if it exists
 if (process.env['DATABASE_URL']) {
   var options = {}
+
+  //Disable logging while testing
   if (process.env.NODE_ENV === 'test') {
     options = {logging: false}
   }
+
   var sequelize = new Sequelize(process.env['DATABASE_URL'], options)
 }
 
+//Adds all models to the database dictionary, "db"
 fs
   .readdirSync(__dirname)
   .filter(function (file) {
@@ -42,6 +49,7 @@ Object.keys(db).forEach(function (modelName) {
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
+//Sequelize authenticates with the database and syncs if it's successful.
 sequelize
   .authenticate()
   .then(function (auth) {
@@ -61,5 +69,6 @@ sequelize
 
 
 
+// exports db object with all relevant references to models
 module.exports = db
 

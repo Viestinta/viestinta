@@ -95,6 +95,7 @@ app.use(passport.session())
 router(app)
 
 // Prevent NodeJS container from locking into listen when running in test env
+
 if (process.env.NODE_ENV !== 'test') {
   server.listen(app.get('port'), (err) => {
     if (err) throw err
