@@ -57,7 +57,7 @@ export default class ChatApp extends Component {
         <MuiThemeProvider muiTheme={muiTheme}>
           <div style={styles.container}>
             <Header />
-            {/*<Login />*/}
+            <Login />
             {/* List of messages */}
             <MessageList />
             {/* Inputfield for user */}
