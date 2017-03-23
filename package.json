@@ -34,6 +34,7 @@
   },
   "homepage": "https://viestinta.eu",
   "dependencies": {
+    "axios": "^0.15.3",
     "babel": "^6.23.0",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.3.2",
@@ -59,6 +60,7 @@
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "react": "^15.4.2",
+    "react-axios": "0.0.9",
     "react-dom": "^15.4.2",
     "react-tap-event-plugin": "^2.0.1",
     "sequelize": "^3.30.2",

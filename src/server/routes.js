@@ -12,7 +12,8 @@ module.exports = (app) => {
   app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
   app.get('/user', (req, res) => {
     if (req.user) {
-      res.json({user: req.user})
+      res.status(200)
+      res.json({user: req.user.data})
     } else {
       res.status(404)
     }
@@ -34,7 +35,10 @@ module.exports = (app) => {
       res.status(403)
     }
   })
-
+  app.get('/logout', (req, res) => {
+    req.user = undefined
+    res.redirect('https://auth.dataporten.no/logout')
+  })
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 
