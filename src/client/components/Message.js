@@ -1,19 +1,19 @@
-import React from 'react';
-import Paper from 'material-ui/Paper';
-import FlatButton from 'material-ui/FlatButton';
-import ActionSchedule from 'material-ui/svg-icons/action/schedule';
-import {ListItem} from 'material-ui/List';
+import React from 'react'
+import Paper from 'material-ui/Paper'
+import FlatButton from 'material-ui/FlatButton'
+import ActionSchedule from 'material-ui/svg-icons/action/schedule'
+import {ListItem} from 'material-ui/List'
 
-import {grey400} from 'material-ui/styles/colors';
-import {orange800} from 'material-ui/styles/colors';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import ActionThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
-import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
-import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import Snackbar from 'material-ui/Snackbar';
+import {grey400} from 'material-ui/styles/colors'
+import {orange800} from 'material-ui/styles/colors'
+import IconButton from 'material-ui/IconButton'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import ActionThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down'
+import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up'
+import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import Snackbar from 'material-ui/Snackbar'
 
 const styles = {
 	container: {
@@ -22,14 +22,14 @@ const styles = {
 
 		padding: '0px',
 		margin: '10px',
-		textAlign: 'left',
+		textAlign: 'left'
 	},
   listItem: {
     paddingTop: '20px',
     paddingSide: '10px',
     paddingBottom: '10px',
 
-    borderRadius: '2px',
+    borderRadius: '2px'
   },
   footer: {
     display: 'flex', 
@@ -38,8 +38,8 @@ const styles = {
     alignItems: 'center',
 
     height: '24px',
-    marginTop: '20px',
-  },
+    marginTop: '20px'
+  }
 }
 
 const iconButtonVote = (
@@ -149,11 +149,12 @@ export default class Message extends React.Component {
           autoHideDuration={2000}
           onRequestClose={this.handleRequestClose}
         />
-    	</Paper>
+      </Paper>
     )
   }
 }
 
+// Defines the proptypes it needs
 Message.propTypes = {
   text: React.PropTypes.string
 }

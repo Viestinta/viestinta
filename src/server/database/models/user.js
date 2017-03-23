@@ -19,13 +19,6 @@ module.exports = function (sequelize, DataTypes) {
 
         // Associations to other models
       associate: function (models) {
-            // associations can be defined here
-      },
-
-      getterMethods: {
-      },
-
-      setterMethods: {
       }
     }
   })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import socket from '../../server/socket'
+import socket from '../socket'
 
 export default class FeedbackWindow extends Component {
 
@@ -36,10 +36,10 @@ export default class FeedbackWindow extends Component {
   }
 
   receiveFeedback (feedback) {
-    console.log('Setting feedback')
+    console.log('Setting feedback:', feedback)
     var feedbackList = this.state.feedback
-    if (feedback === -1) {
-      feedbackList[0] = feedbackList[0] - 1
+    if (feedback.value === -1) {
+      feedbackList[0] = feedbackList[0] + 1
     } else {
       feedbackList[1] = feedbackList[1] + 1
     }
@@ -64,4 +64,10 @@ export default class FeedbackWindow extends Component {
       </div>
     )
   }
+}
+
+FeedbackWindow.propTypes = {
+  slow: React.PropTypes.number,
+  fast: React.PropTypes.number,
+  updateFeedbackInterval: React.PropTypes.func
 }

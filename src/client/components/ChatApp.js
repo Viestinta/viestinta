@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import socket from '../../server/socket'
+import socket from '../socket'
 
 // Theme
 import {orange800} from 'material-ui/styles/colors'
@@ -20,17 +20,17 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         paddingTop: 0,
-        height: '100%',
+        height: '100%'
     },
     element: {
-        display: 'flex',
+        display: 'flex'
     }
 };
 
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: orange800,
-    accent1Color:  blue500,
+    accent1Color:  blue500
   }
 })
 
@@ -38,15 +38,18 @@ export default class ChatApp extends Component {
     // At beginning there is no msg and the text-field is empty
   constructor (props) {
     super(props)
+
+    this.login = this.login.bind(this)
   }
 
   componentDidMount () {
-    socket.on('join', this.join)
+    this.login()
   }
 
-  join () {
-    console.log('join')
-    socket.emit('join', 'Hello world from client')
+  login () {
+    console.log('[ChatApp] login')
+    socket.emit('login')
+    console.log('[ChatApp] afterLogin')
   }
 
   render () {

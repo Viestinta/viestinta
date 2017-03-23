@@ -1,6 +1,7 @@
 // Controller for Message model
 
-var Message = require('../models/index').Message
+const Message = require('../models/index').Message
+const Lecture = require('../models/index').Lecture
 
 module.exports = {
 
@@ -16,7 +17,7 @@ module.exports = {
   update (req) {
     return Message.update(req.body, {
       where: {
-        id: req.params.id
+        id: req.id
       }
     })
   },
@@ -25,16 +26,28 @@ module.exports = {
   delete (req) {
     Message.destroy({
       where: {
-        id: req.params.id
+        id: req.id
       }
     })
   },
 
   // Get last 10
-  getLastTen (req) {
-    return Message.all({
+  getLastTen (lecture) {
+    return Message.findAll({
+      where: {
+        lectureId: lecture.id
+      },
       order: '"time" DESC',
       limit: 10
+    })
+  },
+
+  // Get all to a specific lecture
+  getAllToLecture (lecture) {
+    return Message.findAll({
+      where: {
+        lectureId: lecture.id
+      }
     })
   },
 
@@ -47,5 +60,15 @@ module.exports = {
           as: 'message'
         }]
       })
+  },
+
+  vote (req) {
+    var msg = Message.findById(req.id).then(function (result) {
+      if (req.value === -1) {
+        msg.votesDown ++
+      } else {
+        msg.votesUp ++
+      }
+    })
   }
 }

@@ -32,3 +32,4 @@ services:
       NODE_ENV: test
     tty: true
     stdin_open: true
+
