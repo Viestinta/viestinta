@@ -62,9 +62,9 @@ export default class ChatApp extends Component {
           {/* List of messages */}
           <MessageList />
           {/* Inputfield for user */}
-          <ChatBox />
           {/* Sidebar with feedback-options */}
           <FeedbackBox />
+          <ChatBox />
         </div>
       </MuiThemeProvider>
 
