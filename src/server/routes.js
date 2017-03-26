@@ -45,9 +45,44 @@ module.exports = (app) => {
       res.status(403)
     }
   })
+
+  app.get('/lectures', (req,res) => {
+    //TODO: Possible to connect to Redis instead of database for better performance
+
+    /*db['Lecture'].create({
+      startDate: new Date(),
+      endDate: new Date(),
+      name: "TestLecture1",
+      isActive: true
+    }).then(function (data) {
+      db['Lecture'].create({
+        startDate: new Date(),
+        endDate: new Date(),
+        name: "TestLecture2",
+        isActive: true
+      }).then(function () {*/
+        if (req.user) {
+          db['Lecture'].findAll({
+            raw: true,
+            where: {
+              isActive: true
+            }
+          }).then(function (lectures) {
+            console.log("Found active lectures: ", lectures)
+            res.status(200)
+            res.json(lectures)
+          })
+        }
+  //    })
+
+    //})
+
+  })
+
   app.get('/logout', (req, res) => {
     req.user = undefined
     res.redirect('https://auth.dataporten.no/logout')
+
   })
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))

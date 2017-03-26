@@ -30,7 +30,11 @@ const rightMenu = (
 		anchorOrigin={{horizontal: 'right', vertical: 'top'}}
 	>
 		<MenuItem primaryText="Hjelp" />
-		<MenuItem primaryText="Logg ut" rightIcon={<img src="images/feide_32px.png" style={{width: '24px', height: 'auto'}}/>}/>
+		<MenuItem primaryText="Logg ut"
+              href="/logout"
+              rightIcon={<img src="images/feide_32px.png"
+                              style={{width: '24px', height: 'auto'}}/>}/>
+
 	</IconMenu>
 )
 

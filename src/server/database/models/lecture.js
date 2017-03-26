@@ -24,6 +24,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
     },
 
+    isActive: {
+      type: DataTypes.BOOLEAN,
+    }
+
   }, {
     classMethods: {
 
