@@ -62,9 +62,18 @@ app.use(bodyparser.json())
 // Redis and ExpressJS session setup
 // ///////////////////////////////////////////////////
 
-var sessionStore = new RedisStore({ host: 'redis', port: 6379, client: redis })
+//If REDIS_URL exists, it indicates the use of Drone,
+//which disallows relative Docker URLs
+let redisHost = 'redis'
+if (process.env['REDIS_URL']) {
+  redisHost = process.env['REDIS_URL']
+}
 
-var sess = {
+//Creating Redis SessionStore
+const sessionStore = new RedisStore({ host: redisHost, port: 6379, client: redis })
+
+//Declaring session options
+let sess = {
   secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
   resave: false,
   saveUninitialized: true,
@@ -77,23 +86,24 @@ if (app.get('env') === 'production') {
   sess.cookie.secure = true
 }
 
+//Connects to Redis server
 redis.on('connect', function () {
   console.log("Redis connected")
 })
 
-
+//Sends the session object to Express,
+// containing the sess options and references to the Redis SessionStorage
 app.use(session(sess))
 
+//Session handling for disconnects
 
-//Disconnect session handling
-/*
 app.use(function (req, res, next) {
   if (!req.session) {
     return next(new Error('oh no')) // handle error
   }
   next() // otherwise continue
 })
-*/
+
 
 // ///////////////////////////////////////////////////
 // Passport/Dataporten setup
