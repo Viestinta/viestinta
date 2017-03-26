@@ -14,7 +14,7 @@ module.exports = (app) => {
     if(req.user){
       req.session.key = req.user.data.sub
       req.session.name = req.user.data.name
-      console.log(req.session.key)
+      console.log("Session key: " + req.session.key, "Name: " + req.session.name)
     }
 
     res.sendFile(path.resolve(__dirname, '../client/index.html'))

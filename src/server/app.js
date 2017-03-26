@@ -12,7 +12,7 @@ const express = require('express')
 const passport = require('passport')
 const bodyparser = require('body-parser')
 const cookieparser = require('cookie-parser')
-
+const redisAdapter = require('socket.io-redis');
 const session = require('express-session')
 const redis = require("redis").createClient('6379', 'redis')
 const RedisStore = require("connect-redis")(session)
@@ -81,8 +81,19 @@ redis.on('connect', function () {
   console.log("Redis connected")
 })
 
+
 app.use(session(sess))
 
+
+//Disconnect session handling
+/*
+app.use(function (req, res, next) {
+  if (!req.session) {
+    return next(new Error('oh no')) // handle error
+  }
+  next() // otherwise continue
+})
+*/
 
 // ///////////////////////////////////////////////////
 // Passport/Dataporten setup
@@ -132,27 +143,40 @@ const feedbacksController = require('./database/controllers').feedbacks
 // Create a connection
 // var socket = io.connect('http://localhost::8000')
 var io = require('socket.io')(server)
-
+io.adapter(redisAdapter({ host: 'redis', port: 6379, client: redis }));
 // When a new user connects
 io.sockets.on('connection', function (socket) {
+
+/*  io.of('/').adapter.clients(function (err, clients) {
+    console.log("Connected clients: " + clients); // an array containing all connected socket ids
+  })
+
+  io.of('/').adapter.allRooms(function (err, rooms) {
+    if (err) { console.log("Unknown ID: " + err) }
+    console.log("All rooms:" + rooms); // an array containing every room a given id has joined.
+
+  })
+*/
   // Reports when it finds a connection
   console.log('[app] connection')
 
   socket.on('login', function (data) {
     console.log('[app] login')
-
     //Create test user
     user.create({name: 'Pekka'})
-    .then(function () {
-      // Set user
-      // socket.set('user', user)
-      usersController.retriveByName('Pekka').then(function (user) {
-        console.log('User: ', user.name)
-        // Save user in socket-connection
-
+      .then(function () {
+        // Set user
+        // socket.set('user', user)
+        //sessionStore.get(req.cookies['connect.sid'], function (err, session) {
+        // console.log(session);
+        //})
+        usersController.retriveByName('Pekka').then(function (user) {
+          console.log('User: ', user.name)
+          // Save user in socket-connection
+        })
       })
-    })
-
+  })
+  /*
     //Create test lecture
     lecture.create({
       name: 'TDT4145-1'
@@ -215,17 +239,22 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] left')
     socket.emit('messages', 'Goodbye from server')
   })
-
+*/
   // When a new message is sendt from somebody
   socket.on('new-message', function (msg) {
-    console.log('[app] new-message: ' + msg)
+    console.log('[app] new-message: ' + msg.text)
     messagesController.create(msg).then(function (result) {
-      // result.setUser(socket.user)
-      result.setLecture(socket.lecture)
-      io.sockets.emit('receive-message', result)
+      //result.setUser(socket.user)
+      //result.setLecture(socket.lecture)
+      io.sockets.emit('receive-message', {
+        text: result.text,
+        time: result.time,
+        UserId: result.UserId,
+        LectureId: result.LectureId
+      })
     })
   })
-
+/*
   // When a new message is sendt from somebody
   socket.on('new-voting-message', function (id, value) {
     console.log('[app] new-voting-message: ' + value)
@@ -236,7 +265,7 @@ io.sockets.on('connection', function (socket) {
       io.sockets.emit('updated-message', result)
     })
   })
-
+*/
   // When somebody gives feedback
   socket.on('new-feedback', function (feedback) {
     console.log('[app] new-feedback: ' + feedback)
@@ -245,10 +274,10 @@ io.sockets.on('connection', function (socket) {
     }).then(function (result) {
       // Create association between feedback and lecture
       result.setLecture(socket.lecture)
-      io.sockets.emit('receive-feedback', result)
+      io.sockets.emit('receive-feedback', {value: result.value})
     })
   })
-
+/*
   // Called every x minuts
   socket.on('update-feedback-interval', function () {
     // Get feedback from database for past x minuts
@@ -259,8 +288,30 @@ io.sockets.on('connection', function (socket) {
     })
     io.sockets.emit('update-feedback-interval')
   })
+
+
+  io.of('/').adapter.remoteJoin('<my-id>', 'room1', function (err) {
+    if (err) {  unknown id  }
+    // success
+   })
+
+  io.on('connection', (socket) => {
+
+    socket.on('message-all', (data) => {
+      io.emit('message-all', data)
+    })
+
+    socket.on('join', (room) => {
+      socket.join(room)
+      io.emit('message-all', "Socket " + socket.id + " joined to room " + room)
+    })
+
+    socket.on('message-room', (data) => {
+      const room = data.room;
+      const message = data.message;
+      io.to(room).emit('message-room', data)
+    })
+*/
 })
 
-
 module.exports = redis
-
