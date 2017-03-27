@@ -17,7 +17,11 @@ const redisAdapter = require('socket.io-redis');
 const session = require('express-session')
 
 //'redis' is a relative Docker IP, supply URL in env if it's not Docker
-const redisHost = 'redis' || process.env['REDIS_URL']
+var redisHost = 'redis'
+if(process.env['REDIS_URL']){
+  redisHost = process.env['REDIS_URL']
+  console.log(redisHost, process.env['REDIS_URL'])
+}
 const redis = require("redis").createClient('6379', redisHost)
 const RedisStore = require("connect-redis")(session)
 
