@@ -12,8 +12,9 @@ module.exports = (app) => {
   // Go to index.html
   app.get('/', (req, res) => {
     if(req.user){
-      req.session.user = req.user
-      console.log("Session" + req.session)
+      req.session.key = req.user.data.sub
+      req.session.name = req.user.data.name
+      console.log(req.session.key)
     }
 
     res.sendFile(path.resolve(__dirname, '../client/index.html'))
@@ -25,9 +26,6 @@ module.exports = (app) => {
     } else {
       res.status(404)
     }
-    redis.get('"sess:' + req.session.id + '"', function(err, result){
-      console.log("Get session: " + util.inspect(result,{ showHidden: true, depth: null }));
-    });
   })
 
   app.get('/connect', (req, res) => {

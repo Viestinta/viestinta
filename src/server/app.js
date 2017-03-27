@@ -62,11 +62,13 @@ app.use(bodyparser.json())
 // Redis and ExpressJS session setup
 // ///////////////////////////////////////////////////
 
+var sessionStore = new RedisStore({ host: 'redis', port: 6379, client: redis })
+
 var sess = {
   secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
   resave: false,
   saveUninitialized: true,
-  store: new RedisStore({ host: 'redis', port: 6379, client: redis }),
+  store: sessionStore,
   cookie: {}
 }
 
