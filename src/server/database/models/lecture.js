@@ -36,7 +36,10 @@ module.exports = function (sequelize, DataTypes) {
           this.setDataValue('endDate', date)
         }
       },
-
+      /**
+       * @description Associations to User model
+       * @param models
+       */
       associate: function(models) {
 
         // Should only be associated in message and feedback
