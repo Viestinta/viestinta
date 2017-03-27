@@ -162,16 +162,6 @@ if(process.env.NODE_ENV !== 'test'){
 // When a new user connects
 io.sockets.on('connection', function (socket) {
 
-/*  io.of('/').adapter.clients(function (err, clients) {
-    console.log("Connected clients: " + clients); // an array containing all connected socket ids
-  })
-
-  io.of('/').adapter.allRooms(function (err, rooms) {
-    if (err) { console.log("Unknown ID: " + err) }
-    console.log("All rooms:" + rooms); // an array containing every room a given id has joined.
-
-  })
-*/
   // Reports when it finds a connection
   console.log('[app] connection')
 
@@ -180,50 +170,13 @@ io.sockets.on('connection', function (socket) {
     //Create test user
     user.create({name: 'Pekka'})
       .then(function () {
-        // Set user
-        // socket.set('user', user)
-        //sessionStore.get(req.cookies['connect.sid'], function (err, session) {
-        // console.log(session);
-        //})
         usersController.retriveByName('Pekka').then(function (user) {
           console.log('User: ', user.name)
           // Save user in socket-connection
         })
       })
   })
-  /*
-    //Create test lecture
-    lecture.create({
-      name: 'TDT4145-1'
-    }).then(function () {
-      lecture.create({
-        name: 'TDT4140-3'
-      })
-    }).then(function () {
-      // Hardcoding to choose a lecture
-      lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
-        console.log('Lecture: ', lecture.name)
-        // Save lecture in socket-connection
-        socket.lecture = lecture
 
-        console.log('Before getting feedback')
-        // Get feedback status for last x min
-
-        feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
-          feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
-            socket.emit('update-feedback-interval', [resultNeg, resultPos])
-          })
-        })
-
-        console.log('Before getting messages')
-        // Get all messages to that lecture
-        messagesController.getAllToLecture(lecture).then(function (result) {
-          socket.emit('last-ten-messages', result.reverse())
-        })
-      })
-
-    })
-  })
 
   socket.on('create-lecture', function (lecture) {
     console.log('[app] create-lecture')
@@ -254,8 +207,8 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] left')
     socket.emit('messages', 'Goodbye from server')
   })
-*/
-  // When a new message is sendt from somebody
+
+  // When a new message is sent from somebody
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg.text)
     messagesController.create(msg).then(function (result) {
@@ -269,7 +222,7 @@ io.sockets.on('connection', function (socket) {
       })
     })
   })
-/*
+
   // When a new message is sendt from somebody
   socket.on('new-voting-message', function (id, value) {
     console.log('[app] new-voting-message: ' + value)
@@ -280,7 +233,7 @@ io.sockets.on('connection', function (socket) {
       io.sockets.emit('updated-message', result)
     })
   })
-*/
+
   // When somebody gives feedback
   socket.on('new-feedback', function (feedback) {
     console.log('[app] new-feedback: ' + feedback)
@@ -292,7 +245,7 @@ io.sockets.on('connection', function (socket) {
       io.sockets.emit('receive-feedback', {value: result.value})
     })
   })
-/*
+
   // Called every x minuts
   socket.on('update-feedback-interval', function () {
     // Get feedback from database for past x minuts
@@ -303,30 +256,6 @@ io.sockets.on('connection', function (socket) {
     })
     io.sockets.emit('update-feedback-interval')
   })
-
-
-  io.of('/').adapter.remoteJoin('<my-id>', 'room1', function (err) {
-    if (err) {  unknown id  }
-    // success
-   })
-
-  io.on('connection', (socket) => {
-
-    socket.on('message-all', (data) => {
-      io.emit('message-all', data)
-    })
-
-    socket.on('join', (room) => {
-      socket.join(room)
-      io.emit('message-all', "Socket " + socket.id + " joined to room " + room)
-    })
-
-    socket.on('message-room', (data) => {
-      const room = data.room;
-      const message = data.message;
-      io.to(room).emit('message-room', data)
-    })
-*/
 })
 
 //For fake module export in test env
