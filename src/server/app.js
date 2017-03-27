@@ -71,7 +71,7 @@ app.use(bodyparser.json())
 // ///////////////////////////////////////////////////
 
 //Creating Redis SessionStore
-var sessionStore = new RedisStore({ host: redisHost, port: 6379, client: redis })
+const sessionStore = new RedisStore({ host: redisHost, port: 6379, client: redis })
 
 //Declaring session options
 let sess = {
@@ -151,10 +151,12 @@ const lecturesController = require('./database/controllers').lectures
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
 
-// Create a connection
-// var socket = io.connect('http://localhost::8000')
+//Create SocketIO server
 var io = require('socket.io')(server)
-io.adapter(redisAdapter({ host: 'redis', port: 6379, client: redis }));
+
+//Setup Redis adapter for SocketIO
+io.adapter(redisAdapter({ host: redisHost, port: 6379, client: redis }))
+
 // When a new user connects
 io.sockets.on('connection', function (socket) {
 
