@@ -22,6 +22,7 @@ export default class Login extends Component {
     return (
       <div>
         <RaisedButton
+            style={{marginTop: '10px'}}
             backgroundColor="#be1527"
             labelColor="#ffffff"
             href="/login"
