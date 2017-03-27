@@ -15,13 +15,6 @@ const bodyparser = require('body-parser')
 const cookieparser = require('cookie-parser')
 const redisAdapter = require('socket.io-redis');
 const session = require('express-session')
-
-//'redis' is a relative Docker IP, supply URL in env if it's not Docker
-var redisHost = process.env['REDIS_URL'] || 'redis'
-
-const redis = require("redis").createClient('6379', redisHost)
-const RedisStore = require("connect-redis")(session)
-
 const nconf = require('nconf')
 const path = require('path')
 
@@ -67,40 +60,50 @@ app.use(bodyparser.json())
 // Redis and ExpressJS session setup
 // ///////////////////////////////////////////////////
 
-//Creating Redis SessionStore
-const sessionStore = new RedisStore({ host: redisHost, port: 6379, client: redis })
+const RedisStore = require("connect-redis")(session)
 
-//Declaring session options
-let sess = {
-  secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
-  resave: false,
-  saveUninitialized: true,
-  store: sessionStore,
-  cookie: {}
-}
+//'redis' is a relative Docker IP, supply URL in env if it's not Docker
+var redisHost = process.env['REDIS_URL'] || 'redis'
+if (process.env.NODE_ENV !== 'test') {
 
-//Enable secure cookies for production env, using HTTPS
-if (app.get('env') === 'production') {
-  sess.cookie.secure = true
-}
+  //Create redis client
+  const redis = require("redis").createClient('6379', redisHost)
 
-//Connects to Redis server
-redis.on('connect', function () {
-  console.log("Redis connected")
-})
+  //Creating Redis SessionStore
+  const sessionStore = new RedisStore({host: redisHost, port: 6379, client: redis})
 
-//Sends the session object to Express,
-// containing the sess options and references to the Redis SessionStorage
-app.use(session(sess))
+  //Connects to Redis server
+  redis.on('connect', function () {
+    console.log("Redis connected")
+  })
 
-//Session handling for disconnects
-
-app.use(function (req, res, next) {
-  if (!req.session) {
-    return next(new Error('oh no')) // handle error
+  //Declaring session options
+  let sess = {
+    secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore,
+    cookie: {}
   }
-  next() // otherwise continue
-})
+
+  //Enable secure cookies for production env, using HTTPS
+  if (app.get('env') === 'production') {
+    sess.cookie.secure = true
+  }
+
+  //Sends the session object to Express,
+  // containing the sess options and references to the Redis SessionStorage
+  app.use(session(sess))
+
+  //Session handling for disconnects
+  app.use(function (req, res, next) {
+    if (!req.session) {
+      return next(new Error('oh no')) // handle error
+    }
+    next() // otherwise continue
+  })
+}
+
 
 
 // ///////////////////////////////////////////////////
@@ -151,8 +154,10 @@ const feedbacksController = require('./database/controllers').feedbacks
 //Create SocketIO server
 var io = require('socket.io')(server)
 
-//Setup Redis adapter for SocketIO
-io.adapter(redisAdapter({ host: redisHost, port: 6379, client: redis }))
+//Setup Redis adapter for SocketIO, if env is not test
+if(process.env.NODE_ENV !== 'test'){
+  io.adapter(redisAdapter({ host: redisHost, port: 6379, client: redis })) //Faulty warning for client: redis
+}
 
 // When a new user connects
 io.sockets.on('connection', function (socket) {
@@ -324,4 +329,8 @@ io.sockets.on('connection', function (socket) {
 */
 })
 
+//For fake module export in test env
+if(process.env.NODE_ENV !== 'test'){
+  var redis = 10
+}
 module.exports = redis
