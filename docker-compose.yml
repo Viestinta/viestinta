@@ -31,6 +31,7 @@ services:
       - .:/srv/app/
       - /arv/app/node_modules
     environment:
+      REDIS_URL: redis
       DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
     tty: true
     stdin_open: true
