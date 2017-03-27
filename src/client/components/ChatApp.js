@@ -46,23 +46,14 @@ export default class ChatApp extends Component {
       username: undefined
     }
 
-    this.login = this.login.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
   }
 
   componentDidMount() {
     this.getUserInfo()
-    socket.on('login', this.login)
-  }
-
-  login () {
-    console.log('[ChatApp] login')
-    socket.emit('login')
-    console.log('[ChatApp] afterLogin')
   }
 
   getUserInfo () {
-    console.log("Triggering 'getUserInfo ()'")
     axios
       .get("/user")
       .then(userinfo => {
