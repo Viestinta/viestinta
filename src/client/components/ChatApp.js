@@ -16,6 +16,7 @@ import Login from './Login'
 import FeedbackBox from './FeedbackBox'
 import RaisedButton from 'material-ui/RaisedButton'
 
+
 const styles = {
     container: {
         display: 'flex',
@@ -38,6 +39,7 @@ const muiTheme = getMuiTheme({
 
 export default class ChatApp extends Component {
     // At beginning there is no msg and the text-field is empty
+
   constructor (props) {
     super(props)
 

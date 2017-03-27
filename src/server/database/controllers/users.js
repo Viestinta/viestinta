@@ -7,8 +7,11 @@ const User = require('../models/index').User
 
 module.exports = {
 
-    // Create a new user using model.create()
-
+  /**
+   * @description Create a new user using model.create()
+   * @param req
+   * @param res
+   */
   create (req, res) {
     User.create(req.body)
     .then(function (newUser) {
@@ -19,13 +22,27 @@ module.exports = {
     })
   },
 
+
+
+  /**
+   * @description Creates and returns a Promise for a user
+   * @param req
+   * @returns {Promise.<User>}
+   */
   create (req) {
     return User.create({
       name: req.name
     })
   },
 
-  retriveByName (name) {
+
+
+  /**
+   * @description Retrieves user by name and returns a Promise for that user
+   * @param name
+   * @returns {Promise.<User>}
+   */
+  retrieveByName (name) {
     return User.find({
       where: {
         name: name
@@ -33,7 +50,13 @@ module.exports = {
     })
   },
 
-  // Edit an existing user details using model.update()
+
+
+  /**
+   * @description Edits an existing user's details using model.update()
+   * @param req
+   */
+  //
   update (req) {
     User.update(req.body, {
       where: {
@@ -42,7 +65,13 @@ module.exports = {
     })
   },
 
-    // Delete an existing user by the unique ID using model.destroy()
+
+
+  /**
+   * @description Deletes an existing user by their unique ID using model.destroy()
+   * @param req
+   * @param res
+   */
   delete (req, res) {
     User.destroy({
       where: {

@@ -8,14 +8,10 @@ const MIN = 60000
 
 module.exports = {
 
-  // Create a new Feedback using model.create()
-  create (req) {
-    return Feedback.create({
-      value: req.value,
-    })
-  },
-
-  // Edit an existing Feedback details using model.update()
+  /**
+   * @description Edit an existing Feedback details using model.update()
+   * @param req
+   */
   update (req) {
     Feedback.update(req.body, {
       where: {
@@ -24,7 +20,40 @@ module.exports = {
     })
   },
 
-  // For last 5 min
+
+
+  /**
+   * @description Delete an existing Feedback by the unique ID using model.destroy()
+   * @param req
+   */
+  delete (req) {
+    Feedback.destroy({
+      where: {
+        id: req.id
+      }
+    })
+  },
+
+
+
+  /**
+   * @description Create a new Feedback using model.create()
+   * @param req
+   * @returns {Promise.<Feedback>}
+   */
+  create (req) {
+    return Feedback.create({
+      value: req.value,
+    })
+  },
+
+
+
+  /**
+   * @description Gets number of negative feedback for a lecture For the last 5 min
+   * @param lecture
+   * @returns {Promise.<Integer>}
+   */
   getLastIntervalNeg (lecture) {
     return Feedback.count({
       where: {
@@ -39,7 +68,13 @@ module.exports = {
     })
   },
 
-  // For last 5 min
+
+
+  /**
+   * @description Gets number of positive feedback for a lecture For the last 5 min
+   * @param lecture
+   * @returns {Promise.<Integer>}
+   */
   getLastIntervalPos (lecture) {
     return Feedback.count({
      where: {
@@ -54,26 +89,30 @@ module.exports = {
     })
   },
 
+
+
+  /**
+   * @description Gets all lectures
+   * @returns {Promise.<Array.<Feedback>>}
+   */
   getAll () {
     return Feedback.findAll()
   },
 
-  getAllToLecture (req) {
+
+
+  /**
+   * @description Gets all lectures from the last 2 hours
+   * @param req
+   * @returns {Promise.<Array.<Feedback>>}
+   */
+  getAllToLecture (lecture) {
     return Feedback.findAll({
       where: {
         createdAt: {
           $between: [new Date(), new Date(new Date() - 120 * MIN)]
         }
         // TODO connect to lecture
-      }
-    })
-  },
-
-    // Delete an existing Feedback by the unique ID using model.destroy()
-  delete (req) {
-    Feedback.destroy({
-      where: {
-        id: req.id
       }
     })
   }
