@@ -84,7 +84,7 @@ export default class ChatBox extends Component {
             />
         <RaisedButton
           style={styles.btn}
-          primary
+          primary={true}
           label='Send'
           onTouchTap={this.sendMessage}
             />
