@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import socket from '../socket'
 import Drawer from 'material-ui/Drawer'
 import RaisedButton from 'material-ui/RaisedButton'
+import Subheader from 'material-ui/Subheader'
 
 import FeedbackMenu from './FeedbackMenu'
 import FeedbackWindow from './FeedbackWindow'
@@ -12,6 +13,14 @@ const styles = {
     maxWidth: '500px',
 
     marginTop: '10px'
+  }, 
+  menu: { 
+    display: 'flex', 
+    flexDirection: 'column', 
+    alignItems: 'flex-start', 
+    justifyContent: 'flex-start', 
+
+    padding: '20px'
   }
 }
 
@@ -74,12 +83,18 @@ export default class FeedbackBox extends Component {
           open={this.state.open}
           onRequestChange={(open) => this.setState({open})}
         >
-          <FeedbackMenu onClick={this.onClick} />
-          <FeedbackWindow
-            slow={this.state.feedback[0]}
-            fast={this.state.feedback[1]}
-            updateFeedbackInterval={this.updateFeedbackInterval}
-          />
+          <div style={styles.menu}> 
+            <h3>Tilbakemelding til foreleser</h3> 
+            <p>Vennligst gi tilbakemelding på hvordan du opplever 
+            forelesningen akkurat nå.</p> 
+            <Subheader>Tempo:</Subheader> 
+            <FeedbackMenu onClick={this.onClick} /> 
+            <FeedbackWindow 
+              slow={this.state.feedback[0]} 
+              fast={this.state.feedback[1]} 
+              updateFeedbackInterval={this.updateFeedbackInterval} 
+            /> 
+          </div> 
         </Drawer>
       </div>
     )
