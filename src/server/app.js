@@ -64,10 +64,7 @@ app.use(bodyparser.json())
 
 //If REDIS_URL exists, it indicates the use of Drone,
 //which disallows relative Docker URLs
-let redisHost = 'redis'
-if (process.env['REDIS_URL']) {
-  redisHost = process.env['REDIS_URL']
-}
+var redisHost = 'redis' || process.env['REDIS_URL']
 
 //Creating Redis SessionStore
 const sessionStore = new RedisStore({ host: redisHost, port: 6379, client: redis })
