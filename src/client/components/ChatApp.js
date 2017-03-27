@@ -38,7 +38,6 @@ const muiTheme = getMuiTheme({
 })
 
 export default class ChatApp extends Component {
-    // At beginning there is no msg and the text-field is empty
 
   constructor (props) {
     super(props)
@@ -49,23 +48,17 @@ export default class ChatApp extends Component {
 
     this.login = this.login.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
-    this.renderLogin = this.renderLogin.bind(this)
-
-    this.getUserInfo ()
   }
 
-  componentDidMount () {
-    this.login()
+  componentDidMount() {
+    this.getUserInfo()
+    socket.on('login', this.login)
   }
 
   login () {
     console.log('[ChatApp] login')
     socket.emit('login')
     console.log('[ChatApp] afterLogin')
-  }
-
-  componentDidMount() {
-    socket.on('login', this.login)
   }
 
   getUserInfo () {
@@ -83,34 +76,18 @@ export default class ChatApp extends Component {
       })
   }
 
-  renderLogin () {
-    if (!this.state.username) {
-      return (
-        <div>
-          <RaisedButton
-              backgroundColor="#be1527"
-              labelColor="#ffffff"
-              href="/login"
-              label="Logg inn"
-              icon={<img src="images/feide_100px_white.png" style={{width: 20, height: 'auto'}}/>}
-          />
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          <p id="username">Logget inn som: {this.state.username}</p>
-        </div>
-      )
-    }
-  }
-
   render () {
+    const User = (
+      <div>
+        <p>Logget inn som: {this.state.username}</p>
+      </div>
+    )
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div style={styles.container}>
           <Header />
-          { this.renderLogin() }
+          {/* Login button or username */}
+          { !this.state.username ? <Login/> : User }
           {/* List of messages */}
           <MessageList />
           {/* Inputfield for user */}
