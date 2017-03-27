@@ -54,10 +54,6 @@ export default class ChatApp extends Component {
     this.getUserInfo ()
   }
 
-  componentDidMount () {
-    this.login()
-  }
-
   login () {
     console.log('[ChatApp] login')
     socket.emit('login')
