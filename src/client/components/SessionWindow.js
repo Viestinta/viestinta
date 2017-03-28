@@ -12,6 +12,7 @@ const styles = {
     container: {
         display: 'flex',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         alignItems: 'baseline',
         justifyContent: 'space-between',
 
