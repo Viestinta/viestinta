@@ -64,6 +64,25 @@ export default class SessionWindow extends Component {
         //TODO: Kan ikke være mulig for hvem som helst å lage via et API call
     }
 
+    handleChange (event, index, value) {
+        console.log('Menu index: ' + index + ', value: ' + value)
+        this.setState({
+            menuValue: (index + 1)
+        })
+        if (index > 0) {
+            this.setState({disable: false})
+        } else {
+            this.setState({disable: true})
+        }
+    }
+
+    handleOnTouchTap () {
+        // TODO: Funksjon ved knappetrykk
+
+        // Only connect once, disable button
+        this.setState({disable: true})
+    }
+
     render () {
         return (
             <div>
