@@ -24,6 +24,7 @@ services:
 
     links:
       - postgres
+      - redis
     ports:
       - "8000:8000"
     volumes:
@@ -33,3 +34,8 @@ services:
       DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
     tty: true
     stdin_open: true
+
+  redis:
+      image: redis
+      ports:
+          - "6379"

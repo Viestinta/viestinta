@@ -18,16 +18,27 @@ export default class SessionWindow extends Component {
         }
     }
 
-    connectToSession () {
-        
+    connectToLecture () {
+        //TODO: Håndteres av Socket? Som del av Rooms
     }
 
-    getAvailableSessions () {
-
+    getAvailableLectures () {
+      axios
+        .get("/lectures")
+        .then(lectureList => {
+          this.setState({
+            lectureList: lectureList
+          })
+          console.log("Returning list of lectures: " + lectureList)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
 
-    createNewSession () {
-
+    createNewLecture () {
+        //TODO: Håndteres av Socket?
+        //TODO: Kan ikke være mulig for hvem som helst å lage via et API call
     }
 
     render () {
