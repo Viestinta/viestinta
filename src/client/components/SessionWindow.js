@@ -94,6 +94,16 @@ export default class SessionWindow extends Component {
     }
 
     render () {
+        var menuItems = this.state.lectureList.map((lecture, i) => {
+            return (
+                <MenuItem
+                    value={i+2}
+                    key={i+2} /* Denne trengs, vet ikke hvorfor */
+                    primaryText={lecture}
+                />
+            )
+        })
+
         return (
             <Paper zDepth={3} style={styles.container}>
                 <Subheader style={{width: 'auto'}}>
@@ -101,8 +111,7 @@ export default class SessionWindow extends Component {
                 </Subheader>
                 <DropDownMenu value={this.state.menuValue} onChange={this.handleChange}>
                     <MenuItem value={1} primaryText="-Velg her-" />
-                    <MenuItem value={2} primaryText="TDT4100" />
-                    <MenuItem value={3} primaryText="TTK4175" />
+                    {menuItems}
                 </DropDownMenu>
                 <RaisedButton
                     primary={true}
