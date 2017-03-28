@@ -5,7 +5,11 @@ const Lecture = require('../models/index').Lecture
 
 module.exports = {
 
-  // Create a new Message using model.create()
+  /**
+   * @description Create a new Message using model.create()
+   * @param req
+   * @returns {Promise.<Message>}
+   */
   create (req) {
     return Message.create({
       time: new Date(),
@@ -13,7 +17,13 @@ module.exports = {
     })
   },
 
-  // Edit an existing Message details using model.update()
+
+
+  /**
+   * @description Edit an existing Message details using model.update()
+   * @param req
+   * @returns {Promise.<Message>}
+   */
   update (req) {
     return Message.update(req.body, {
       where: {
@@ -22,7 +32,12 @@ module.exports = {
     })
   },
 
-  // Delete an existing Message by the unique ID using model.destroy()
+
+
+  /**
+   * @description Delete an existing Message by the unique ID using model.destroy()
+   * @param req
+   */
   delete (req) {
     Message.destroy({
       where: {
@@ -31,30 +46,48 @@ module.exports = {
     })
   },
 
-  // Get last 10
+
+
+  /**
+   * Get last 10 messages in lecture
+   * @param lecture
+   * @returns {Promise.<Message>}
+   */
   getLastTen (lecture) {
     return Message.findAll({
       where: {
-        lectureId: lecture.id
+        LectureId: lecture.id
       },
       order: '"time" DESC',
       limit: 10
     })
   },
 
-  // Get all to a specific lecture
+
+
+  /**
+   * @description Get all to a specific lecture
+   * @param lecture
+   * @returns {Promise.<Message>}
+   */
   getAllToLecture (lecture) {
     return Message.findAll({
       where: {
-        lectureId: lecture.id
+        LectureId: lecture.id
       }
     })
   },
 
-  // Retrive an existing Message by the unique ID
+
+
+  /**
+   * @description Retrieve an existing Message by the unique ID
+   * @param req
+   * @returns {Promise.<Message>}
+   */
   retrieve (req) {
     return Message
-      .findById(req.params.messageId, {
+      .findById(req.params.MessageId, {
         include: [{
           model: Message,
           as: 'message'
@@ -62,6 +95,13 @@ module.exports = {
       })
   },
 
+
+
+  /**
+   * @description
+   * @param req
+   * @returns {Promise.<Message>}
+   */
   vote (req) {
     var msg = Message.findById(req.id).then(function (result) {
       if (req.value === -1) {

@@ -24,6 +24,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
     },
 
+    isActive: {
+      type: DataTypes.BOOLEAN,
+    }
+
   }, {
     classMethods: {
 
@@ -32,41 +36,21 @@ module.exports = function (sequelize, DataTypes) {
           this.setDataValue('endDate', date)
         }
       },
-
+      /**
+       * @description Associations to User model
+       * @param models
+       */
       associate: function(models) {
 
         // Should only be associated in message and feedback
-        
-        //Lecture has a set of messages
-        /*
-        Lecture.hasMany(models.Message, {
-          as: 'messages'
-        })
-                
-        //Lecture has a set of feedbacks 
-        Lecture.hasMany(models.Feedback, {
-          onDelete: 'CASCADE',
-          foreignKey: {
-            allowNull: true
-          }
-        })
-        */
-        //Admin for lecture
-        /*
-        Lecture.belongsTo(models.User, {
-          foreignKey: {
-            allowNull: false
-          }
-        })
-        /*
+
         //Connected users
         Lecture.hasMany(models.User, {
           foreignKey: {
-            //field: userId,
             allowNull: true
           }
         })
-        */
+
         //Lecture has a connected course
         /*Lecture.belongsTo(models.Course, {
          foreignKey: {

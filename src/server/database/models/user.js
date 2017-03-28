@@ -16,7 +16,10 @@ module.exports = function (sequelize, DataTypes) {
       // Definition of methods related to the user object
       // class-wide methods
     classMethods: {
-
+      /**
+       * @description No associations to other models
+       * @param models
+       */
         // Associations to other models
       associate: function (models) {
       }

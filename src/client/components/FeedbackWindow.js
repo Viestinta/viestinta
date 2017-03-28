@@ -36,7 +36,7 @@ export default class FeedbackWindow extends Component {
   }
 
   receiveFeedback (feedback) {
-    console.log('Setting feedback:', feedback)
+    console.log('Setting feedback:', feedback.value)
     var feedbackList = this.state.feedback
     if (feedback.value === -1) {
       feedbackList[0] = feedbackList[0] + 1

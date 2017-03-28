@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const passport = require('passport')
 const db = require('./database/models/index')
+const redis = require('../server/app.js')
 
 // ///////////////////////////////////////////////////
 // Routing
@@ -9,10 +10,19 @@ const db = require('./database/models/index')
 
 module.exports = (app) => {
   // Go to index.html
-  app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, '../client/index.html')) })
+  app.get('/', (req, res) => {
+    if(req.user){
+      req.session.key = req.user.data.sub
+      req.session.name = req.user.data.name
+      console.log("Session key: " + req.session.key, "Name: " + req.session.name)
+    }
+
+    res.sendFile(path.resolve(__dirname, '../client/index.html'))
+  })
   app.get('/user', (req, res) => {
     if (req.user) {
-      res.json({user: req.user})
+      res.status(200)
+      res.json({user: req.user.data})
     } else {
       res.status(404)
     }
@@ -20,6 +30,7 @@ module.exports = (app) => {
 
   app.get('/connect', (req, res) => {
     if (req.user) {
+      req.session.user = req.user
       let userinfo = req.user.data
       db['User'].findOrCreate({
         where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
@@ -35,6 +46,11 @@ module.exports = (app) => {
     }
   })
 
+  app.get('/logout', (req, res) => {
+    req.user = undefined
+    res.redirect('https://auth.dataporten.no/logout')
+
+  })
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
   app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
 

@@ -7,22 +7,24 @@
 // Include Statments
 // ///////////////////////////////////////////////////
 
+
+
 const express = require('express')
 const passport = require('passport')
 const bodyparser = require('body-parser')
 const cookieparser = require('cookie-parser')
+const redisAdapter = require('socket.io-redis');
 const session = require('express-session')
-// const morgan = require('morgan')
 const nconf = require('nconf')
-
 const path = require('path')
-const PDStrategy = require('passport-openid-connect').Strategy
-// const User = require('passport-openid-connect').User
 
+const PDStrategy = require('passport-openid-connect').Strategy
 const router = require('./routes')
+
 // ///////////////////////////////////////////////////
 // Initial Server Setup
 // ///////////////////////////////////////////////////
+
 
 nconf.argv()
   .env('__')
@@ -40,7 +42,9 @@ nconf.argv()
     }
   })
 
+
 const app = express()
+
 const server = require('http').createServer(app)
 
 app.set('view options', { pretty: true })
@@ -50,11 +54,61 @@ app.set('port', 8000)
 app.use(cookieparser())
 app.use(bodyparser.urlencoded({extended: true}))
 app.use(bodyparser.json())
-app.use(session({
-  secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
-  resave: false,
-  saveUninitialized: false
-}))
+
+
+// ///////////////////////////////////////////////////
+// Redis and ExpressJS session setup
+// ///////////////////////////////////////////////////
+
+const RedisStore = require("connect-redis")(session)
+
+//'redis' is a relative Docker IP, supply URL in env if it's not Docker
+var redisHost = process.env['REDIS_URL'] || 'redis'
+if (process.env.NODE_ENV !== 'test') {
+
+  //Create redis client
+  const redis = require("redis").createClient('6379', redisHost)
+
+  //Creating Redis SessionStore
+  const sessionStore = new RedisStore({host: redisHost, port: 6379, client: redis})
+
+  //Connects to Redis server
+  redis.on('connect', function () {
+    console.log("Redis connected")
+  })
+
+  //Declaring session options
+  let sess = {
+    secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore,
+    cookie: {}
+  }
+
+  //Enable secure cookies for production env, using HTTPS
+  if (app.get('env') === 'production') {
+    sess.cookie.secure = true
+  }
+
+  //Sends the session object to Express,
+  // containing the sess options and references to the Redis SessionStorage
+  app.use(session(sess))
+
+  //Session handling for disconnects
+  app.use(function (req, res, next) {
+    if (!req.session) {
+      return next(new Error('oh no')) // handle error
+    }
+    next() // otherwise continue
+  })
+}
+
+
+
+// ///////////////////////////////////////////////////
+// Passport/Dataporten setup
+// ///////////////////////////////////////////////////
 
 var pd = new PDStrategy(nconf.get('dataporten'))
 
@@ -65,13 +119,14 @@ passport.deserializeUser(PDStrategy.deserializeUser)
 app.use(passport.initialize())
 app.use(passport.session())
 
+
 // ///////////////////////////////////////////////////
 // Routing
 // ///////////////////////////////////////////////////
 
 router(app)
 
-// Related to database
+// Prevent NodeJS container from locking into listen when running in test env
 
 if (process.env.NODE_ENV !== 'test') {
   server.listen(app.get('port'), (err) => {
@@ -80,11 +135,10 @@ if (process.env.NODE_ENV !== 'test') {
   })
 }
 
-// ///////////////////////////////////////////////////
-// Setup for database
-// ///////////////////////////////////////////////////
 
-// TODO: Flytt til annen fil, eller gjør som del av user login/creation. Må bare kjøres før user objektet skal brukes.
+// ///////////////////////////////////////////////////
+// Setup for SocketIO
+// ///////////////////////////////////////////////////
 
 const db = require('./database/models/index')
 
@@ -98,62 +152,32 @@ const lecturesController = require('./database/controllers').lectures
 const messagesController = require('./database/controllers').messages
 const feedbacksController = require('./database/controllers').feedbacks
 
-// Create a connection
-// var socket = io.connect('http://localhost::8000')
+//Create SocketIO server
 var io = require('socket.io')(server)
+
+//Setup Redis adapter for SocketIO, if env is not test
+if(process.env.NODE_ENV !== 'test'){
+  io.adapter(redisAdapter({ host: redisHost, port: 6379, client: redis })) //Faulty warning for client: redis
+}
 
 // When a new user connects
 io.sockets.on('connection', function (socket) {
+
   // Reports when it finds a connection
   console.log('[app] connection')
 
   socket.on('login', function (data) {
     console.log('[app] login')
-
     //Create test user
     user.create({name: 'Pekka'})
-    .then(function () {
-      // Set user
-      // socket.set('user', user)
-      usersController.retriveByName('Pekka').then(function (user) {
-        console.log('User: ', user.name)
-        // Save user in socket-connection
-
-      })
-    })
-
-    //Create test lecture
-    lecture.create({
-      name: 'TDT4145-1'
-    }).then(function () {
-      lecture.create({
-        name: 'TDT4140-3'
-      })
-    }).then(function () {
-      // Hardcoding to choose a lecture
-      lecturesController.retriveByName('TDT4145-1').then(function (lecture) {
-        console.log('Lecture: ', lecture.name)
-        // Save lecture in socket-connection
-        socket.lecture = lecture
-
-        console.log('Before getting feedback')
-        // Get feedback status for last x min
-
-        feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
-          feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
-            socket.emit('update-feedback-interval', [resultNeg, resultPos])
-          })
-        })
-
-        console.log('Before getting messages')
-        // Get all messages to that lecture
-        messagesController.getAllToLecture(lecture).then(function (result) {
-          socket.emit('last-ten-messages', result.reverse())
+      .then(function () {
+        usersController.retriveByName('Pekka').then(function (user) {
+          console.log('User: ', user.name)
+          // Save user in socket-connection
         })
       })
-
-    })
   })
+
 
   socket.on('create-lecture', function (lecture) {
     console.log('[app] create-lecture')
@@ -185,13 +209,18 @@ io.sockets.on('connection', function (socket) {
     socket.emit('messages', 'Goodbye from server')
   })
 
-  // When a new message is sendt from somebody
+  // When a new message is sent from somebody
   socket.on('new-message', function (msg) {
-    console.log('[app] new-message: ' + msg)
+    console.log('[app] new-message: ' + msg.text)
     messagesController.create(msg).then(function (result) {
-      // result.setUser(socket.user)
-      result.setLecture(socket.lecture)
-      io.sockets.emit('receive-message', result)
+      //result.setUser(socket.user)
+      //result.setLecture(socket.lecture)
+      io.sockets.emit('receive-message', {
+        text: result.text,
+        time: result.time,
+        UserId: result.UserId,
+        LectureId: result.LectureId
+      })
     })
   })
 
@@ -214,7 +243,7 @@ io.sockets.on('connection', function (socket) {
     }).then(function (result) {
       // Create association between feedback and lecture
       result.setLecture(socket.lecture)
-      io.sockets.emit('receive-feedback', result)
+      io.sockets.emit('receive-feedback', {value: result.value})
     })
   })
 
@@ -230,16 +259,8 @@ io.sockets.on('connection', function (socket) {
   })
 })
 
-
-// ///////////////////////////////////////////////////
-// Routing
-// ///////////////////////////////////////////////////
-
-router(app)
-
-if (process.env.NODE_ENV !== 'test') {
-  server.listen(app.get('port'), (err) => {
-    if (err) throw err
-    console.log('Node app is running on port', app.get('port'))
-  })
+//For fake module export in test env
+if(process.env.NODE_ENV !== 'test'){
+  var redis = 10
 }
+module.exports = redis

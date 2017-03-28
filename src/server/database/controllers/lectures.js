@@ -8,6 +8,7 @@ module.exports = {
   /**
    * @description Create a new Lecture using model.create()
    * @param req
+   * @returns {Promise.<Lecture>}
    */
   create (req) {
     return Lecture.create({
@@ -18,10 +19,12 @@ module.exports = {
     })
   },
 
+
+
   /**
    * @description Edit an existing Lecture details using model.update()
    * @param req
-   * @returns {*|Progress|Promise.<Array.<affectedCount, affectedRows>>|ReactWrapper|ShallowWrapper}
+   * @returns {Promise.<Lecture>}
    */
   update (req) {
     return Lecture.update(req.body, {
@@ -31,9 +34,12 @@ module.exports = {
     })
   },
 
+
+
   /**
    * @description Delete an existing Lecture by the unique ID using model.destroy()
    * @param req
+   * @returns {Promise.<Lecture>}
    */
   delete (req) {
     return Lecture.destroy({
@@ -43,19 +49,23 @@ module.exports = {
     })
   },
 
+
+
   /**
    * @description Get all lectures
-   * @returns {*}
+   * @returns {Promise.<Lecture>}
    */
   getAll () {
     return Lecture.findAll()
   },
 
+
+
   /**
    * @description Retrive an existing Lecture by the unique ID
    * @param req
    * @param res
-   * @returns {Promise.<T>}
+   * @returns {Promise.<Lecture>}
    */
   retrieve (req, res) {
     return Lecture
@@ -76,6 +86,13 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
+
+
+  /**
+   * @description Returns Lecture matching parameter name
+   * @param name
+   * @returns {Promise.<Lecture>}
+   */
   retriveByName (name) {
     return Lecture.find({
       where: {
@@ -84,6 +101,13 @@ module.exports = {
     })
   },
 
+
+
+  /**
+   * @description Returns all messages in lecture
+   * @param lecture
+   * @returns {Promise.<Lecture>}
+   */
   getAllMessages (lecture) {
     return Lecture.findAll({
       where: {

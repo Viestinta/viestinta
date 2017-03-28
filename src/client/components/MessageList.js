@@ -69,7 +69,7 @@ export default class MessageList extends Component {
 
   render () {
     var list = this.state.messages.map((message, i) => {
-      console.log('Looping trought messages in messageList')
+      console.log('Looping through messages in messageList')
 
       var time = message.time
       return (
