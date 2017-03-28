@@ -35,7 +35,7 @@ export default class SessionWindow extends Component {
                Set empty [] when done
                When 'getAvailableLectures()' works */
             lectureList: ['TDT0000', 'TTK0000', 'TIØ0000'],
-            menuValue: 1,
+            value: 1,
             disable: true
         }
 
@@ -75,9 +75,8 @@ export default class SessionWindow extends Component {
     }
 
     handleChange (event, index, value) {
-        console.log('Menu index: ' + index + ', value: ' + value)
         this.setState({
-            menuValue: (index + 1)
+            value: value
         })
         if (index > 0) {
             this.setState({disable: false})
@@ -99,7 +98,7 @@ export default class SessionWindow extends Component {
             return (
                 <MenuItem
                     value={i+2}
-                    key={i+2} /* Denne trengs, vet ikke hvorfor */
+                    key={i} /* All menu items need unique key */
                     primaryText={lecture}
                 />
             )
@@ -110,7 +109,7 @@ export default class SessionWindow extends Component {
                 <Subheader style={{width: 'auto'}}>
                     FORELESNING:
                 </Subheader>
-                <DropDownMenu value={this.state.menuValue} onChange={this.handleChange}>
+                <DropDownMenu value={this.state.value} onChange={this.handleChange}>
                     <MenuItem value={1} primaryText="-Velg her-" />
                     {menuItems}
                 </DropDownMenu>
