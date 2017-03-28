@@ -29,8 +29,16 @@ export default class SessionWindow extends Component {
         super(props)
 
         this.state = {
-            currentSessionID: undefined
+            currentSessionID: undefined,
+            menuValue: 1,
+            disable: true
         }
+
+        this.connectToLecture = this.connectToLecture.bind(this)
+        this.getAvailableLectures = this.getAvailableLectures.bind(this)
+        this.createNewLecture = this.createNewLecture.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleOnTouchTap = this.handleOnTouchTap.bind(this)
     }
 
     connectToLecture () {
