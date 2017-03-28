@@ -14,7 +14,7 @@ import MessageList from './MessageList'
 import Header from './Header'
 import Login from './Login'
 import FeedbackBox from './FeedbackBox'
-import RaisedButton from 'material-ui/RaisedButton'
+import SessionWindow from './SessionWindow'
 
 
 const styles = {
@@ -79,6 +79,8 @@ export default class ChatApp extends Component {
           <Header />
           {/* Login button or username */}
           { !this.state.username ? <Login/> : User }
+          {/* Session */}
+          <SessionWindow />
           {/* List of messages */}
           <MessageList />
           {/* Sidebar with feedback-options */}
