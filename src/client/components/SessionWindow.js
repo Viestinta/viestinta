@@ -85,10 +85,22 @@ export default class SessionWindow extends Component {
 
     render () {
         return (
-            <div>
-
-            </div>
+            <Paper zDepth={3} style={styles.container}>
+                <Subheader style={{width: 'auto'}}>
+                    FORELESNING:
+                </Subheader>
+                <DropDownMenu value={this.state.menuValue} onChange={this.handleChange}>
+                    <MenuItem value={1} primaryText="-Velg her-" />
+                    <MenuItem value={2} primaryText="TDT4100" />
+                    <MenuItem value={3} primaryText="TTK4175" />
+                </DropDownMenu>
+                <RaisedButton
+                    primary={true}
+                    label="Koble til"
+                    disabled={this.state.disable}
+                    onTouchTap={this.handleOnTouchTap}
+                />
+            </Paper>
         )
     }
-
 }
