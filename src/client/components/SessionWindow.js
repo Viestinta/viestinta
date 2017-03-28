@@ -86,9 +86,10 @@ export default class SessionWindow extends Component {
     }
 
     handleOnTouchTap () {
-        // TODO: Funksjon ved knappetrykk
+        // TODO: Funksjonalitet ved knappetrykk
+        this.connectToLecture()
 
-        // Only connect once, disable button
+        // Only connect once -> disable button
         this.setState({disable: true})
     }
 
