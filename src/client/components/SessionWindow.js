@@ -30,6 +30,10 @@ export default class SessionWindow extends Component {
 
         this.state = {
             currentSessionID: undefined,
+            /* Set default values for develop
+               Set empty [] when done
+               When 'getAvailableLectures()' works */
+            lectureList: ['TDT0000', 'TTK0000', 'TIØ0000'],
             menuValue: 1,
             disable: true
         }
@@ -41,8 +45,9 @@ export default class SessionWindow extends Component {
         this.handleOnTouchTap = this.handleOnTouchTap.bind(this)
     }
 
-    connectToLecture () {
-        //TODO: Håndteres av Socket? Som del av Rooms
+    componentDidMount() {
+        /* This method is called after first render */
+        this.getAvailableLectures()
     }
 
     getAvailableLectures () {
@@ -57,6 +62,10 @@ export default class SessionWindow extends Component {
         .catch(err => {
           console.log(err)
         })
+    }
+
+    connectToLecture () {
+        //TODO: Håndteres av Socket? Som del av Rooms
     }
 
     createNewLecture () {
