@@ -2,11 +2,26 @@ import React, { Component } from 'react'
 import socket from '../socket'
 import axios from 'axios'
 
-// Theme
-import {orange800} from 'material-ui/styles/colors'
-import {blue500} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import Paper from 'material-ui/Paper'
+import Subheader from 'material-ui/Subheader'
+import DropDownMenu from 'material-ui/DropDownMenu'
+import MenuItem from 'material-ui/MenuItem'
+import RaisedButton from 'material-ui/RaisedButton'
+
+const styles = {
+    container: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        justifyContent: 'space-between',
+
+        maxWidth: '500px',
+        width: '100%',
+
+        marginTop: '10px',
+        padding: '10px'
+    }
+}
 
 export default class SessionWindow extends Component {
 
