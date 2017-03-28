@@ -35,6 +35,7 @@ export default class SessionWindow extends Component {
                Set empty [] when done
                When 'getAvailableLectures()' works */
             lectureList: ['TDT0000', 'TTK0000', 'TIØ0000'],
+            selectedLecture: undefined,
             value: 1,
             disable: true
         }
@@ -67,6 +68,7 @@ export default class SessionWindow extends Component {
 
     connectToLecture () {
         //TODO: Håndteres av Socket? Som del av Rooms
+        console.log('Connect to lecture: ' + this.state.selectedLecture)
     }
 
     createNewLecture () {
@@ -79,9 +81,15 @@ export default class SessionWindow extends Component {
             value: value
         })
         if (index > 0) {
-            this.setState({disable: false})
+            this.setState({
+                disable: false,
+                selectedLecture: this.state.lectureList[index-1]
+            })
         } else {
-            this.setState({disable: true})
+            this.setState({
+                disable: true,
+                selectedLecture: undefined
+            })
         }
     }
 
