@@ -58,7 +58,7 @@ export default class FeedbackWindow extends Component {
 
   render () {
     return (
-      <div id='feedbackWindow'>
+      <div>
         <p>Antall som synes det går for tregt: {this.state.feedback[0]}</p>
         <p>Antall som synes det går for fort: {this.state.feedback[1]}</p>
       </div>

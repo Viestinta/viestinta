@@ -81,10 +81,10 @@ export default class ChatApp extends Component {
           { !this.state.username ? <Login/> : User }
           {/* List of messages */}
           <MessageList />
-          {/* Inputfield for user */}
-          <ChatBox />
           {/* Sidebar with feedback-options */}
           <FeedbackBox />
+          {/* Inputfield for user */}
+          <ChatBox />
         </div>
       </MuiThemeProvider>
     )
