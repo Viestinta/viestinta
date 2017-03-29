@@ -63,13 +63,15 @@ let addUserAsAdmin = function (userEmail, courseCode, callback){
       //Only adds userEmail to adminList if it doesn't already exist
       if (adminList.indexOf(userEmail) === -1) {
         adminList.push(userEmail)
-
       } else {
         console.log("This user is already an admin in this course")
       }
 
       //Saves the course with potentially new adminList
-      course.save().then(function () {
+      course.update({
+        admins: adminList
+      }).then(function () {
+        //Calls the callback argument, which is executed after updating the database
         if (callback){
           callback()
         }
@@ -79,8 +81,6 @@ let addUserAsAdmin = function (userEmail, courseCode, callback){
     }).catch(function (err) {
       console.error(err)
     })
-
-  //TODO: Make a return statement for conditional routing?
 }
 
 
