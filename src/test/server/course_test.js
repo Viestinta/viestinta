@@ -83,10 +83,12 @@ describe('Test suite: Course and Lecture testing', function () {
         courseAdmins.push(pekkaEmail)
         courseController.getAdminsForCourse(courseCode)
           .then(function (databaseAdmins) {
-            //assert.deepEqual(databaseAdmins, courseAdmins)
-            testLecture.destroy()
-            testCourse.destroy()
-            done()
+            assert.deepEqual(databaseAdmins.admins, courseAdmins)
+            testLecture.destroy().then(function () {
+              testCourse.destroy().then(function () {
+                done()
+              })
+            })
           }).catch(function (err) {
             console.error(err)
           })
