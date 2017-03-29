@@ -92,7 +92,7 @@ module.exports = {
 
 
   /**
-   * @description Gets all lectures
+   * @description Gets all feedback
    * @returns {Promise.<Array.<Feedback>>}
    */
   getAll () {
@@ -102,8 +102,8 @@ module.exports = {
 
 
   /**
-   * @description Gets all lectures from the last 2 hours
-   * @param req
+   * @description Gets all feedback from the last 2 hours for a lecture
+   * @param lecture
    * @returns {Promise.<Array.<Feedback>>}
    */
   getAllToLecture (lecture) {
@@ -111,8 +111,8 @@ module.exports = {
       where: {
         createdAt: {
           $between: [new Date(), new Date(new Date() - 120 * MIN)]
-        }
-        // TODO connect to lecture
+        },
+        LectureId: lecture.id
       }
     })
   }

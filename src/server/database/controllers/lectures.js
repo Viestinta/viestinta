@@ -12,10 +12,11 @@ module.exports = {
    */
   create (req) {
     return Lecture.create({
+      CourseId: req.courseId,
       startDate: new Date(req.startDate),
       endDate: new Date(req.endDate),
       location: req.loc,
-      description: req.description
+      description: req.description,
     })
   },
 
@@ -93,7 +94,7 @@ module.exports = {
    * @param name
    * @returns {Promise.<Lecture>}
    */
-  retriveByName (name) {
+  retrieveByName (name) {
     return Lecture.find({
       where: {
         name: name
@@ -118,5 +119,7 @@ module.exports = {
         model: Message, as: 'messages'
       }]
     })
-  }
+  },
+
+
 }

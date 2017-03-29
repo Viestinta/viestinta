@@ -7,22 +7,6 @@ const User = require('../models/index').User
 
 module.exports = {
 
-  /**
-   * @description Create a new user using model.create()
-   * @param req
-   * @param res
-   */
-  create (req, res) {
-    User.create(req.body)
-    .then(function (newUser) {
-      res.status(200).json(newUser)
-    })
-    .catch(function (error) {
-      res.status(500).json(error)
-    })
-  },
-
-
 
   /**
    * @description Creates and returns a Promise for a user
@@ -56,7 +40,6 @@ module.exports = {
    * @description Edits an existing user's details using model.update()
    * @param req
    */
-  //
   update (req) {
     User.update(req.body, {
       where: {

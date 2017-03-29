@@ -5,7 +5,7 @@ module.exports = function (sequelize, DataTypes) {
   // Definition of Lecture attributes
   let Lecture = sequelize.define('Lecture', {
     name: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     startDate: {
       type: DataTypes.DATE,
@@ -26,6 +26,7 @@ module.exports = function (sequelize, DataTypes) {
 
     isActive: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
 
   }, {
@@ -52,11 +53,12 @@ module.exports = function (sequelize, DataTypes) {
         })
 
         //Lecture has a connected course
-        /*Lecture.belongsTo(models.Course, {
-         foreignKey: {
-         allowNull: false
-         }
-         })*/
+        Lecture.belongsTo(models.Course, {
+          foreignKey: {
+            allowNull: false
+          }
+        })
+
       }
     }
   })
