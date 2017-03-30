@@ -4,17 +4,16 @@ const Lecture = require('../models/index').Lecture
 
 /**
  * @description Creates and returns a Promise for a course
- * @param req
+ * @param course
  * @returns {Promise.<Course>}
  */
-let findOrCreateCourse = function (req) {
+let findOrCreateCourse = function (course) {
   return Course.findOrCreate({
     where: {
-      name: req.name,
-      code: req.code,
-      admins: req.admins,
+      name: course.name,
+      code: course.code,
+      admins: course.admins,
     },
-    plain: true
   })
 }
 
@@ -30,7 +29,6 @@ let getByCode = function (code) {
     where: {
       code: code
     }
-
   })
 }
 
@@ -150,14 +148,14 @@ let getAllLecturesForCourse = function (courseCode) {
 
 /**
  * @description Updates an existing course's details using model.update()
- * @param courseCode
+ * @param course
  * @returns {Promise.<Course>}
  */
 
-let updateCourse = function(courseCode) {
-  return Course.update(req.body, {
+let updateCourse = function(course) {
+  return Course.update(course, {
     where: {
-      code: courseCode
+      code: course.code
     }
   })
 }
