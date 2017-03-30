@@ -70,32 +70,78 @@ describe('Test suite: Course and Lecture testing', function () {
     })
   })
 
-  /**TEST 3 COURSE ADMINS**/
+  /**TEST 3 ADD COURSE ADMINS**/
 
 
   let pekkaEmail = 'pekka@ntnu.no'
   /**
-   *  @description Test for course admins management
+   *  @description Test for adding admins to course
    */
-  describe('Course management for admins: ' + courseAdmins + ', from ' + courseCode, function () {
-    it('Name and code to Lecture object in database is identical to input', function (done) {
+  describe('Test for adding admins to course: ' + courseAdmins + ', from ' + courseCode, function () {
+    it('Admins added are identical to admins in course', function (done) {
       courseController.addUserAsAdmin(pekkaEmail, courseCode, function () {
         courseAdmins.push(pekkaEmail)
         courseController.getAdminsForCourse(courseCode)
           .then(function (databaseAdmins) {
             assert.deepEqual(databaseAdmins.admins, courseAdmins)
             testLecture.destroy().then(function () {
-              testCourse.destroy().then(function () {
-                done()
-              })
+              testCourse.destroy()
             })
+            done()
           }).catch(function (err) {
-            console.error(err)
-          })
+          console.error(err)
+        })
       })
     })
   })
 
+  /**TEST 4 DELETE COURSE ADMINS**/
 
+  /**
+   *  @description Test for deleting course admins
+   */
 
+  let courseName2 = 'Objekt Orientert Programmering'
+  let courseCode2 = 'TDT4100'
+  let courseAdmins2 = ['hallvard', 'hermann']
+  let testCourse2 = undefined
+
+  describe('Test for deleting admins from course: ' + courseAdmins2 + ', from ' + courseCode2, function () {
+
+    before(function (done) {
+      courseController.findOrCreateCourse(
+        {
+          name: courseName2,
+          code: courseCode2,
+          admins: courseAdmins2
+        })
+        .spread(function (course, created) {
+          testCourse2 = course
+          courseController.addUserAsAdmin(pekkaEmail, courseCode2, function () {
+            courseAdmins2.push(pekkaEmail)
+            done()
+          })
+        })
+    })
+    describe('Initialization successful', function () {
+      it('Admins deleted are identical to admins in course', function (done) {
+        courseController.deleteUserFromAdmins(pekkaEmail, courseCode2, function () {
+          courseAdmins2.pop(pekkaEmail)
+          courseController.getAdminsForCourse(courseCode2)
+            .then(function (databaseAdmins, created) {
+              assert.deepEqual(databaseAdmins.admins, courseAdmins2)
+              done()
+              testCourse2.destroy().then(function () {})
+
+            }).catch(function (err) {
+              console.error(err)
+          })
+        })
+      })
+    })
+  })
 })
+
+
+
+

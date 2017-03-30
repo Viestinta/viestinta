@@ -7,11 +7,14 @@ const Lecture = require('../models/index').Lecture
  * @param req
  * @returns {Promise.<Course>}
  */
-let createCourse = function () {
-  return Course.create({
-    name: req.name,
-    code: req.code,
-    admins: req.admins,
+let findOrCreateCourse = function (req) {
+  return Course.findOrCreate({
+    where: {
+      name: req.name,
+      code: req.code,
+      admins: req.admins,
+    },
+    plain: true
   })
 }
 
@@ -27,6 +30,7 @@ let getByCode = function (code) {
     where: {
       code: code
     }
+
   })
 }
 
@@ -64,7 +68,7 @@ let addUserAsAdmin = function (userEmail, courseCode, callback){
       if (adminList.indexOf(userEmail) === -1) {
         adminList.push(userEmail)
       } else {
-        console.log("This user is already an admin in this course")
+        console.log("This user is already an admin in this course", adminList)
       }
 
       //Saves the course with potentially new adminList
@@ -89,9 +93,10 @@ let addUserAsAdmin = function (userEmail, courseCode, callback){
  * @description Deletes a userEmail from the course's adminList, given by the courseCode
  * @param userEmail
  * @param courseCode
- *
+ * @param callback
+ * @callback Runs callback after deleting user from admins
  */
-let deleteUserFromAdmins = function (userEmail, courseCode){
+let deleteUserFromAdmins = function (userEmail, courseCode, callback){
   getByCode(courseCode)
     .then(function (course) {
       let adminList = course.admins
@@ -102,16 +107,24 @@ let deleteUserFromAdmins = function (userEmail, courseCode){
       if (index > -1) {
         adminList.splice(index, 1)
       }else{
-        console.log("This user is not an admin in this course")
+        console.log("This user is not an admin in this course", adminList)
       }
 
       //Saves the course with potentially new adminList
-      course.save().then(function () {})
+      course.update({
+        admins: adminList
+      }).then(function () {
+
+        //Callback: run the code in the callback argument
+        if (callback){
+          callback()
+        }
+      })
 
       //Catches any errors that may have occurred
     }).catch(function (err) {
-    console.error(err)
-  })
+      console.error(err)
+    })
 
   //TODO: Make a return statement for conditional routing?
 }
@@ -137,13 +150,14 @@ let getAllLecturesForCourse = function (courseCode) {
 
 /**
  * @description Updates an existing course's details using model.update()
- * @param req
+ * @param courseCode
+ * @returns {Promise.<Course>}
  */
 
-let updateCourse = function(req) {
-  Course.update(req.body, {
+let updateCourse = function(courseCode) {
+  return Course.update(req.body, {
     where: {
-      id: req.params.id
+      code: courseCode
     }
   })
 }
@@ -152,19 +166,19 @@ let updateCourse = function(req) {
 
 /**
  * @description Deletes an existing course by their unique ID using model.destroy()
- * @param req
- * @param res
+ * @param courseCode
+ * @returns {Promise.<Course>}
  */
-let deleteCourse=function(req, res) {
-  Course.destroy({
+let deleteCourse=function(courseCode) {
+  return Course.destroy({
     where: {
-      id: req.params.id
+      code: courseCode
     }
   })
 }
 
 module.exports = {
-  createCourse:             createCourse,
+  findOrCreateCourse:       findOrCreateCourse,
   getByCode:                getByCode,
   getAdminsForCourse:       getAdminsForCourse,
   addUserAsAdmin:           addUserAsAdmin,
