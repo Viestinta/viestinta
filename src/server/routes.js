@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const passport = require('passport')
 const db = require('./database/models/index')
+const lecturesController = require('./database/controllers/lectures')
 const redis = require('../server/app.js')
 
 // ///////////////////////////////////////////////////
@@ -45,7 +46,16 @@ module.exports = (app) => {
       res.status(403)
     }
   })
-
+  app.get('/lectures', (req, res) => {
+    if(req.user){
+      res.status(200)
+      lecturesController.getAll().then(function (lectures) {
+        res.json(lectures)
+      })
+    } else {
+      res.status(401)
+    }
+  })
   app.get('/logout', (req, res) => {
     req.user = undefined
     res.redirect('https://auth.dataporten.no/logout')

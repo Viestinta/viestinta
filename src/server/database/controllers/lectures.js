@@ -57,7 +57,7 @@ module.exports = {
    * @returns {Promise.<Lecture>}
    */
   getAll () {
-    return Lecture.findAll()
+    return Lecture.findAll({plain: true})
   },
 
 
