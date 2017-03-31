@@ -65,14 +65,14 @@ let getAll = function() {
 
 /**
  * @description Retrive an existing Lecture by the unique ID
- * @param lecture
+ * @param id
  * @returns {Promise.<Lecture>}
  */
-let getById = function(lecture) {
+let getById = function(id) {
   return Lecture
-    .findById({
+    .find({
         where: {
-          id: lecture.id
+          id: id
         }
       })
 }

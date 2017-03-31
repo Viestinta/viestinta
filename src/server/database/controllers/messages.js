@@ -14,7 +14,6 @@ module.exports = {
     return Message.create({
       time: new Date(),
       text: req.text,
-      UserId: req.UserId,
       LectureId: req.LectureId
     })
   },

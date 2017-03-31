@@ -4,6 +4,7 @@ const assert = require('assert')
 const db = require('../../server/database/models/index')
 const courseController = require('../../server/database/controllers/courses')
 const lectureController = require('../../server/database/controllers/lectures')
+const messageController = require('../../server/database/controllers/messages')
 
 
 describe('Test suite: Course and Lecture testing', function () {
@@ -178,48 +179,44 @@ describe('Test suite: Course and Lecture testing', function () {
         })
     })
 
+    /**
+     *  @description Test for adding admins to course
+     */
 
-    describe('Initialization successful', function () {
-
-      /**
-       *  @description Test for adding admins to course
-       */
-
-      it('Admins added are identical to admins in course', function (done) {
-        courseController.addUserAsAdmin(pekkaEmail, courseCode4, function () {
-          courseAdmins4.push(pekkaEmail)
-          courseController.getAdminsForCourse(courseCode4)
-            .then(function (databaseAdmins) {
-              assert.deepEqual(databaseAdmins.admins, courseAdmins4)
-              done()
-            }).catch(function (err) {
-              console.error(err)
-            })
-        })
+    it('Admins added are identical to admins in course', function (done) {
+      courseController.addUserAsAdmin(pekkaEmail, courseCode4, function () {
+        courseAdmins4.push(pekkaEmail)
+        courseController.getAdminsForCourse(courseCode4)
+          .then(function (databaseAdmins) {
+            assert.deepEqual(databaseAdmins.admins, courseAdmins4)
+            done()
+          }).catch(function (err) {
+            console.error(err)
+          })
       })
+    })
 
-      /**
-       *  @description Test for deleting course admins
-       */
+    /**
+     *  @description Test for deleting course admins
+     */
 
-      it('Admins deleted are removed from admins in the course', function (done) {
-        courseController.deleteUserFromAdmins(pekkaEmail, courseCode4, function () {
-          courseAdmins4.pop()
-          courseController.getAdminsForCourse(courseCode4)
-            .then(function (databaseAdmins) {
-              assert.deepEqual(databaseAdmins.admins, courseAdmins4)
-              done()
+    it('Admins deleted are removed from admins in the course', function (done) {
+      courseController.deleteUserFromAdmins(pekkaEmail, courseCode4, function () {
+        courseAdmins4.pop()
+        courseController.getAdminsForCourse(courseCode4)
+          .then(function (databaseAdmins) {
+            assert.deepEqual(databaseAdmins.admins, courseAdmins4)
+            done()
 
-            }).catch(function (err) {
-              console.error(err)
-            })
-        })
+          }).catch(function (err) {
+            console.error(err)
+          })
       })
+    })
 
-      after(function (done) {
-        courseController.deleteCourse(courseCode4).then(function () {
-          done()
-        })
+    after(function (done) {
+      courseController.deleteCourse(courseCode4).then(function () {
+        done()
       })
     })
   })
@@ -382,6 +379,149 @@ describe('Test suite: Course and Lecture testing', function () {
         })
       })
     })
+  })
+
+  let courseName7 = "Data GK"
+  let courseCode7 = "TDT2048"
+  let courseAdmins7 = ['me']
+
+  let lectureName7 = "Introduction to ALUs"
+
+
+  describe('Test for getting lectures:  ' + courseCode7, function () {
+    let testLecture7 = undefined
+
+    before(function (done) {
+      courseController.findOrCreateCourse({
+        name: courseName7,
+        code: courseCode7,
+        admins: courseAdmins7
+      }).spread(function (course, then) {
+        lectureController.createLecture({
+          CourseId: course.id,
+          name: lectureName7
+        }).then(function (lecture) {
+          testLecture7 = lecture
+          done()
+        })
+
+      })
+    })
+
+
+    it('Got lecture by name', function (done) {
+      lectureController.getByName(lectureName7).then(function (lecture) {
+        assert.equal(lecture.id, testLecture7.id)
+        done()
+      })
+    })
+
+    it('Got lecture by ID', function (done) {
+      lectureController.getById(testLecture7.id).then(function (lecture) {
+        assert.equal(lecture.name, testLecture7.name)
+        done()
+      })
+
+    })
+
+    it('Got all lectures', function (done) {
+      lectureController.getAll().then(function (lectures) {
+        assert.equal(lectures[0].id, testLecture7.id)
+        done()
+      })
+
+    })
+
+    after(function (done) {
+      testLecture7.destroy().then(function () {
+        courseController.deleteCourse(courseCode7).then(function () {
+          done()
+        })
+      })
+    })
+  })
+
+
+  let courseName8 = "Database"
+  let courseCode8 = "TDT4145"
+  let courseAdmins8 = ['postgres', 'sql']
+  let lectureName8 = "Datamodellering"
+
+  describe('Test for getting all messages for a lecture', function (done) {
+
+
+    let testCourse8 = undefined
+    let testLecture8 = undefined
+    let message0 = undefined
+    let message1 = undefined
+
+    before(function (done) {
+
+      courseController.findOrCreateCourse({
+        name: courseName8,
+        code: courseCode8,
+        admins: courseAdmins8
+      }).spread(function(course, created){
+        testCourse8 = course
+        lectureController.createLecture({
+          name: lectureName8,
+          CourseId: testCourse8.id
+        }).then(function (lecture) {
+          testLecture8 = lecture
+          messageController.create({
+            text: "Kjempe kult med Databaser!",
+            LectureId: testLecture8.id
+          }).then(function (message) {
+            message0 = message
+            messageController.create({
+              text: "Ja, ikke sant?",
+              LectureId: testLecture8.id
+            }).then(function (message) {
+              message1 = message
+              done()
+            })
+          })
+        })
+      })
+    })
+
+    it('Messages are identical to test input', function (done) {
+      lectureController.getAllMessages(testLecture8).then(function (messages) {
+
+        let testMessage0 = messages[0]
+        let testMessage1 = messages[1]
+
+        if(testMessage0.text === message0.text){
+          assert.equal(testMessage0.text, message0.text)
+          assert.equal(testMessage0.id, message0.id)
+          assert.equal(testMessage1.text, message1.text)
+
+          done()
+
+        } else {
+          assert.equal(testMessage0.text, message1.text)
+          assert.equal(testMessage0.id, message1.id)
+          assert.equal(testMessage1.text, message0.text)
+
+          done()
+        }
+      })
+    })
+
+    after(function (done) {
+      message1.destroy().then(function () {
+        message0.destroy().then(function () {
+          testLecture8.destroy().then(function () {
+            testCourse8.destroy().then(function () {
+              done()
+            })
+          })
+        })
+      })
+    })
+
+
+
   })
 })
 
