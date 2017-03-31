@@ -4,6 +4,8 @@ var Lecture = require('../models/index').Lecture
 var Message = require('../models/index').Message
 var User = require('../models/index').User
 
+let courseController = require('../controllers/index').courses
+
 
 /**
  * @description Create a new Lecture using model.create()
@@ -123,6 +125,30 @@ let getAllUsers = function (lecture) {
   })
 }
 
+
+
+/**
+ * @description Gets the CourseId from the lecture
+ * @param lecture
+ * @returns Integer
+ */
+let getCourse = function (lecture) {
+  return lecture.CourseId
+}
+
+
+
+/**
+ * @description Gets admins for the lecture's course
+ * @param lecture
+ * @returns {Promise.<Course>}
+ */
+let getAdmins = function (lecture) {
+  return courseController.getAdminsForCourse(lecture.CourseId)
+}
+
+
+
 module.exports = {
   createLecture:        createLecture,
   updateLecture:        updateLecture,
@@ -132,7 +158,8 @@ module.exports = {
   getByName:            getByName,
   getAllMessages:       getAllMessages,
   getAllUsers:          getAllUsers,
-
+  getCourse:            getCourse,
+  getAdmins:            getAdmins
 }
 
 
