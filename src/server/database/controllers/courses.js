@@ -6,6 +6,7 @@ const Lecture = require('../models/index').Lecture
  * @description Creates and returns a Promise for a course
  * @param course
  * @returns {Promise.<Course>}
+ * @tutorial Use .spread(course, created)
  */
 let findOrCreateCourse = function (course) {
   return Course.findOrCreate({
@@ -149,15 +150,12 @@ let getAllLecturesForCourse = function (courseCode) {
 /**
  * @description Updates an existing course's details using model.update()
  * @param course
+ * @param updates
  * @returns {Promise.<Course>}
  */
 
-let updateCourse = function(course) {
-  return Course.update(course, {
-    where: {
-      code: course.code
-    }
-  })
+let updateCourse = function(course, updates) {
+  return course.update(updates)
 }
 
 

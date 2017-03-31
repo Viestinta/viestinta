@@ -100,14 +100,14 @@ let getByName = function(name) {
  * @returns {Promise.<Lecture>}
  */
 let getAllMessages = function(lecture) {
-  return Lecture.findAll({
+  return Message.findAll({
     where: {
-      id: lecture.id
+      LectureId: lecture.id
     },
-    include: [
+    /*include: [
     {
       model: Message, as: 'messages'
-    }]
+    }]*/
   })
 }
 
