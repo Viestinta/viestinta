@@ -2,7 +2,7 @@
 
 var Lecture = require('../models/index').Lecture
 var Message = require('../models/index').Message
-
+var User = require('../models/index').User
 
 
 /**
@@ -104,10 +104,22 @@ let getAllMessages = function(lecture) {
     where: {
       LectureId: lecture.id
     },
-    /*include: [
-    {
-      model: Message, as: 'messages'
-    }]*/
+  })
+}
+
+
+
+/**
+ * @description Returns all users related to a lecture
+ * @param lecture
+ * @returns {Promise.<Array<User>>}
+ */
+
+let getAllUsers = function (lecture) {
+  return User.findAll({
+    where: {
+      LectureId: lecture.id
+    }
   })
 }
 
@@ -119,6 +131,7 @@ module.exports = {
   getById:              getById,
   getByName:            getByName,
   getAllMessages:       getAllMessages,
+  getAllUsers:          getAllUsers,
 
 }
 

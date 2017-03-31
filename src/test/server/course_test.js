@@ -519,9 +519,6 @@ describe('Test suite: Course and Lecture testing', function () {
         })
       })
     })
-
-
-
   })
 })
 
