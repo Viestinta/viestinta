@@ -196,10 +196,19 @@ io.sockets.on('connection', function (socket) {
           socket.emit('update-feedback-interval', [resultNeg, resultPos])
         })
       })
-      // Get last 10 messages
-      messagesController.getLastTen(lecture).then(function (result) {
-        socket.emit('last-ten-messages', result.reverse())
+      // Get all messages
+
+      // If lecturer
+      // TODO
+      if (true) {
+        messagesController.getInPrioritizedOrder(lecture).then(function (result) {
+          socket.emit('all-messages-prioritized', result.reverse())
+        })
+      } else {
+        messagesController.getAllMessages(lecture).then(function (result) {
+        socket.emit('all-messages', result.reverse())
       })
+      }   
     })
   })
 
@@ -231,7 +240,7 @@ io.sockets.on('connection', function (socket) {
       msgId: id,
       value: value
     }).then(function (result) {
-      io.sockets.emit('updated-message', result)
+      io.sockets.emit('update-message-order', result)
     })
   })
 

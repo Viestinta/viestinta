@@ -100,7 +100,6 @@ module.exports = {
   /**
    * @description
    * @param req
-   * @returns {Promise.<Message>}
    */
   vote (req) {
     var msg = Message.findById(req.id).then(function (result) {
@@ -111,4 +110,5 @@ module.exports = {
       }
     })
   }
+
 }

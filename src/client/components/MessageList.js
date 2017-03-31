@@ -44,20 +44,34 @@ export default class MessageList extends Component {
 
     this.receiveMessage = this.receiveMessage.bind(this)
     this.lastTenMessages = this.lastTenMessages.bind(this)
+    this.getAllMessages = this.getAllMessages.bind(this)
+    this.getAllMessagesPrioritized = this.getAllMessagesPrioritized.bind(this)
+    this.updateMessageListOrder = this.updateMessageListOrder.bind(this)
+    this.sort = this.sort.bind(this) 
   }
 
   componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
     socket.on('last-ten-messages', this.lastTenMessages)
+    socket.on('all-messages', this.getAllMessages)
+    socket.on('update-message-order', this.updateMessageListOrder)
   }
 
   receiveMessage (msg) {
     console.log('receiveMessage: ', msg.text)
     // Copies the list
     var messages = this.state.messages.slice()
+
     // Adds the message
     messages.push(msg)
     this.setState({ messages: messages })
+  }
+
+  getAllMessages (msgList) {
+    console.log('getAllMessages: ', msgList)
+    this.setState({
+      messages: msgList
+    })
   }
 
   lastTenMessages (msgList) {
@@ -65,6 +79,32 @@ export default class MessageList extends Component {
     this.setState({
       messages: msgList
     })
+  }
+
+  updateMessageListOrder () {
+    this.sort()
+  }
+
+  sort () {
+    var list = this.state.messages.slice()
+
+    list.sort(function(msgOne, msgTwo) {
+      msgOneVotes = msgOne.votesUp - msgOne.votesDown
+      msgTwoVotes = msgTwo.votesUp - msgTwo.votesDown
+    })
+
+    if (msgOneVotes > msgTwoVotes) {
+      return -1
+    } else if (msgOneVotes < msgTwoVotes) {
+      return 1
+    } else {
+      return 0
+    }
+
+    this.setState({
+      messages: list
+    })
+
   }
 
   render () {
