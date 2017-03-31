@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import socket from '../../server/socket'
+import socket from '../socket'
+import axios from 'axios'
 
 // Theme
-import {deepOrange500} from 'material-ui/styles/colors'
+import {orange800} from 'material-ui/styles/colors'
+import {blue500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -12,6 +14,8 @@ import MessageList from './MessageList'
 import Header from './Header'
 import Login from './Login'
 import FeedbackBox from './FeedbackBox'
+import RaisedButton from 'material-ui/RaisedButton'
+
 
 const styles = {
     container: {
@@ -19,49 +23,70 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         paddingTop: 0,
-        height: 'auto',
+        height: '100%'
     },
     element: {
-        display: 'flex',
+        display: 'flex'
     }
 };
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: '#ec7c2f', // Orange
-    accent1Color:  '#2daae4', // Blue
+    primary1Color: orange800,
+    accent1Color:  blue500
   }
 })
 
 export default class ChatApp extends Component {
-    // At beginning there is no msg and the text-field is empty
+
   constructor (props) {
     super(props)
+
+    this.state = {
+      username: undefined
+    }
+
+    this.getUserInfo = this.getUserInfo.bind(this)
   }
 
-  componentDidMount () {
-    socket.on('join', this.join)
+  componentDidMount() {
+    this.getUserInfo()
   }
 
-  join () {
-    console.log('join')
-    socket.emit('join', 'Hello world from client')
+  getUserInfo () {
+    axios
+      .get("/user")
+      .then(userinfo => {
+        console.log("Returning user info: " + JSON.stringify(userinfo.data.user))
+        this.setState({
+          username: userinfo.data.user.name
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   render () {
+    const User = (
+      <div>
+        <p>Logget inn som: {this.state.username}</p>
+      </div>
+    )
     return (
-        <MuiThemeProvider muiTheme={muiTheme}>
-          <div style={styles.container}>
-            <Header />
-            <Login />
-            {/* List of messages */}
-            <MessageList />
-            {/* Inputfield for user */}
-            <ChatBox />
-            {/* Sidebar with feedback-options */}
-            <FeedbackBox />
-          </div>
-        </MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <div style={styles.container}>
+          <Header />
+          {/* Login button or username */}
+          { !this.state.username ? <Login/> : User }
+          {/* List of messages */}
+          <MessageList />
+          {/* Sidebar with feedback-options */}
+          <FeedbackBox />
+          {/* Inputfield for user */}
+          <ChatBox />
+        </div>
+      </MuiThemeProvider>
     )
   }
 }

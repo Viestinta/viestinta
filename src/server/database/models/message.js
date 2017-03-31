@@ -8,6 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     time: {
       type: DataTypes.DATE,
       defaultValue: new Date(),
+      // Return date and/or clock in a nice format
       get: function () {
         var date = new Date(this.getDataValue('time'))
         // var string = date.getDay() + '.' + date.getMonth() + '.' + date.getYear()
@@ -15,14 +16,13 @@ module.exports = function (sequelize, DataTypes) {
         var hours = date.getHours()
         if (date.getHours() < 10) {
           hours = '0' + date.getHours()
-        }else{
-
         }
+
         var mins = date.getMinutes()
         if (date.getMinutes() < 10) {
           mins = '0' + date.getMinutes()
         }
-        return hours + ":" + mins
+        return hours + ':' + mins
       }
 
     },
@@ -36,9 +36,6 @@ module.exports = function (sequelize, DataTypes) {
         }
       }
     },
-    // user: {
-    // }
-    // lecture: {}
     votesUp: {
       type: DataTypes.INTEGER,
       defaultValue: 0
@@ -49,17 +46,18 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     classMethods: {
-
-      /*
-      assosiate: function(models) {
+      /**
+       * @description Associations to User model and Lecture model
+       * @param models
+       */
+      associate: function (models) {
         Message.belongsTo(models.User, {
-          onDelete: 'CASCADE',
-          foreignKey: {
-            allowNull: true
-          }
+          onDelete: 'CASCADE'
         }),
-        // Add lecture
-      } */
+        Message.belongsTo(models.Lecture, {
+          onDelete: 'CASCADE'
+        })
+      }
     },
     instanceMethods: {
 

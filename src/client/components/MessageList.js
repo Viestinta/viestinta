@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import socket from '../../server/socket'
-import Paper from 'material-ui/Paper';
+import socket from '../socket'
+import Paper from 'material-ui/Paper'
+import {List} from 'material-ui/List'
 
 import Message from './Message'
 
@@ -11,26 +12,26 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
 
-    maxWidth:   500,
-    maxHeight:  400,
-    width:      '100%',
-    height:     '100%',
+    maxWidth: 500,
+    maxHeight: 400,
+    width: '100%',
+    height: '100%',
 
     marginTop: 10,
-    padding: 15,
+    paddingRight: 20,
 
     overflowY: 'auto',
-    minHeight: 0,
+    minHeight: 0
   },
 
   child: {
-    minHeight: 'auto',
+    height: 500,
     width: '100%',
 
-    padding: 10,
-    margin: 5,
-    textAlign: 'left',
-  },
+    padding: 0,
+    margin: 0,
+    textAlign: 'left'
+  }
 };
 
 export default class MessageList extends Component {
@@ -68,12 +69,9 @@ export default class MessageList extends Component {
 
   render () {
     var list = this.state.messages.map((message, i) => {
-      console.log('Looping trought messages in messageList')
+      console.log('Looping through messages in messageList')
 
       var time = message.time
-      // console.log('Date: ', date)
-      // var time = date.format('dd.MM.yyyy HH:mm')
-      // console.log('Time: ', time)
       return (
         <Message
           key={i}
@@ -85,7 +83,9 @@ export default class MessageList extends Component {
 
     return (
       <Paper zDepth={3} style={styles.parent}>
-        {list}
+        <List style={styles.child}>
+          {list}
+        </List>
       </Paper>
     )
   }

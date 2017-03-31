@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import socket from '../../server/socket'
+import socket from '../socket'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
 const style = {
-  margin: 12
+  margin: '12px',
+  minWidth: '105px'
 }
 
 export default class FeedbackMenu extends Component {
@@ -22,7 +23,8 @@ export default class FeedbackMenu extends Component {
 
   componentDidMount () {
     // Activate button every x min
-    this.interval = setInterval(this.activateButtons, 5 * 6000)
+    // TODO: set to 5 x 6000 after testing
+    this.interval = setInterval(this.activateButtons, 3000)
   }
 
   activateButtons () {
@@ -48,10 +50,14 @@ export default class FeedbackMenu extends Component {
 
   render () {
     return (
-        <div id='feedbackMenuBar'>
-          <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
-          <RaisedButton style={style} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
-        </div>
+      <div id='feedbackMenuBar'>
+        <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
+        <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
+      </div>
     )
   }
+}
+
+FeedbackMenu.propTypes = {
+  onClick: React.PropTypes.func
 }
