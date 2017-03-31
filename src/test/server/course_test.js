@@ -317,7 +317,7 @@ describe('Test suite: Course and Lecture testing', function () {
       })
     })
   })
-/*
+
   let courseName6 = 'Matematikk 3'
   let courseCode6 = 'TMA1010'
   let courseAdmins6 = ['me']
@@ -335,7 +335,6 @@ describe('Test suite: Course and Lecture testing', function () {
       })
         .spread(function (course, created) {
           testCourse6 = course
-          console.log("Course id: " + testCourse6.id)
           lectureController.createLecture({
             name: 'Turing Machines',
             CourseId: testCourse6.id
@@ -356,9 +355,18 @@ describe('Test suite: Course and Lecture testing', function () {
 
     it('Lectures are retrieved successfully', function (done) {
 
-      courseController.getAllLecturesForCourse(courseCode6).spread(function (lectures, created) {
-        console.log("Lectures from database: " + lectures)
-        console.log("Local lectures: " + [testLecture6_1, testLecture6_2])
+      courseController.getAllLecturesForCourse(courseCode6, function (lectures) {
+
+        let lecture1 = lectures[0]
+        let lecture2 = lectures[1]
+
+        if (lecture1.name === testLecture6_1.name){
+          assert.equal(lecture1.admins, testLecture6_1.admins)
+          assert.equal(lecture2.name, testLecture6_2.name)
+        } else {
+          assert.equal(lecture2.admins, testLecture6_1.admins)
+          assert.equal(lecture1.name, testLecture6_2.name)
+        }
 
         done()
       })
@@ -368,13 +376,13 @@ describe('Test suite: Course and Lecture testing', function () {
     after(function (done) {
       testLecture6_1.destroy().then(function () {
         testLecture6_2.destroy().then(function () {
-          courseController.deleteCourse(courseCode6).then(function () {
+          testCourse6.destroy().then(function () {
             done()
           })
         })
       })
     })
-  })*/
+  })
 })
 
 

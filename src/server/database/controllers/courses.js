@@ -133,14 +133,18 @@ let deleteUserFromAdmins = function (userEmail, courseCode, callback){
 /**
  * @description Returns all lectures to the course specified by the courseCode
  * @param courseCode
+ * @param callback
  * @returns {Promise.<Lecture>}
+ * @callback callback
  */
-let getAllLecturesForCourse = function (courseCode) {
+let getAllLecturesForCourse = function (courseCode, callback) {
   getByCode(courseCode).then(function (course) {
-    return Lecture.findAll({
-              where: {
-                CourseId: course.id
-              }
+    Lecture.findAll({
+      where: {
+        CourseId: course.id
+      }
+    }).then(function(lectures){
+      callback(lectures)
     })
   })
 }
