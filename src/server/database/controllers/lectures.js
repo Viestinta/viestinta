@@ -28,14 +28,11 @@ let createLecture = function(lecture) {
 /**
  * @description Edit an existing Lecture details using model.update()
  * @param lecture
+ * @param updates
  * @returns {Promise.<Lecture>}
  */
-let updateLecture = function(lecture) {
-  return Lecture.update(lecture, {
-    where: {
-      id: lecture.id
-    }
-  })
+let updateLecture = function(lecture, updates) {
+  return lecture.update(updates)
 }
 
 

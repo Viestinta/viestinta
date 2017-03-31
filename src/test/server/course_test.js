@@ -388,7 +388,7 @@ describe('Test suite: Course and Lecture testing', function () {
   let lectureName7 = "Introduction to ALUs"
 
 
-  describe('Test for getting lectures:  ' + courseCode7, function () {
+  describe('Test for getting lectures and updating:  ' + courseCode7, function () {
     let testLecture7 = undefined
 
     before(function (done) {
@@ -430,6 +430,18 @@ describe('Test suite: Course and Lecture testing', function () {
         done()
       })
 
+    })
+
+    it('Updated a lecture', function (done) {
+      let updates = {name: "Introduction to CPUs"}
+      lectureController.updateLecture(testLecture7, updates).then(function () {
+        lectureController.getById(testLecture7.id).then(function (lectureID) {
+          lectureController.getByName(updates.name).then(function (lectureName) {
+            assert.equal(lectureID.name, lectureName.name)
+            done()
+          })
+        })
+      })
     })
 
     after(function (done) {
