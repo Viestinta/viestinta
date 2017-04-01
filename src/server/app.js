@@ -240,19 +240,20 @@ io.sockets.on('connection', function (socket) {
 
   // When somebody votes on a message
   socket.on('new-vote-on-message', function (id, value) {
-    console.log('[app] new-voting-message: ' + value)
-    messagesController.vote({
-      id: id,
-      value: value
-    }).then(function (result) {
-      console.log(".then in new-vote-on-message:", result)
+    console.log('[app] new-voting-message: ' + id + " with " + value)
+    messagesController.retrieve({id: id})
+      .then(function(msg) {
+        console.log("Message after retrieve: ", msg)
+        msg.vote(value).then(function (result) {
+          console.log(".then in new-vote-on-message:", result)
 
-      // TODO: change to getAllToLecture
-      messagesController.getAll().then(function (msgList) {
-        //console.log("Get all afterwards ", msgList)
-        io.sockets.emit('update-message-order', msgList)  
+          // TODO: change to getAllToLecture
+          messagesController.getAll().then(function (msgList) {
+            //console.log("Get all afterwards ", msgList)
+            io.sockets.emit('update-message-order', msgList)  
+          })
+        })
       })
-    })
   })
 
   // When somebody gives feedback

@@ -102,11 +102,16 @@ module.exports = {
    */
   retrieve (req) {
     return Message
-      .findById(req.params.MessageId, {
+      .find({
+        where: {
+          id: req.id
+        },
+        raw: true
+        /*, {
         include: [{
           model: Message,
           as: 'message'
-        }]
+        }]*/
       })
   },
 
@@ -116,8 +121,13 @@ module.exports = {
    * @description
    * @param req
    */
+   /*
   vote (req) {
-    return Message.findById(req.id).then(function (msg) {
+    return Message.findById(
+      req.params.id
+    ).then(function (msg) {
+      console.log("Req: ", req)
+      console.log(msg.text)
       if (req.value === -1) {
         msg.votesDown ++
       } else {
@@ -125,5 +135,6 @@ module.exports = {
       }
     })
   }
+  */
 
 }
