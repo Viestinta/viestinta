@@ -24,7 +24,10 @@ module.exports = function (sequelize, DataTypes) {
        * @description Associations to lecture model
        * @param models
        */
-      associate: function (models) {      
+      associate: function (models) {
+        Feedback.belongsTo(models.User, {
+          onDelete: 'CASCADE'
+        })
         Feedback.belongsTo(models.Lecture, {
           onDelete: 'CASCADE'
         })

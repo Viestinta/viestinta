@@ -2,64 +2,112 @@
  * Created by jacob on 20.02.17.
  */
 
-const User = require('../models/index').User
 // Controller for user model
+const User = require('../models/index').User
+const adminRoleController = require('../controllers/index').adminRoles
+
+
+
+/**
+ * @description Creates and returns a Promise for a user
+ * @param user
+ * @returns {Promise.<User>}
+ */
+let findOrCreateUser = function(user) {
+  return User.findOrCreate({
+    name: user.name,
+    student_id: user.student_id,
+    email: user.email,
+    email_verified: user.email_verified,
+    sub: user.sub
+  })
+}
+
+
+
+/**
+ * @description Retrieves user by name and returns a Promise for that user
+ * @param name
+ * @returns {Promise.<User>}
+ */
+let getByName = function(name) {
+  return User.find({
+    where: {
+      name: name
+    }
+  })
+}
+
+
+
+/**
+ * @description Gets user by subID and returns a Promise for that user
+ * @param sub
+ * @returns {Promise.<User>}
+ */
+let getBySub = function(sub) {
+  return User.find({
+    where: {
+      sub: sub
+    }
+  })
+}
+
+
+
+/**
+ * @description Retrieves user by email and returns a Promise for that user
+ * @param email
+ * @returns {Promise.<User>}
+ */
+let getByEmail = function(email) {
+  return User.find({
+    where: {
+      email: email
+    }
+  })
+}
+
+
+
+/**
+ * @description Edits an existing user's details using model.update()
+ * @param user
+ * @param updates
+ * @returns {Promise.<User>}
+ */
+let updateUser = function(user, updates) {
+  return user.update(updates)
+}
+
+
+
+/**
+ * @description Deletes an existing user by their unique ID
+ * @description and their respective adminRoles
+ * @param user
+ * @param callback
+ * @callback Callbacks when all adminRoles and the user has been deleted
+ */
+let deleteUser = function(user, callback) {
+  adminRoleController.getAllByUserId(user.id).then(function (adminRoles) {
+    adminRoleController.deleteAllAdminRoles(adminRoles).then(function () {
+      user.destroy().then(function () {
+        if (callback) {
+          callback()
+        }
+      })
+    })
+  })
+}
+
+
 
 module.exports = {
-
-
-  /**
-   * @description Creates and returns a Promise for a user
-   * @param req
-   * @returns {Promise.<User>}
-   */
-  create (req) {
-    return User.create({
-      name: req.name
-    })
-  },
-
-
-
-  /**
-   * @description Retrieves user by name and returns a Promise for that user
-   * @param name
-   * @returns {Promise.<User>}
-   */
-  retrieveByName (name) {
-    return User.find({
-      where: {
-        name: name
-      }
-    })
-  },
-
-
-
-  /**
-   * @description Edits an existing user's details using model.update()
-   * @param req
-   */
-  update (req) {
-    User.update(req.body, {
-      where: {
-        id: req.params.id
-      }
-    })
-  },
-
-
-
-  /**
-   * @description Deletes an existing user by their unique ID using model.destroy()
-   * @param req
-   * @param res
-   */
-  delete (req, res) {
-    User.destroy({
-      where: {
-        id: req.params.id
-      }
-    })
-  }
+  findOrCreateUser:       findOrCreateUser,
+  getByName:              getByName,
+  getBySub:               getBySub,
+  getByEmail:             getByEmail,
+  updateUser:             updateUser,
+  deleteUser:             deleteUser,
 }

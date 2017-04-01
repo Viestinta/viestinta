@@ -38,7 +38,7 @@ module.exports = function (sequelize, DataTypes) {
         }
       },
       /**
-       * @description Associations to User model
+       * @description Associations to User and Course model
        * @param models
        */
       associate: function(models) {
@@ -49,13 +49,6 @@ module.exports = function (sequelize, DataTypes) {
         Lecture.hasMany(models.User, {
           foreignKey: {
             allowNull: true
-          }
-        })
-
-        //Lecture has a connected course
-        Lecture.belongsTo(models.Course, {
-          foreignKey: {
-            allowNull: false
           }
         })
 

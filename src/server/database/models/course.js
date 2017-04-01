@@ -14,10 +14,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,   //TMA4100
       allowNull: false
     },
-    admins: {                                   //HeadLecturer is default admin
-      type: DataTypes.ARRAY(DataTypes.STRING),  //Array of email Strings
-      allowNull: false                          //Could have been a relation to a user
-    },
     description: {
       type: DataTypes.STRING
     }
@@ -27,11 +23,26 @@ module.exports = function (sequelize, DataTypes) {
     // class-wide methods
     classMethods: {
       /**
-       * @description No associations to other models
+       * @description Course hasMany association to Lecture. Course hasMany association to User.
        * @param models
        */
       // Associations to other models
       associate: function (models) {
+        Course.hasMany(models.Lecture, {
+          foreignKey: {
+            allowNull: true
+          }
+        })
+        Course.hasMany(models.User, {
+          foreignKey: {
+            allowNull: true
+          }
+        })
+        Course.hasMany(models.AdminRole, {
+          foreignKey: {
+            allowNull: true
+          }
+        })
       }
     }
   })

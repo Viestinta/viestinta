@@ -1,39 +1,35 @@
-/**
- * Created by jacob on 20.02.17.
- */
 
-// Controller for user model
-const User = require('../models/index').User
-const adminController = require('../controllers/admins')
+// Controller for adminRole relation model
+
+const AdminRole = require('../models/index').AdminRole
 
 
 
 /**
- * @description Creates and returns a Promise for a user
- * @param user
- * @returns {Promise.<User>}
+ * @description Creates or finds an AdminRole
+ * @param adminRole
+ * @returns {Promise.<AdminRole>}
  */
-let findOrCreateUser = function(user) {
-  return User.findOrCreate({
-    name: user.name,
-    student_id: user.student_id,
-    email: user.email,
-    email_verified: user.email_verified,
-    sub: user.sub
+let findOrCreateAdminRole = function(adminRole) {
+  return AdminRole.findOrCreate({
+    where: {
+      CourseId: adminRole.CourseId,
+      UserId: adminRole.UserId,
+    },
   })
 }
 
 
 
 /**
- * @description Retrieves user by name and returns a Promise for that user
- * @param name
- * @returns {Promise.<User>}
+ * @description Get all AdminRoles related to a user
+ * @param UserId
+ * @returns {Promise.<AdminRole>}
  */
-let getByName = function(name) {
-  return User.find({
+let getAllByUserId = function(UserId) {
+  return AdminRole.findAll({
     where: {
-      name: name
+      UserId: UserId
     }
   })
 }
@@ -41,14 +37,14 @@ let getByName = function(name) {
 
 
 /**
- * @description Gets user by subID and returns a Promise for that user
- * @param sub
- * @returns {Promise.<User>}
+ * @description Get all AdminRoles related to a course
+ * @param CourseId
+ * @returns {Promise.<AdminRole>}
  */
-let getBySub = function(sub) {
-  return User.find({
+let getAllByCourseId = function (CourseId) {
+  return AdminRole.findAll({
     where: {
-      sub: sub
+      CourseId: CourseId
     }
   })
 }
@@ -56,14 +52,16 @@ let getBySub = function(sub) {
 
 
 /**
- * @description Retrieves user by email and returns a Promise for that user
- * @param email
- * @returns {Promise.<User>}
+ * @description Returns a unique adminRole defined by both the user and course
+ * @param CourseId
+ * @param UserId
+ * @returns {Promise.<AdminRole>}
  */
-let getByEmail = function(email) {
-  return User.find({
+let getSpecificAdminRole = function (CourseId, UserId) {
+  return AdminRole.findAll({
     where: {
-      email: email
+      CourseId: CourseId,
+      UserId: UserId,
     }
   })
 }
@@ -71,64 +69,131 @@ let getByEmail = function(email) {
 
 
 /**
- * @description Edits an existing user's details using model.update()
- * @param user
+ * @description Updates the adminRole with a new type
+ * @param adminRole
+ * @param type
+ * @return {Promise.<AdminRole>}
+ */
+let updateAdminRoleType = function (adminRole, type) {
+  return adminRole.update({type: type})
+}
+
+
+
+/**
+ * @description Edits an existing adminRole's details using model.update()
+ * @param adminRole
+ * @returns {Promise.<AdminRole>}
+ */
+let updateAdminRole = function(adminRole) {
+  return adminRole.update(adminRole, {
+    where: {
+      id: adminRole.id
+    }
+  })
+}
+
+
+
+/**
+ * @description Deletes an existing adminRole by their unique ID
+ * @param adminRole
+ * @returns {Promise.<AdminRole>}
+ */
+let deleteAdminRole = function(adminRole) {
+  return adminRole.destroy()
+}
+
+
+
+/**
+ * @description
+ * @param adminRoles
  * @param callback
- * @callback
+ * @callback Callbacks when all adminRoles have been deleted
  */
-let updateUser = function(user, callback) {
-  User.update(user, {
-    where: {
-      id: user.id
-    }
-  })
-}
-
-
-
-/**
- * @description Deletes an existing user by their unique ID
- * @description and deletes the related Admin object if it exists
- * @param user
- * @param callback
- * @callback
- */
-let deleteUser = function(user, callback) {
-  let Promise = adminController.getBySub(user.sub)
-  if (Promise) {
-    Promise.then(function (admin) {
-      adminController.deleteAdmin(admin).then(function () {
-        User.destroy({
-          where: {
-            id: user.id
-          }
-        }).then(function () {
-          if(callback){
-            callback()
-          }
-        })
-      })
-    })
-  } else {
-    User.destroy({
-      where: {
-        id: user.id
+let deleteAllAdminRoles = function (adminRoles, callback) {
+  let adminRolesProcessed = 0
+  adminRoles.forEach(function (adminRole) {
+    deleteAdminRole(adminRole).then(function () {
+      adminRolesProcessed++
+      if(adminRolesProcessed === adminRoles.length){
+        if(callback){
+          callback()
+        }
       }
-    }).then(function () {
-      if (callback){
+    })
+  })
+}
+
+
+
+/**
+ * @description Deactivates the AdminRole
+ * @param adminRole
+ * @returns {Promise.<AdminRole>}
+ */
+let deactivateAdminRole = function (adminRole) {
+  return adminRole.update({active: false})
+}
+
+
+
+/**
+ * @description Activates the AdminRole
+ * @param adminRole
+ * @returns {Promise.<AdminRole>}
+ */
+let activateAdminRole = function (adminRole) {
+  return adminRole.update({active: true})
+}
+
+
+
+/**
+ * @description Creates an AdminRole for the given course and user
+ * @param user
+ * @param course
+ * @returns {Promise.<AdminRole>}
+ */
+let addUserAsAdminToCourse = function (user, course){
+  return findOrCreateAdminRole({
+    CourseId: course.id, UserId: user.id,
+  })
+}
+
+
+
+/**
+ * @description Deletes an adminRole specified by user and course
+ * @param user
+ * @param course
+ * @param callback
+ * @callback Callbacks when user has been deleted from admins
+ */
+let deleteUserFromAdmins = function (user, course, callback){
+  getSpecificAdminRole(user.id, course.id).then(function(adminRole){
+    deleteAdminRole(adminRole).then(function () {
+      if(callback){
         callback()
       }
     })
-  }
+  })
 }
 
 
 
 module.exports = {
-  findOrCreateUser:       findOrCreateUser,
-  getByName:              getByName,
-  getBySub:               getBySub,
-  getByEmail:             getByEmail,
-  updateUser:             updateUser,
-  deleteUser:             deleteUser,
+  findOrCreateAdminRole:    findOrCreateAdminRole,
+  getAllByUserId:           getAllByUserId,
+  getAllByCourseId:         getAllByCourseId,
+  getSpecificAdminRole:     getSpecificAdminRole,
+  updateAdminRole:          updateAdminRole,
+  updateAdminRoleType:      updateAdminRoleType,
+  deleteAdminRole:          deleteAdminRole,
+  deleteAllAdminRoles:      deleteAllAdminRoles,
+  deactivateAdminRole:      deactivateAdminRole,
+  activateAdminRole:        activateAdminRole,
+  addUserAsAdminToCourse:   addUserAsAdminToCourse,
+  deleteUserFromAdmins:     deleteUserFromAdmins,
 }

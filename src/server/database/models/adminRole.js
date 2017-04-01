@@ -1,16 +1,19 @@
 'use strict'
 
-// User model
+// AdminRole relation model
 
 module.exports = function (sequelize, DataTypes) {
-    // Definition of User attributes
+    // Definition of AdminRole attributes
 
-  var User = sequelize.define('User', {
-    name: DataTypes.STRING,
-    student_id: DataTypes.INTEGER,
-    email: DataTypes.STRING,
-    email_verified: DataTypes.BOOLEAN,
-    sub: DataTypes.STRING
+  var AdminRole = sequelize.define('AdminRole', {
+    roleType: {
+      type: DataTypes.STRING,
+      defaultValue: "Foreleser"
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   }, {
 
       // Definition of methods related to the user object
@@ -25,5 +28,5 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   })
-  return User
+  return AdminRole
 }
