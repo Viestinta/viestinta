@@ -168,6 +168,7 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('login', function (data) {
     console.log('[app] login')
+
     //Create test user
     user.create({name: 'Pekka'})
       .then(function () {
@@ -224,10 +225,13 @@ io.sockets.on('connection', function (socket) {
     messagesController.create(msg).then(function (result) {
       //result.setUser(socket.user)
       //result.setLecture(socket.lecture)
+      
       io.sockets.emit('receive-message', {
         id: result.id,
         text: result.text,
         time: result.time,
+        votesUp: result.votesUp,
+        votesDown: result.votesDown,
         UserId: result.UserId,
         LectureId: result.LectureId
       })
@@ -241,7 +245,13 @@ io.sockets.on('connection', function (socket) {
       id: id,
       value: value
     }).then(function (result) {
-      io.sockets.emit('update-message-order', result)
+      console.log(".then in new-vote-on-message:", result)
+
+      // TODO: change to getAllToLecture
+      messagesController.getAll().then(function (msgList) {
+        //console.log("Get all afterwards ", msgList)
+        io.sockets.emit('update-message-order', msgList)  
+      })
     })
   })
 
@@ -262,6 +272,7 @@ io.sockets.on('connection', function (socket) {
     // Get feedback from database for past x minuts
     feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
       feedbacksController.getLastIntervalPos().then(function (resultPos) {
+        console.log("Feedback results: ", resultNeg, resultPos)
         io.sockets.emit('update-feedback-interval', [resultNeg, resultPos])
       })
     })

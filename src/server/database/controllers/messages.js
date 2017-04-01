@@ -73,11 +73,26 @@ module.exports = {
   getAllToLecture (lecture) {
     return Message.findAll({
       where: {
-        LectureId: lecture.id
-      }
+        LectureId: null
+      },
+      order: '"time" DESC',
+      limit: 10
+    }).then(function (result) {
+      console.log("Result: ", result)
     })
   },
 
+
+/**
+   * @description Get all 
+   * @returns {Promise.<Message>}
+   */
+  getAll () {
+    return Message.findAll({
+      raw: true,
+      limit: 4
+    })
+  },
 
 
   /**

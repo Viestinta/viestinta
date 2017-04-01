@@ -44,7 +44,6 @@ export default class MessageList extends Component {
 
     this.receiveMessage = this.receiveMessage.bind(this)
     this.getAllMessages = this.getAllMessages.bind(this)
-    this.getAllMessagesPrioritized = this.getAllMessagesPrioritized.bind(this)
     this.updateMessageListOrder = this.updateMessageListOrder.bind(this)
     this.sort = this.sort.bind(this) 
   }
@@ -72,25 +71,29 @@ export default class MessageList extends Component {
     })
   }
 
-  updateMessageListOrder () {
+  updateMessageListOrder (msgList) {
+    this.setState({ messages: msgList})
+    console.log("Updated msgListorder: ", msgList)
     this.sort()
   }
 
   sort () {
     var list = this.state.messages.slice()
+    console.log("List: ", list)
 
     list.sort(function(msgOne, msgTwo) {
-      msgOneVotes = msgOne.votesUp - msgOne.votesDown
-      msgTwoVotes = msgTwo.votesUp - msgTwo.votesDown
+      var msgOneVotes = msgOne.votesUp - msgOne.votesDown
+      var msgTwoVotes = msgTwo.votesUp - msgTwo.votesDown
+    
+      console.log(msgOne.text, ": ", msgOne.votesUp, " - ", msgOne.votesDown)
+      if (msgOneVotes > msgTwoVotes) {
+        return -1
+      } else if (msgOneVotes < msgTwoVotes) {
+        return 1
+      } else {
+        return 0
+      }
     })
-
-    if (msgOneVotes > msgTwoVotes) {
-      return -1
-    } else if (msgOneVotes < msgTwoVotes) {
-      return 1
-    } else {
-      return 0
-    }
 
     this.setState({
       messages: list
