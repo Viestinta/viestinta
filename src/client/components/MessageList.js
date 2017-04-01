@@ -43,7 +43,6 @@ export default class MessageList extends Component {
     }
 
     this.receiveMessage = this.receiveMessage.bind(this)
-    this.lastTenMessages = this.lastTenMessages.bind(this)
     this.getAllMessages = this.getAllMessages.bind(this)
     this.getAllMessagesPrioritized = this.getAllMessagesPrioritized.bind(this)
     this.updateMessageListOrder = this.updateMessageListOrder.bind(this)
@@ -52,7 +51,6 @@ export default class MessageList extends Component {
 
   componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
-    socket.on('last-ten-messages', this.lastTenMessages)
     socket.on('all-messages', this.getAllMessages)
     socket.on('update-message-order', this.updateMessageListOrder)
   }
@@ -69,13 +67,6 @@ export default class MessageList extends Component {
 
   getAllMessages (msgList) {
     console.log('getAllMessages: ', msgList)
-    this.setState({
-      messages: msgList
-    })
-  }
-
-  lastTenMessages (msgList) {
-    console.log('lastTenMessages: ', msgList)
     this.setState({
       messages: msgList
     })
@@ -117,6 +108,7 @@ export default class MessageList extends Component {
           key={i}
           time={time}
           text={message.text}
+          id={message.id}
         />
       )
     })

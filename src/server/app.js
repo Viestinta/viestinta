@@ -225,6 +225,7 @@ io.sockets.on('connection', function (socket) {
       //result.setUser(socket.user)
       //result.setLecture(socket.lecture)
       io.sockets.emit('receive-message', {
+        id: result.id,
         text: result.text,
         time: result.time,
         UserId: result.UserId,
@@ -233,11 +234,11 @@ io.sockets.on('connection', function (socket) {
     })
   })
 
-  // When a new message is sendt from somebody
-  socket.on('new-voting-message', function (id, value) {
+  // When somebody votes on a message
+  socket.on('new-vote-on-message', function (id, value) {
     console.log('[app] new-voting-message: ' + value)
     messagesController.vote({
-      msgId: id,
+      id: id,
       value: value
     }).then(function (result) {
       io.sockets.emit('update-message-order', result)

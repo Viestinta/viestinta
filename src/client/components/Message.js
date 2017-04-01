@@ -1,4 +1,6 @@
 import React from 'react'
+import socket from '../socket'
+
 import Paper from 'material-ui/Paper'
 import FlatButton from 'material-ui/FlatButton'
 import ActionSchedule from 'material-ui/svg-icons/action/schedule'
@@ -85,6 +87,7 @@ export default class Message extends React.Component {
     this.handleVoteUp = this.handleVoteUp.bind(this)
     this.handleVoteDown = this.handleVoteDown.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
+    this.sendVote = this.sendVote.bind(this)
   }
 
   handleVoteUp () {
@@ -95,6 +98,7 @@ export default class Message extends React.Component {
       open: true,
       actionInfo: 'Stemte melding opp.'
     })
+    this.sendVote()
   }
 
   handleVoteDown () {
@@ -106,6 +110,18 @@ export default class Message extends React.Component {
       open: true,
       actionInfo: 'Stemte melding ned.'
     })
+    this.sendVote()
+  }
+
+  sendVote () {
+    var value = 0
+    if (this.state.voteUp) {
+      value = 1
+    } else if (this.state.voteDown) {
+      value = -1
+    }
+    var msgId = this.props.id
+    socket.emit('new-vote-on-message', msgId, value)
   }
 
   handleRequestClose () {

@@ -102,7 +102,7 @@ module.exports = {
    * @param req
    */
   vote (req) {
-    var msg = Message.findById(req.id).then(function (result) {
+    return Message.findById(req.id).then(function (msg) {
       if (req.value === -1) {
         msg.votesDown ++
       } else {
