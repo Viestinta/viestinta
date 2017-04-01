@@ -158,7 +158,8 @@ let activateAdminRole = function (adminRole) {
  */
 let addUserAsAdminToCourse = function (user, course){
   return findOrCreateAdminRole({
-    CourseId: course.id, UserId: user.id,
+    CourseId: course.id,
+    UserId: user.id,
   })
 }
 
@@ -172,8 +173,11 @@ let addUserAsAdminToCourse = function (user, course){
  * @callback Callbacks when user has been deleted from admins
  */
 let deleteUserFromAdmins = function (user, course, callback){
-  getSpecificAdminRole(user.id, course.id).then(function(adminRole){
+
+  getSpecificAdminRole(course.id, user.id).spread(function(adminRole, created){
+
     deleteAdminRole(adminRole).then(function () {
+
       if(callback){
         callback()
       }

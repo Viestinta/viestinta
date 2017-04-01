@@ -5,6 +5,7 @@
 // Controller for user model
 const User = require('../models/index').User
 const adminRoleController = require('../controllers/index').adminRoles
+const adminRoleController2 = require('../controllers/adminRoles')
 
 
 
@@ -15,11 +16,12 @@ const adminRoleController = require('../controllers/index').adminRoles
  */
 let findOrCreateUser = function(user) {
   return User.findOrCreate({
-    name: user.name,
-    student_id: user.student_id,
-    email: user.email,
-    email_verified: user.email_verified,
-    sub: user.sub
+    where: {
+      name: user.name,
+      student_id: user.student_id,
+      email: user.email,
+      sub: user.sub
+    }
   })
 }
 
@@ -90,14 +92,24 @@ let updateUser = function(user, updates) {
  * @callback Callbacks when all adminRoles and the user has been deleted
  */
 let deleteUser = function(user, callback) {
-  adminRoleController.getAllByUserId(user.id).then(function (adminRoles) {
-    adminRoleController.deleteAllAdminRoles(adminRoles).then(function () {
-      user.destroy().then(function () {
-        if (callback) {
-          callback()
-        }
-      })
-    })
+  adminRoleController2.getAllByUserId(user.id)
+    .spread(function (adminRoles, created) {
+      if(adminRoles) {
+        adminRoleController2.deleteAllAdminRoles(adminRoles)
+          .then(function () {
+            user.destroy().then(function () {
+              if (callback) {
+                callback()
+              }
+            })
+          })
+      } else {
+        user.destroy().then(function () {
+          if(callback){
+            callback()
+          }
+        })
+      }
   })
 }
 

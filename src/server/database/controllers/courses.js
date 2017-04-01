@@ -36,12 +36,12 @@ let getByCode = function (code) {
 
 
 /**
- * @description Returns the list of admins for a course
+ * @description Returns all admins for course
  * @param course
- * @returns {Promise.<Course>}
+ * @returns {Promise.<AdminRole>}
  */
 let getAdminsForCourse = function (course) {
-  return AdminRole.find({
+  return AdminRole.findAll({
     where: {
       CourseId: course.id
     },

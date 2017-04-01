@@ -139,9 +139,11 @@ let getCourse = function (lecture) {
  * @description Gets admins for the lecture's course
  * @param lecture
  * @returns {Promise.<Course>}
+ * @deprecated TODO: Needs update
  */
 let getAdmins = function (lecture) {
   return courseController.getAdminsForCourse(lecture.CourseId)
+
 }
 
 

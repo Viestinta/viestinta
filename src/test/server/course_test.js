@@ -157,12 +157,10 @@ describe('Test suite: Course and Lecture testing', function () {
 
 
   /**TEST 4 DELETE COURSE ADMINS**/
+  let courseCode4 = 'TDT4100'
+  let courseName4 = 'Objekt Orientert Programmering'
 
-/*
   describe('Test for adding and deleting admins from course: ' + courseCode4, function () {
-
-    let courseName4 = 'Objekt Orientert Programmering'
-    let courseCode4 = 'TDT4100'
 
     let testCourse4 = undefined
 
@@ -179,56 +177,80 @@ describe('Test suite: Course and Lecture testing', function () {
 
     before(function (done) {
 
-      courseController.findOrCreateCourse(
-        {
-          name: courseName4,
-          code: courseCode4,
-        })
-        .spread(function (course, created) {
-          testCourse4 = course
+      //Create testUser1
+      userController.findOrCreateUser({
+        name: testUser1Name,
+        email: testUser1Email
+      }).spread(function (user, created) {
+        testUser1 = user
 
-          done()
+        //Create testUser2
+        userController.findOrCreateUser({
+          name: testUser2Name,
+          email: testUser2Email
+        }).spread(function (user, created) {
+          testUser2 = user
+
+          //Create testCourse
+          courseController.findOrCreateCourse(
+            {
+              name: courseName4,
+              code: courseCode4,
+            })
+            .spread(function (course, created) {
+              testCourse4 = course
+              //Finish setup
+              done()
+            })
         })
+      })
     })
 
     /**
      *  @description Test for adding admins to course
      */
-/*
+
     it('Admins added are identical to admins in course', function (done) {
-      courseController.addUserAsAdmin(pekkaEmail, courseCode4, function () {
-        courseAdmins4.push(pekkaEmail)
-        courseController.getAdminsForCourse(courseCode4)
-          .then(function (databaseAdmins) {
-            assert.deepEqual(databaseAdmins.admins, courseAdmins4)
-            done()
-          }).catch(function (err) {
+      adminRoleController.addUserAsAdminToCourse(testUser1, testCourse4)
+        .spread(function (adminRole, created) {
+          let createdAdminRole = adminRole
+          courseController.getAdminsForCourse(testCourse4)
+            .then(function (adminRoles) {
+              let databaseAdmin = adminRoles[0]
+              assert.equal(databaseAdmin.UserId, createdAdminRole.UserId)
+              assert.equal(databaseAdmin.CourseId, createdAdminRole.CourseId)
+
+              done()
+            }).catch(function (err) {
             console.error(err)
           })
-      })
+        })
     })
 
     /**
      *  @description Test for deleting course admins
      */
 
-  /*  it('Admins deleted are removed from admins in the course', function (done) {
-      courseController.deleteUserFromAdmins(pekkaEmail, courseCode4, function () {
-        courseAdmins4.pop()
-        courseController.getAdminsForCourse(courseCode4)
-          .then(function (databaseAdmins) {
-            assert.deepEqual(databaseAdmins.admins, courseAdmins4)
-            done()
+    it('Admins deleted are removed from admins in the course', function (done) {
+      adminRoleController.deleteUserFromAdmins(testUser1, testCourse4, function () {
+        courseController.getAdminsForCourse(testCourse4)
+        .spread(function (adminRoles, created) {
+          assert.equal(adminRoles, undefined)
+          done()
 
-          }).catch(function (err) {
-            console.error(err)
-          })
+        }).catch(function (err) {
+          console.error(err)
+        })
       })
     })
 
     after(function (done) {
       courseController.deleteCourse(courseCode4).then(function () {
-        done()
+        userController.deleteUser(testUser1, function () {
+          userController.deleteUser(testUser2, function () {
+            done()
+          })
+        })
       })
     })
   })
@@ -477,7 +499,6 @@ describe('Test suite: Course and Lecture testing', function () {
     let message1 = undefined
 
     before(function (done) {
-
       courseController.findOrCreateCourse({
         name: courseName8,
         code: courseCode8,
