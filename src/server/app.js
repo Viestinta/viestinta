@@ -241,27 +241,24 @@ io.sockets.on('connection', function (socket) {
   // When somebody votes on a message
   socket.on('new-vote-on-message', function (id, value) {
     console.log('[app] new-voting-message: ' + id + " with " + value)
-    /*
-    messagesController.retrieve({id: id})
-      .then(function(msg) { 
-        console.log("Message after retrieve: ", msg)
-
-
+      var correctVoting = function (value) {
         if (value === 1) {
-          msg.update({votesUp: votesUp++})
-         
-        } else {
-          msg.update({votesDown: votesDown++})
-        }
+            messagesController.voteUp({id: id})
+           
+          } else {
+           messagesController.voteDown({id: id})
+          }
+      }
 
-        console.log("Message after vote:", msg)
-      */  
+      // correctVoting(value).then(function(result) {
+    
+        
         messagesController.vote({id: id, value: value}).then(function (result) {
-          console.log(".then in new-vote-on-message:", result)
+          //console.log(".then in new-vote-on-message:", result)
 
           // TODO: change to getAllToLecture
           messagesController.getAll().then(function (msgList) {
-            console.log("Get all afterwards ", msgList)
+            //console.log("Get all afterwards ", msgList)
             io.sockets.emit('update-message-order', msgList)  
           })
         })

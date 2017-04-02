@@ -95,32 +95,33 @@ export default class Message extends React.Component {
     /* TODO: Send vote up to database*/
     this.setState({
       voteEnabled: false,
+      voteUp: true,
       open: true,
       actionInfo: 'Stemte melding opp.'
     })
-    this.sendVote()
+    console.log("voteValue in voteUp: ", this.state.voteValue)
+    console.log("state in voteUp: ", this.state)
+    this.sendVote(1)
   }
 
   handleVoteDown () {
     console.log('Voted: down')
     /* TODO: Send vote up to database*/
+    
     this.setState({
       voteEnabled: false,
-      voteUp: false,
+      voteup: false,
       open: true,
       actionInfo: 'Stemte melding ned.'
     })
-    this.sendVote()
+    console.log("voteValue in voteDown: ", this.state.voteValue)
+    console.log("state in voteDown: ", this.state)
+    this.sendVote(-1)
   }
 
-  sendVote () {
-    var value = 0
-    if (this.state.voteUp) {
-      value = 1
-    } else if (this.state.voteDown) {
-      value = -1
-    }
+  sendVote (value) {
     var msgId = this.props.id
+    console.log("Value in Message: ", value)
     socket.emit('new-vote-on-message', msgId, value)
   }
 
