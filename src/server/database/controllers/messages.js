@@ -101,12 +101,6 @@ module.exports = {
         where: {
           id: req.id
         },
-        
-        /*, {
-        include: [{
-          model: Message,
-          as: 'message'
-        }]*/
       })
   },
 
@@ -119,94 +113,19 @@ module.exports = {
    * @callback Callbacks when voting attributes have been updated
    */
   vote (req, callback) {
-    console.log("Req value: ", req.value)
-
     return Message.find({where: {id: req.id}})
       .then(function (msg) {
         if (req.value === 1) {
-          console.log("Value is 1: ", req.value)
           msg.increment('votesUp', {
             where: 
             { id: req.id }
-          }).then(function (result) {
-            //console.log(result)
           })
         } else if (req.value === -1) {
-          console.log("Value is -1: ", req.value)
           msg.increment('votesDown', {
             where: 
             { id: req.id }
-          }).then(function (result) {
-            //console.log(result)
           })
         }
       })
-    /*
-    return Message.findById(
-      req.id
-    ).then(function (msg) {
-      console.log("Req: ", req)
-      console.log(msg)
-      if (req.value === -1) {
-        //msg.votesDown ++
-        msg.updte({votesIp: 1})
-        console.log("Increased votesDown")
-        if(callback){
-          callback()
-        }
-      } else {
-        msg.votesUp ++
-        console.log("Increased votesup")
-        if(callback){
-          callback()
-        }
-      }
-    })
-    
-    if (req.value === -1) {
-        return Message.update({
-          votesDown: sequelize.literal('votesDown + 1')
-        }, {
-          where: 
-          { id: req.id }
-        }).then(function (result) {
-          console.log(result)
-        })
-
-      } else {
-        return Message.update({
-          votesUp: sequelize.literal('votesUp + 1')
-        }, {
-          where: 
-          { id: req.id }
-        }).then(function (result) {
-          console.log(result)
-        })
-      }
-    
-    
-    */
-  },
-
-  voteUp (req) {
-    return Message.find({where: {id: req.id}})
-      .then(function (msg) {
-        msg.increment('votesUp', {
-          where: 
-          { id: req.id }
-        }).then(function (result) {
-          console.log(result)
-        })
-      })
-    
-  },
-
-  voteDown (req) {
-    return Message.increment('votesDown', {
-      where: 
-      { id: req.id }
-    }).then(function (result) {
-      console.log(result)
-    })
   }
 }

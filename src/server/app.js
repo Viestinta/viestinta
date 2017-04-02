@@ -240,28 +240,13 @@ io.sockets.on('connection', function (socket) {
 
   // When somebody votes on a message
   socket.on('new-vote-on-message', function (id, value) {
-    console.log('[app] new-voting-message: ' + id + " with " + value)
-      var correctVoting = function (value) {
-        if (value === 1) {
-            messagesController.voteUp({id: id})
-           
-          } else {
-           messagesController.voteDown({id: id})
-          }
-      }
-
-      // correctVoting(value).then(function(result) {
-    
-        
-        messagesController.vote({id: id, value: value}).then(function (result) {
-          //console.log(".then in new-vote-on-message:", result)
-
-          // TODO: change to getAllToLecture
-          messagesController.getAll().then(function (msgList) {
-            //console.log("Get all afterwards ", msgList)
-            io.sockets.emit('update-message-order', msgList)  
-          })
-        })
+    console.log('[app] new-voting-message: ' + id + " with " + value)       
+    messagesController.vote({id: id, value: value}).then(function (result) {
+      // TODO: change to getAllToLecture
+      messagesController.getAll().then(function (msgList) {
+        io.sockets.emit('update-message-order', msgList)  
+      })
+    })
       
   })
 
@@ -282,7 +267,6 @@ io.sockets.on('connection', function (socket) {
     // Get feedback from database for past x minuts
     feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
       feedbacksController.getLastIntervalPos().then(function (resultPos) {
-        console.log("Feedback results: ", resultNeg, resultPos)
         io.sockets.emit('update-feedback-interval', [resultNeg, resultPos])
       })
     })
