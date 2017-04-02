@@ -59,6 +59,7 @@ module.exports = function (sequelize, DataTypes) {
         })
       }
     },
+    /*
     instanceMethods: {
       vote: function(value, done) {
         if (value === 1) {
@@ -67,9 +68,20 @@ module.exports = function (sequelize, DataTypes) {
           this.votesDown ++
         }
         return done()
+      }, voteUp: function() {
+        console.log("voteUp()")
+        this.votesUp++
       }
     }
+    */
   })
+  Message.Instance.prototype.vote = function(value) {
+    if (value === 1) {
+        this.votesUp ++
+      } else if (value === -1) {
+        this.votesDown ++
+      }
+  }
 
   return Message
 }

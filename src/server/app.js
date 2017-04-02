@@ -242,9 +242,10 @@ io.sockets.on('connection', function (socket) {
   socket.on('new-vote-on-message', function (id, value) {
     console.log('[app] new-voting-message: ' + id + " with " + value)
     messagesController.retrieve({id: id})
-      .then(function(msg) {
+      .then(function(msg) { 
         console.log("Message after retrieve: ", msg)
-        msg.vote(value).then(function (result) {
+
+        msg.build().voteUp().then(function (result) {
           console.log(".then in new-vote-on-message:", result)
 
           // TODO: change to getAllToLecture

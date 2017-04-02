@@ -21,29 +21,24 @@ module.exports = {
 
   /**
    * @description Edit an existing Message details using model.update()
-   * @param req
+   * @param message
+   * @param updates
    * @returns {Promise.<Message>}
    */
-  update (req) {
-    return Message.update(req.body, {
-      where: {
-        id: req.id
-      }
+  update (message, updates) {
+    return Message.update(message, updates}
     })
   },
 
 
 
   /**
-   * @description Delete an existing Message by the unique ID using model.destroy()
-   * @param req
+   * @description Delete an existing Message
+   * @param message
+   * @returns {Promise.<Message>}
    */
-  delete (req) {
-    Message.destroy({
-      where: {
-        id: req.id
-      }
-    })
+  delete (message) {
+    message.destroy()
   },
 
 
@@ -106,7 +101,7 @@ module.exports = {
         where: {
           id: req.id
         },
-        raw: true
+        
         /*, {
         include: [{
           model: Message,
@@ -123,6 +118,12 @@ module.exports = {
    */
    /*
   vote (req) {
+    if (req.value === 1) {
+      
+    }
+    else if (req.value === -1) {
+  
+    }
     return Message.findById(
       req.params.id
     ).then(function (msg) {
