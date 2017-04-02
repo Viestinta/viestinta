@@ -82,6 +82,37 @@ let updateUser = function(user, updates) {
   return user.update(updates)
 }
 
+/**
+ * @description Gets all lectures related to the user
+ * @param user
+ * @returns {Promise.<Array.<Lecture>>}
+ */
+let getAllLectureForUser = function (user) {
+  return user.getLectures()
+}
+
+
+/**
+ * @description Gets all lectures related to the user
+ * @param user
+ * @returns {Promise.<Array.<Course>>}
+ */
+let getAllCourseForUser = function(user){
+  return user.getCourses()
+}
+
+
+
+/**
+ * @description Adds user to a course
+ * @param user
+ * @param course
+ * @returns {Promise}
+ */
+let addUserToCourse = function (user, course) {
+  return user.addCourse(course)
+}
+
 
 
 /**
@@ -120,6 +151,9 @@ module.exports = {
   getByName:              getByName,
   getBySub:               getBySub,
   getByEmail:             getByEmail,
+  getAllLectureForUser:   getAllLectureForUser,
+  getAllCourseForUser:    getAllCourseForUser,
+  addUserToCourse:        addUserToCourse,
   updateUser:             updateUser,
   deleteUser:             deleteUser,
 }

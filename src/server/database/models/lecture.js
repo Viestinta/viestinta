@@ -45,13 +45,14 @@ module.exports = function (sequelize, DataTypes) {
 
         // Should only be associated in message and feedback
 
-        //Connected users
-        Lecture.hasMany(models.User, {
+        Lecture.belongsTo(models.Course, {
           foreignKey: {
-            allowNull: true
+            allowNull: true //should be false
           }
         })
-
+        Lecture.belongsToMany(models.User, {
+          through: "UserLecture"
+        })
       }
     }
   })

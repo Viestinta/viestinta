@@ -192,19 +192,21 @@ describe('Test suite: Course and Lecture testing', function () {
           testUser2 = user
 
           //Create testCourse
-          courseController.findOrCreateCourse(
-            {
+          courseController.findOrCreateCourse({
               name: courseName4,
               code: courseCode4,
             })
             .spread(function (course, created) {
               testCourse4 = course
-              //Finish setup
+
+              //Finish setup for test
               done()
             })
         })
       })
     })
+
+
 
     /**
      *  @description Test for adding admins to course
@@ -276,6 +278,7 @@ describe('Test suite: Course and Lecture testing', function () {
       })
         .then(function (course) {
           testCourse5 = course
+
           //Finish initialization after creating course
           done()
         })
@@ -490,7 +493,7 @@ describe('Test suite: Course and Lecture testing', function () {
   let courseAdmins8 = ['postgres', 'sql']
   let lectureName8 = "Datamodellering"
 
-  describe('Test for getting all messages for a lecture', function (done) {
+  describe('Test for getting all messages for a lecture', function () {
 
 
     let testCourse8 = undefined
@@ -558,6 +561,46 @@ describe('Test suite: Course and Lecture testing', function () {
               done()
             })
           })
+        })
+      })
+    })
+  })
+
+  describe('Test for getting all users to a course', function () {
+
+    let testCourse9 = undefined
+    let testUser9 = undefined
+
+    before(function (done) {
+      courseController.findOrCreateCourse({
+        name: "TestCourse",
+        code: "TDT0400"
+      }).spread(function (course, created) {
+        testCourse9 = course
+        userController.findOrCreateUser({
+          name: "Jacob2"
+        }).spread(function (user, created) {
+          testUser9 = user
+          testUser9.addCourse(testCourse9).then(function () {
+            done()
+          })
+        })
+      })
+    })
+
+    it('Getting all users from course', function (done) {
+      courseController.getAllUsersForCourse(testCourse9).spread(function(user, created){
+        let exampleUser = user
+        assert.equal(testUser9.id, exampleUser.id)
+        assert.equal(testUser9.name, exampleUser.name)
+        done()
+      })
+    })
+
+    after(function (done) {
+      testUser9.destroy().then(function () {
+        testCourse9.destroy().then(function () {
+          done()
         })
       })
     })

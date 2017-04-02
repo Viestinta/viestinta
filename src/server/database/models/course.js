@@ -28,16 +28,6 @@ module.exports = function (sequelize, DataTypes) {
        */
       // Associations to other models
       associate: function (models) {
-        Course.hasMany(models.Lecture, {
-          foreignKey: {
-            allowNull: true
-          }
-        })
-        Course.hasMany(models.User, {
-          foreignKey: {
-            allowNull: true
-          }
-        })
         Course.hasMany(models.AdminRole, {
           foreignKey: {
             allowNull: true

@@ -1,4 +1,5 @@
 const Course = require('../models/index').Course
+const User = require('../models/index').User
 const Lecture = require('../models/index').Lecture
 const AdminRole = require('../models/index').AdminRole
 // Controller for course model
@@ -72,12 +73,32 @@ let getAllLecturesForCourse = function (courseCode, callback) {
 
 
 /**
+ * @description Gets all users related to course
+ * @param course
+ * @returns {Promise.<Array.<User>>}
+ */
+let getAllUsersForCourse = function (course) {
+
+  return User.findAll({
+    include: [{
+      model: Lecture,
+      /*through: {
+        where: {
+          CourseId: course.id
+        }
+      }*/
+    }]
+  })
+}
+
+
+
+/**
  * @description Updates an existing course's details using model.update()
  * @param course
  * @param updates
  * @returns {Promise.<Course>}
  */
-
 let updateCourse = function(course, updates) {
   return course.update(updates)
 }
@@ -102,6 +123,7 @@ let deleteCourse=function(courseCode) {
 module.exports = {
   findOrCreateCourse:       findOrCreateCourse,
   getByCode:                getByCode,
+  getAllUsersForCourse:     getAllUsersForCourse,
   getAdminsForCourse:       getAdminsForCourse,
   getAllLecturesForCourse:  getAllLecturesForCourse,
   updateCourse:             updateCourse,

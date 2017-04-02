@@ -14,7 +14,8 @@ module.exports = {
     return Message.create({
       time: new Date(),
       text: req.text,
-      LectureId: req.LectureId
+      LectureId: req.LectureId,
+      UserId: req.UserId
     })
   },
 
@@ -27,7 +28,7 @@ module.exports = {
    * @returns {Promise.<Message>}
    */
   update (message, updates) {
-    return message.update(message, updates)
+    return message.update(updates)
   },
 
 
@@ -75,16 +76,16 @@ module.exports = {
     })
   },
 
-  
-
-/**
-   * @description Get all 
+  /**
+   * @descriptio Gets all to a specific user
+   * @param user
    * @returns {Promise.<Message>}
    */
-  getAll () {
+  getAllToUser(user){
     return Message.findAll({
-      raw: true,
-      order: '"time" DESC'
+      where: {
+        UserId: user.id
+      }
     })
   },
 
