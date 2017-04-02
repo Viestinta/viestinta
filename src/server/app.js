@@ -241,20 +241,31 @@ io.sockets.on('connection', function (socket) {
   // When somebody votes on a message
   socket.on('new-vote-on-message', function (id, value) {
     console.log('[app] new-voting-message: ' + id + " with " + value)
+    /*
     messagesController.retrieve({id: id})
       .then(function(msg) { 
         console.log("Message after retrieve: ", msg)
 
-        msg.build().voteUp().then(function (result) {
+
+        if (value === 1) {
+          msg.update({votesUp: votesUp++})
+         
+        } else {
+          msg.update({votesDown: votesDown++})
+        }
+
+        console.log("Message after vote:", msg)
+      */  
+        messagesController.vote({id: id, value: value}).then(function (result) {
           console.log(".then in new-vote-on-message:", result)
 
           // TODO: change to getAllToLecture
           messagesController.getAll().then(function (msgList) {
-            //console.log("Get all afterwards ", msgList)
+            console.log("Get all afterwards ", msgList)
             io.sockets.emit('update-message-order', msgList)  
           })
         })
-      })
+      
   })
 
   // When somebody gives feedback

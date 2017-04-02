@@ -26,19 +26,18 @@ module.exports = {
    * @returns {Promise.<Message>}
    */
   update (message, updates) {
-    return Message.update(message, updates}
-    })
+    return message.update(message, updates)
   },
 
 
 
   /**
-   * @description Delete an existing Message
+   * @description Delete an existing message
    * @param message
    * @returns {Promise.<Message>}
    */
   delete (message) {
-    message.destroy()
+    return message.destroy()
   },
 
 
@@ -72,11 +71,10 @@ module.exports = {
       },
       order: '"time" DESC',
       limit: 10
-    }).then(function (result) {
-      console.log("Result: ", result)
     })
   },
 
+  
 
 /**
    * @description Get all 
@@ -85,11 +83,13 @@ module.exports = {
   getAll () {
     return Message.findAll({
       raw: true,
-      limit: 4
+      limit: 4,
+      order: '"time" DESC'
     })
   },
 
 
+  
   /**
    * @description Retrieve an existing Message by the unique ID
    * @param req
@@ -113,29 +113,42 @@ module.exports = {
 
 
   /**
-   * @description
+   * @description Changes voting attributes in message
    * @param req
+   * @param callback
+   * @callback Callbacks when voting attributes have been updated
    */
-   /*
-  vote (req) {
-    if (req.value === 1) {
-      
-    }
-    else if (req.value === -1) {
-  
-    }
+  vote (req, callback) {
+    /*
     return Message.findById(
-      req.params.id
+      req.id
     ).then(function (msg) {
       console.log("Req: ", req)
-      console.log(msg.text)
+      console.log(msg)
       if (req.value === -1) {
-        msg.votesDown ++
+        //msg.votesDown ++
+        msg.updte({votesIp: 1})
+        console.log("Increased votesDown")
+        if(callback){
+          callback()
+        }
       } else {
         msg.votesUp ++
+        console.log("Increased votesup")
+        if(callback){
+          callback()
+        }
       }
     })
-  }
-  */
+    */
 
+    return Message.update({
+      votesUp: 1
+    }, {
+      where: 
+      { id: req.id }
+    }).then(function (result) {
+      console.log(result)
+    })
+  }
 }
