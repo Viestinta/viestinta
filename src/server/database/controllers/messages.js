@@ -21,29 +21,23 @@ module.exports = {
 
   /**
    * @description Edit an existing Message details using model.update()
-   * @param req
+   * @param message
+   * @param updates
    * @returns {Promise.<Message>}
    */
-  update (req) {
-    return Message.update(req.body, {
-      where: {
-        id: req.id
-      }
-    })
+  update (message, updates) {
+    return message.update(message, updates)
   },
 
 
 
   /**
-   * @description Delete an existing Message by the unique ID using model.destroy()
-   * @param req
+   * @description Delete an existing message
+   * @param message
+   * @returns {Promise.<Message>}
    */
-  delete (req) {
-    Message.destroy({
-      where: {
-        id: req.id
-      }
-    })
+  delete (message) {
+    return message.destroy()
   },
 
 
@@ -77,11 +71,10 @@ module.exports = {
       },
       order: '"time" DESC',
       limit: 10
-    }).then(function (result) {
-      console.log("Result: ", result)
     })
   },
 
+  
 
 /**
    * @description Get all 
@@ -95,6 +88,7 @@ module.exports = {
   },
 
 
+  
   /**
    * @description Retrieve an existing Message by the unique ID
    * @param req
@@ -118,23 +112,28 @@ module.exports = {
 
 
   /**
-   * @description
+   * @description Changes voting attributes in message
    * @param req
+   * @param callback
+   * @callback Callbacks when voting attributes have been updated
    */
-   /*
-  vote (req) {
-    return Message.findById(
+  vote (req, callback) {
+    Message.findById(
       req.params.id
     ).then(function (msg) {
       console.log("Req: ", req)
       console.log(msg.text)
       if (req.value === -1) {
         msg.votesDown ++
+        if(callback){
+          callback()
+        }
       } else {
         msg.votesUp ++
+        if(callback){
+          callback()
+        }
       }
     })
   }
-  */
-
 }
