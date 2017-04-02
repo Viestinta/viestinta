@@ -92,7 +92,6 @@ export default class Message extends React.Component {
 
   handleVoteUp () {
     console.log('Voted: up')
-    /* TODO: Send vote up to database*/
     this.setState({
       voteEnabled: false,
       voteUp: true,
@@ -106,11 +105,9 @@ export default class Message extends React.Component {
 
   handleVoteDown () {
     console.log('Voted: down')
-    /* TODO: Send vote up to database*/
-    
     this.setState({
       voteEnabled: false,
-      voteup: false,
+      voteUp: false,
       open: true,
       actionInfo: 'Stemte melding ned.'
     })
@@ -121,6 +118,7 @@ export default class Message extends React.Component {
 
   sendVote (value) {
     var msgId = this.props.id
+    console.log("State in sendVote:", this.state)
     console.log("Value in Message: ", value)
     socket.emit('new-vote-on-message', msgId, value)
   }
