@@ -55,7 +55,6 @@ export default class MessageList extends Component {
   }
 
   receiveMessage (msg) {
-    console.log('receiveMessage: ', msg.text)
     // Copies the list
     var messages = this.state.messages.slice()
 
@@ -65,7 +64,6 @@ export default class MessageList extends Component {
   }
 
   getAllMessages (msgList) {
-    console.log('getAllMessages: ', msgList)
     this.setState({
       messages: msgList
     })
@@ -73,7 +71,6 @@ export default class MessageList extends Component {
 
   updateMessageListOrder (msgList) {
     this.setState({ messages: msgList})
-    console.log("Updated msgListorder: ", msgList)
     this.sort()
   }
 
@@ -103,8 +100,7 @@ export default class MessageList extends Component {
 
   render () {
     var list = this.state.messages.map((message, i) => {
-      console.log('Looping through messages in messageList')
-
+      
       var time = message.time
       return (
         <Message
