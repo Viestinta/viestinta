@@ -9,6 +9,8 @@ import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
 import LectureWrapper from './LectureWrapper'
 
+import DataTables from 'material-ui-datatables';    
+
 const styles = {
     container: {
         display: 'flex',
@@ -25,6 +27,28 @@ const styles = {
     }
 }
 
+const TABLE_COLUMNS = [
+  {
+    key: 'course',
+    label: 'course',
+  }, {
+    key: 'action',
+    label: 'action',
+  },
+]
+
+const TABLE_DATA = [
+    {
+        course: 'TDT0000',
+    },
+    {
+        course: 'TTK0000'
+    },
+    {
+        course: 'TIØ0000'
+    }
+]
+
 export default class SessionWindow extends Component {
 
     constructor(props) {
@@ -38,14 +62,16 @@ export default class SessionWindow extends Component {
             lectureList: ['TDT0000', 'TTK0000', 'TIØ0000'],
             selectedLecture: undefined,
             value: 1,
-            disable: true
+            disable: false
         }
 
         this.connectToLecture = this.connectToLecture.bind(this)
         this.getAvailableLectures = this.getAvailableLectures.bind(this)
         this.createNewLecture = this.createNewLecture.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.handleOnTouchTap = this.handleOnTouchTap.bind(this)
+        this.connectToLectureButton = this.connectToLectureButton.bind(this)
+        this.handleCellClick = this.handleCellClick.bind(this)
+        this.disconnectFromLecture = this.disconnectFromLecture.bind(this)
     }
 
     componentDidMount() {
@@ -67,10 +93,34 @@ export default class SessionWindow extends Component {
         })
     }
 
+    getLectures () {
+        let L = this.state.lectureList
+        console.log(L)
+        return L.map((a) => {
+            return {
+                course: a,
+                action: <RaisedButton
+                    primary={true}
+                    label="Koble til"
+                    disabled={this.state.disable}
+                    onTouchTap={this.connectToLectureButton}
+                />
+            }
+        })
+    }
+
     connectToLecture () {
-        //TODO: Håndteres av Socket? Som del av Rooms
-        console.log('Connect to lecture: ' + this.state.selectedLecture)
+        console.log('[SessionWindow] Connect to lecture: ' + this.state.selectedLecture)
         socket.emit('join-lecture', this.state.selectedLecture)
+    }
+
+    disconnectFromLecture () {
+        console.log('[SessionWindow] Leave lecture: ' + this.state.selectedLecture)
+        socket.emit('leave-lecture', this.state.selectedLecture)
+        this.setState({
+            disable:false,
+            selectedLecture: undefined,
+        })
     }
 
     createNewLecture () {
@@ -95,12 +145,26 @@ export default class SessionWindow extends Component {
         }
     }
 
-    handleOnTouchTap () {
+    connectToLectureButton () {
         // TODO: Funksjonalitet ved knappetrykk
         this.connectToLecture()
 
         // Only connect once -> disable button
         this.setState({disable: true})
+    }
+
+    handleCellClick (row, col, event) {
+        console.log('[SessionWindow] handleCellClick')
+        console.log('[SessionWindow] row: ' + row + ' col: ' + col + ' event: ' + event)
+        let ll = this.state.lectureList
+        console.log('[SessionWindow] ll: ' + ll + ' row: ' +  row + ' ll[row]: ' + ll[row])
+        this.setState({
+            disable: true,
+            selectedLecture: ll[row]
+        }, function () {
+            console.log('[SessionWindow] lectureList: '+ this.state.lectureList + 'selectedLecture: ' + this.state.selectedLecture)
+            this.connectToLecture()
+        })
     }
 
     render () {
@@ -118,20 +182,44 @@ export default class SessionWindow extends Component {
             <div>
             <Paper zDepth={3} style={styles.container}>
                 <Subheader style={{width: 'auto'}}>
-                    FORELESNING:
+                    FORELESNING: {this.state.selectedLecture}
                 </Subheader>
+                {/*
                 <DropDownMenu value={this.state.value} onChange={this.handleChange}>
                     <MenuItem value={1} primaryText="-Velg her-" />
                     {menuItems}
                 </DropDownMenu>
+                */}
                 <RaisedButton
                     primary={true}
-                    label="Koble til"
-                    disabled={this.state.disable}
-                    onTouchTap={this.handleOnTouchTap}
+                    label= { !this.state.disable ? "Koble til" : "Koble fra" }
+                    onTouchTap={ !this.state.disable ? this.connectToLectureButton : this.disconnectFromLecture }
                 />
             </Paper>
-            { this.state.selectedLecture ? <LectureWrapper courseCode={this.state.selectedLecture} />: <p>No lecture selected, please select one above</p> }
+            { this.state.selectedLecture ? 
+                <LectureWrapper 
+                    courseCode={this.state.selectedLecture}
+                /> 
+                : 
+                <DataTables
+                    height = { 'auto' }
+                    selectable = { false }
+                    showRowHover = { true }
+                    columns = {TABLE_COLUMNS}
+                    data = { this.state.lectureList.map((a) => {
+                        return {
+                            course:a
+                        }
+                    })}
+                    showCheckboxes = { false }
+                    onCellClick = { this.handleCellClick }
+                    onCellDoubleClick= { this.handleCellDoubleClick }
+                    onFilterValueChange = { this.handleFilterValueChange }
+                    onSortOrderChange = { this.handleSortOrderChange }
+                    page = { 1 }
+                    count = { 100 }
+                /> 
+            }
             </div>
         )
     }

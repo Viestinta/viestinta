@@ -188,17 +188,23 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('create-lecture', function (lecture) {
     console.log('[app] create-lecture')
-
+    
     // TODO: missing
   })
 
+  socket.on('leave-lecture', function (courseCode) {
+    console.log('[app][socket] leave-lecture ' + courseCode)
+    socket.leave(courseCode)
+  })
+
   socket.on('join-lecture', function (courseCode) {
-    console.log('[app] join-lecture')
-    console.log('[app] courseCode' + courseCode)
+    console.log('[app][socket] join-lecture ' + courseCode)
+
     courseController.findOrCreateCourse({
         name:"ITSGK",
         code: courseCode
-    }).spread(function(course, created){
+    })
+    .spread(function(course, created){
 
       let testCourse = course
 
