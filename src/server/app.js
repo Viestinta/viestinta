@@ -241,7 +241,7 @@ io.sockets.on('connection', function (socket) {
   // When somebody votes on a message
   socket.on('new-vote-on-message', function (id, value) {
     console.log('[app] new-voting-message: ' + id + " with " + value)       
-    messagesController.vote({id: id, value: value}).then(function (result) {
+    messagesController.vote({id: id, value: value}).then(function () {
       // TODO: change to getAllToLecture
       messagesController.getAll().then(function (msgList) {
         io.sockets.emit('update-message-order', msgList)  
