@@ -33,6 +33,11 @@ const styles = {
 
     borderRadius: '2px'
   },
+  timestamp: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   footer: {
     display: 'flex', 
     flexDirection: 'row', 
@@ -122,6 +127,12 @@ export default class Message extends React.Component {
   }
 
   render () {
+    const timestamp = (
+      <div style={styles.timestamp}>
+        <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
+        <p>{this.props.time}</p>
+      </div>
+    )
     const voteMenu = (
       <IconMenu iconButtonElement={iconButtonVote}>
         <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp}>Stem opp</MenuItem>
@@ -130,8 +141,7 @@ export default class Message extends React.Component {
     )
     const footer = (
       <div style={styles.footer}>
-        <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
-        <p style={{flexBasis: '82%'}}>{this.props.time}</p>
+        {timestamp}
         {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
       </div>
     )
