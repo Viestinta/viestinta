@@ -147,10 +147,12 @@ const lecture = db['Lecture']
 const message = db['Message']
 const feedback = db['Feedback']
 
-const usersController = require('./database/controllers').users
-const lecturesController = require('./database/controllers').lectures
-const messagesController = require('./database/controllers').messages
-const feedbacksController = require('./database/controllers').feedbacks
+const usersController = require('./database/controllers/users')
+const lecturesController = require('./database/controllers/lectures')
+const messagesController = require('./database/controllers/messages')
+const feedbacksController = require('./database/controllers/feedback')
+const courseController = require('./database/controllers/courses')
+const adminRoleController = require('./database/controllers/adminRoles')
 
 //Create SocketIO server
 var io = require('socket.io')(server)
@@ -192,26 +194,36 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('join-lecture', function (courseCode) {
     console.log('[app] join-lecture')
+    console.log('[app] courseCode' + courseCode)
+    courseController.findOrCreateCourse({
+        name:"ITSGK",
+        code: courseCode
+    }).spread(function(course, created){
 
-    lecturesController.retriveByName(courseCode).then(function (lecture) {
-      console.log('[app][socket] Retriveing lecture with ID: ' + lecture.id)
-      socket.lecture = lecture.id
-      console.log('[app][socket] Connected to lecture with ID: ' + socket.lecture)
+      let testCourse = course
 
-      socket.join(courseCode)
-      console.log('[app][socket] Joined course courseCode: ' + courseCode)
+      lecturesController.createLecture({
+        name: "Introduction to IE",
+        CourseId: testCourse.id
+      }).then(function(lecture){
+        
+        console.log('[app][socket] Retriveing lecture with ID: ' + lecture.id)
+        socket.lecture = lecture.id
+        console.log('[app][socket] Connected to lecture with ID: ' + socket.lecture)
 
-      // Get feedback status for last x min
-      feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
-        feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
-          socket.emit('update-feedback-interval', [resultNeg, resultPos])
+        socket.join(courseCode)
+        console.log('[app][socket] Joined course courseCode: ' + courseCode)
+
+        // Get feedback status for last x min
+        feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+          feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
+            socket.emit('update-feedback-interval', [resultNeg, resultPos])
+          })
         })
-      })
-      // Get all messages
-
-      // If lecturer
-      messagesController.getAllToLecture(lecture).then(function (result) {
-        socket.emit('all-messages', result.reverse())
+        // Get last 10 messages
+        messagesController.getLastTen(lecture).then(function (result) {
+          socket.emit('last-ten-messages', result.reverse())
+        })
       })
     })
   })
