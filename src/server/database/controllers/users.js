@@ -4,15 +4,14 @@
 
 // Controller for user model
 const User = require('../models/index').User
-const adminRoleController = require('../controllers/index').adminRoles
-const adminRoleController2 = require('../controllers/adminRoles')
+const adminRoleController = require('../controllers/adminRoles')
 
 
 
 /**
- * @description Creates and returns a Promise for a user
+ * @description Creates and returns a Promise for that user
  * @param user
- * @returns {Promise.<User>}
+ * @returns {Promise.<User, created>}
  */
 let findOrCreateUser = function(user) {
   return User.findOrCreate({
@@ -28,7 +27,7 @@ let findOrCreateUser = function(user) {
 
 
 /**
- * @description Retrieves user by name and returns a Promise for that user
+ * @description Gets a user by name and returns a Promise for that user
  * @param name
  * @returns {Promise.<User>}
  */
@@ -58,7 +57,7 @@ let getBySub = function(sub) {
 
 
 /**
- * @description Retrieves user by email and returns a Promise for that user
+ * @description Gets user by email and returns a Promise for that user
  * @param email
  * @returns {Promise.<User>}
  */
@@ -104,6 +103,18 @@ let getAllCourseForUser = function(user){
 
 
 /**
+ * @description Adds user to a lecture
+ * @param user
+ * @param lecture
+ * @returns {Promise}
+ */
+let addUserToLecture = function (user, lecture) {
+  return user.addLecture(lecture)
+}
+
+
+
+/**
  * @description Adds user to a course
  * @param user
  * @param course
@@ -123,10 +134,10 @@ let addUserToCourse = function (user, course) {
  * @callback Callbacks when all adminRoles and the user has been deleted
  */
 let deleteUser = function(user, callback) {
-  adminRoleController2.getAllByUserId(user.id)
+  adminRoleController.getAllByUserId(user.id)
     .spread(function (adminRoles, created) {
       if(adminRoles) {
-        adminRoleController2.deleteAllAdminRoles(adminRoles)
+        adminRoleController.deleteAllAdminRoles(adminRoles)
           .then(function () {
             user.destroy().then(function () {
               if (callback) {
@@ -154,6 +165,7 @@ module.exports = {
   getAllLectureForUser:   getAllLectureForUser,
   getAllCourseForUser:    getAllCourseForUser,
   addUserToCourse:        addUserToCourse,
+  addUserToLecture:       addUserToLecture,
   updateUser:             updateUser,
   deleteUser:             deleteUser,
 }

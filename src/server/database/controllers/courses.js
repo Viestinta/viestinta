@@ -78,15 +78,14 @@ let getAllLecturesForCourse = function (courseCode, callback) {
  * @returns {Promise.<Array.<User>>}
  */
 let getAllUsersForCourse = function (course) {
-
   return User.findAll({
     include: [{
-      model: Lecture,
-      /*through: {
+      model: Course,
+      through: {
         where: {
           CourseId: course.id
         }
-      }*/
+      }
     }]
   })
 }

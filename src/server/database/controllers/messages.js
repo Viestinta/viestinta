@@ -34,12 +34,16 @@ module.exports = {
 
 
   /**
-   * @description Delete an existing message
+   * @description Delete an existing Message by the unique ID using model.destroy()
    * @param message
-   * @returns {Promise.<Message>}
+   * @returns {Promise}
    */
   delete (message) {
-    return message.destroy()
+    return Message.destroy({
+      where: {
+        id: message.id
+      }
+    })
   },
 
 
@@ -76,6 +80,8 @@ module.exports = {
     })
   },
 
+
+
   /**
    * @descriptio Gets all to a specific user
    * @param user
@@ -90,7 +96,7 @@ module.exports = {
   },
 
 
-  
+
   /**
    * @description Retrieve an existing Message by the unique ID
    * @param req

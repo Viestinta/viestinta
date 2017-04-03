@@ -1,7 +1,5 @@
 const Feedback = require('../models/index').Feedback
 
-const Lecture = require('../models/index').Lecture
-
 // Controller for Feedback model
 
 const MIN = 60000
@@ -10,40 +8,35 @@ module.exports = {
 
   /**
    * @description Edit an existing Feedback details using model.update()
-   * @param req
+   * @param feedback
+   * @param updates
+   * @returns {Promise<Feedback>}
    */
-  update (req) {
-    Feedback.update(req.body, {
-      where: {
-        id: req.params.id
-      }
-    })
+  updateFeedback (feedback, updates) {
+    return feedback.update(updates)
   },
 
 
 
   /**
    * @description Delete an existing Feedback by the unique ID using model.destroy()
-   * @param req
+   * @param feedback
+   * @returns {Promise}
    */
-  delete (req) {
-    Feedback.destroy({
-      where: {
-        id: req.id
-      }
-    })
+  deleteFeedback (feedback) {
+    return feedback.destroy()
   },
 
 
 
   /**
    * @description Create a new Feedback using model.create()
-   * @param req
+   * @param feedback
    * @returns {Promise.<Feedback>}
    */
-  create (req) {
+  createFeedback (feedback) {
     return Feedback.create({
-      value: req.value,
+      value: feedback.value
     })
   },
 
@@ -52,7 +45,7 @@ module.exports = {
   /**
    * @description Gets number of negative feedback for a lecture For the last 5 min
    * @param lecture
-   * @returns {Promise.<Integer>}
+   * @returns {Promise.<int>}
    */
   getLastIntervalNeg (lecture) {
     return Feedback.count({
@@ -73,7 +66,7 @@ module.exports = {
   /**
    * @description Gets number of positive feedback for a lecture For the last 5 min
    * @param lecture
-   * @returns {Promise.<Integer>}
+   * @returns {Promise.<int>}
    */
   getLastIntervalPos (lecture) {
     return Feedback.count({

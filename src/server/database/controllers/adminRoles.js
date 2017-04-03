@@ -13,6 +13,7 @@ const AdminRole = require('../models/index').AdminRole
 let findOrCreateAdminRole = function(adminRole) {
   return AdminRole.findOrCreate({
     where: {
+      roleType: adminRole.roleType,
       CourseId: adminRole.CourseId,
       UserId: adminRole.UserId,
     },
