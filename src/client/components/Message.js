@@ -135,8 +135,8 @@ export default class Message extends React.Component {
     )
     const voteMenu = (
       <IconMenu iconButtonElement={iconButtonVote}>
-        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp}>Stem opp</MenuItem>
-        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown}>Stem ned</MenuItem>
+        <MenuItem primaryText="Stem opp" rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp} />
+        <MenuItem primaryText="Stem ned" rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown} />
       </IconMenu>
     )
     const footer = (
