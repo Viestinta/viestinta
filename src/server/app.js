@@ -190,11 +190,17 @@ io.sockets.on('connection', function (socket) {
     // TODO: missing
   })
 
-  socket.on('choose-lecture', function (lecture) {
-    console.log('[app] choose-lecture')
+  socket.on('join-lecture', function (courseCode) {
+    console.log('[app] join-lecture')
 
-    lectures.Controller.retriveByName('TDT4145-1').then(function (result) {
-      socket.lecture = lecture
+    lecturesController.retriveByName(courseCode).then(function (lecture) {
+      console.log('[app][socket] Retriveing lecture with ID: ' + lecture.id)
+      socket.lecture = lecture.id
+      console.log('[app][socket] Connected to lecture with ID: ' + socket.lecture)
+
+      socket.join(courseCode)
+      console.log('[app][socket] Joined course courseCode: ' + courseCode)
+
       // Get feedback status for last x min
       feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
         feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
@@ -219,12 +225,12 @@ io.sockets.on('connection', function (socket) {
   // When a new message is sent from somebody
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg.text)
+    console.log('[app][socket] Message destined for Room: ' + msg.courseCode)
+
     messagesController.create(msg).then(function (result) {
       //result.setUser(socket.user)
       //result.setLecture(socket.lecture)
-      
-      io.sockets.emit('receive-message', {
-        id: result.id,
+      io.sockets.in(msg.courseCode).emit('receive-message', {
         text: result.text,
         time: result.time,
         votesUp: result.votesUp,

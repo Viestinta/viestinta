@@ -7,6 +7,7 @@ import Subheader from 'material-ui/Subheader'
 import DropDownMenu from 'material-ui/DropDownMenu'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
+import LectureWrapper from './LectureWrapper'
 
 const styles = {
     container: {
@@ -69,6 +70,7 @@ export default class SessionWindow extends Component {
     connectToLecture () {
         //TODO: Håndteres av Socket? Som del av Rooms
         console.log('Connect to lecture: ' + this.state.selectedLecture)
+        socket.emit('join-lecture', this.state.selectedLecture)
     }
 
     createNewLecture () {
@@ -113,6 +115,7 @@ export default class SessionWindow extends Component {
         })
 
         return (
+            <div>
             <Paper zDepth={3} style={styles.container}>
                 <Subheader style={{width: 'auto'}}>
                     FORELESNING:
@@ -128,6 +131,8 @@ export default class SessionWindow extends Component {
                     onTouchTap={this.handleOnTouchTap}
                 />
             </Paper>
+            { this.state.selectedLecture ? <LectureWrapper courseCode={this.state.selectedLecture} />: <p>No lecture selected, please select one above</p> }
+            </div>
         )
     }
 }

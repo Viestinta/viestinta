@@ -9,11 +9,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 // Components
-import ChatBox from './ChatBox'
-import MessageList from './MessageList'
 import Header from './Header'
 import Login from './Login'
-import FeedbackBox from './FeedbackBox'
 import SessionWindow from './SessionWindow'
 
 
@@ -81,12 +78,6 @@ export default class ChatApp extends Component {
           { !this.state.username ? <Login/> : User }
           {/* Session */}
           <SessionWindow />
-          {/* List of messages */}
-          <MessageList />
-          {/* Sidebar with feedback-options */}
-          <FeedbackBox />
-          {/* Inputfield for user */}
-          <ChatBox />
         </div>
       </MuiThemeProvider>
     )
