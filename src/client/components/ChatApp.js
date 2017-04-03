@@ -81,7 +81,7 @@ export default class ChatApp extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div style={styles.container}>
-          <Header />
+          <Header isAdmin={this.state.isAdmin} toggleAdmin={this.toggleAdmin}/>
           {/* Login button or username */}
           { !this.state.username ? <Login/> : User }
           {/* List of messages */}
