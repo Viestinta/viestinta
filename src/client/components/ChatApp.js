@@ -85,9 +85,9 @@ export default class ChatApp extends Component {
           {/* Login button or username */}
           { !this.state.username ? <Login/> : User }
           {/* List of messages */}
-          <MessageList />
+          <MessageList isAdmin={this.state.isAdmin} />
           {/* Sidebar with feedback-options */}
-          <FeedbackBox />
+          { !this.state.isAdmin ? <FeedbackBox /> : undefined }
           {/* Inputfield for user */}
           { !this.state.isAdmin ? <ChatBox /> : undefined }
         </div>
