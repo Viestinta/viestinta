@@ -40,10 +40,12 @@ export default class ChatApp extends Component {
     super(props)
 
     this.state = {
-      username: undefined
+      username: undefined,
+      isAdmin: false
     }
 
     this.getUserInfo = this.getUserInfo.bind(this)
+    this.toggleAdmin = this.toggleAdmin.bind(this)
   }
 
   componentDidMount() {
@@ -64,6 +66,12 @@ export default class ChatApp extends Component {
       })
   }
 
+  toggleAdmin () {
+    this.setState({
+      isAdmin: !this.state.isAdmin
+    })
+  }
+
   render () {
     const User = (
       <div>
@@ -76,8 +84,12 @@ export default class ChatApp extends Component {
           <Header />
           {/* Login button or username */}
           { !this.state.username ? <Login/> : User }
-          {/* Session */}
-          <SessionWindow />
+          {/* List of messages */}
+          <MessageList />
+          {/* Sidebar with feedback-options */}
+          <FeedbackBox />
+          {/* Inputfield for user */}
+          { !this.state.isAdmin ? <ChatBox /> : undefined }
         </div>
       </MuiThemeProvider>
     )
