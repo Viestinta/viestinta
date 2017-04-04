@@ -119,11 +119,19 @@ module.exports = {
           msg.increment('votesUp', {
             where: 
             { id: req.id }
+          }).then( function() {
+            if (callback) {
+              callback()
+            }
           })
         } else if (req.value === -1) {
           msg.increment('votesDown', {
             where: 
             { id: req.id }
+          }).then( function() {
+            if (callback) {
+              callback()
+            }
           })
         }
       })
