@@ -145,6 +145,12 @@ export default class Message extends React.Component {
         {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
       </div>
     )
+    const footerAdmin = (
+      <div style={styles.footer}>
+        {timestamp}
+        <p>Jane Doe</p>
+      </div>
+    )
     /* This menu is not yet in use */
     const rightIconMenu = (
       <IconMenu iconButtonElement={iconButtonMore}>
@@ -157,7 +163,7 @@ export default class Message extends React.Component {
     		<ListItem
           style={styles.listItem}
           primaryText={this.props.text}
-          secondaryText={footer}
+          secondaryText={this.props.isAdmin ? footerAdmin : footer}
         />
         <Snackbar
           style={{textAlign: 'center'}}

@@ -103,7 +103,7 @@ export default class MessageList extends Component {
           key={i}
           time={time}
           text={message.text}
-          id={message.id}
+          isAdmin={this.props.isAdmin}
         />
       )
     })
