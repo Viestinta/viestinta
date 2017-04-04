@@ -3,6 +3,7 @@ const path = require('path')
 const passport = require('passport')
 const db = require('./database/models/index')
 const lecturesController = require('./database/controllers/lectures')
+const courseController = require('./database/controllers/courses')
 const redis = require('../server/app.js')
 
 // ///////////////////////////////////////////////////
@@ -58,14 +59,25 @@ module.exports = (app) => {
   app.get('/lectures', (req, res) => {
     if(req.user){
       res.status(200)
-      lecturesController.getAll().then(function (lectures) {
-        res.json(lectures)
+      lecturesController.getAllActive().then(function (lectures, info) {
+        let counter = 0
+        lectures.map((lecture) => {
+          courseController.getById(lecture.CourseId).then(function (course) {
+            lecture = lecture.toJSON()
+            lecture.course = course
+            counter ++
+            if(counter === lectures.length) {
+              res.json(lectures)
+            }
+          })
+        })
       })
     } else {
       res.status(401)
       res.json([])
     }
   })
+
 
   // API request for logging out
   // Currently not working

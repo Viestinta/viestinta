@@ -37,6 +37,22 @@ let getByCode = function (code) {
 
 
 /**
+ * @description Gets a course by it's unique ID
+ * @param CourseId
+ * @returns {Promise.<Course>}
+ */
+let getById = function (CourseId) {
+  return Course.find({
+    where: {
+      id: CourseId
+    }
+  })
+
+}
+
+
+
+/**
  * @description Returns all admins for course
  * @param course
  * @returns {Promise.<AdminRole>}
@@ -122,6 +138,7 @@ let deleteCourse=function(courseCode) {
 module.exports = {
   findOrCreateCourse:       findOrCreateCourse,
   getByCode:                getByCode,
+  getById:                  getById,
   getAllUsersForCourse:     getAllUsersForCourse,
   getAdminsForCourse:       getAdminsForCourse,
   getAllLecturesForCourse:  getAllLecturesForCourse,

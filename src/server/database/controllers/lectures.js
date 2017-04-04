@@ -20,6 +20,7 @@ let createLecture = function(lecture) {
     endDate: lecture.endDate,
     location: lecture.loc,
     description: lecture.description,
+    isActive: lecture.isActive
   })
 }
 
@@ -58,6 +59,20 @@ let deleteLecture = function(lecture) {
  */
 let getAll = function() {
   return Lecture.findAll()
+}
+
+
+
+/**
+ * @description Gets all currently active lectures
+ * @returns {Promise.<Array.<Lecture>>}
+ */
+let getAllActive = function () {
+  return Lecture.findAll({
+    where: {
+      isActive: true
+    }
+  })
 }
 
 
@@ -153,6 +168,7 @@ module.exports = {
   updateLecture:        updateLecture,
   deleteLecture:        deleteLecture,
   getAll:               getAll,
+  getAllActive:         getAllActive,
   getById:              getById,
   getByName:            getByName,
   getAllMessages:       getAllMessages,
@@ -160,5 +176,3 @@ module.exports = {
   getCourse:            getCourse,
   getAdmins:            getAdmins
 }
-
-
