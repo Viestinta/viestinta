@@ -12,7 +12,8 @@ module.exports = function (sequelize, DataTypes) {
       get: function () {
         var date = new Date(this.getDataValue('time'))
         // var string = date.getDay() + '.' + date.getMonth() + '.' + date.getYear()
-
+        
+        console.log("Get time in message")
         var hours = date.getHours()
         if (date.getHours() < 10) {
           hours = '0' + date.getHours()
@@ -60,6 +61,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     },
     instanceMethods: {
+
     }
     
   })

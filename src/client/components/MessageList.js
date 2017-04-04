@@ -46,6 +46,7 @@ export default class MessageList extends Component {
     this.getAllMessages = this.getAllMessages.bind(this)
     this.updateMessageListOrder = this.updateMessageListOrder.bind(this)
     this.sort = this.sort.bind(this) 
+    this.getClock = this.getClock.bind(this)
   }
 
   componentDidMount () {
@@ -61,6 +62,7 @@ export default class MessageList extends Component {
     // Adds the message
     messages.push(msg)
     this.setState({ messages: messages })
+    console.log("Messages in receiveMessage: ", this.state.messages)
   }
 
   getAllMessages (msgList) {
@@ -76,13 +78,11 @@ export default class MessageList extends Component {
 
   sort () {
     var list = this.state.messages.slice()
-    console.log("List: ", list)
-
+    
     list.sort(function(msgOne, msgTwo) {
       var msgOneVotes = msgOne.votesUp - msgOne.votesDown
       var msgTwoVotes = msgTwo.votesUp - msgTwo.votesDown
     
-      console.log(msgOne.text, ": ", msgOne.votesUp, " - ", msgOne.votesDown)
       if (msgOneVotes > msgTwoVotes) {
         return -1
       } else if (msgOneVotes < msgTwoVotes) {
@@ -98,10 +98,20 @@ export default class MessageList extends Component {
 
   }
 
+  getClock(time) {
+    if (time.length > 5) {
+        return time.substring(11, 16)
+      }
+
+    return time
+  }
+
   render () {
+
     var list = this.state.messages.map((message, i) => {
-      
       var time = message.time
+      time = this.getClock(time)
+
       return (
         <Message
           key={i}
