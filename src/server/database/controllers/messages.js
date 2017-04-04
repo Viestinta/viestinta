@@ -113,17 +113,25 @@ module.exports = {
    * @callback Callbacks when voting attributes have been updated
    */
   vote (req, callback) {
-    Message.find({where: {id: req.id}})
+    return Message.find({where: {id: req.id}})
       .then(function (msg) {
         if (req.value === 1) {
           msg.increment('votesUp', {
             where: 
             { id: req.id }
+          }).then( function() {
+            if (callback) {
+              callback()
+            }
           })
         } else if (req.value === -1) {
           msg.increment('votesDown', {
             where: 
             { id: req.id }
+          }).then( function() {
+            if (callback) {
+              callback()
+            }
           })
         }
       })
