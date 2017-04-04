@@ -87,7 +87,7 @@ export default class MessageList extends Component {
 
   sortVotes () {
     this.setState({
-      selectedIndex: 0
+      selectedIndex: 1
     })
     /* TODO: Sort messages on votes */
   }
