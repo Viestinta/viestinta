@@ -8,7 +8,8 @@ export default class FeedbackWindow extends Component {
 
     this.state = {
       // minsElapsed: 0,
-      feedback: [0, 0]
+      feedback: [0, 0],
+      intervalId: undefined
     }
 
     this.tick = this.tick.bind(this)
@@ -30,9 +31,16 @@ export default class FeedbackWindow extends Component {
 
   componentDidMount () {
     // Increase every min
-    this.interval = setInterval(this.tick, 60000)
+    var interval = setInterval(this.tick, 60000)
+    this.setState({intervalId: interval})
     socket.on('receive-feedback', this.receiveFeedback)
     socket.on('update-feedback-interval', this.updateFeedbackInterval)
+    console.log("componentDidMount: FeedbackWindow")
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.state.intervalId)
+    console.log("componentWillUnmount: FeedbackWindow")
   }
 
   receiveFeedback (feedback) {

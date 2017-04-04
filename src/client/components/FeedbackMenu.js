@@ -13,7 +13,8 @@ export default class FeedbackMenu extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      disabled: false
+      disabled: false,
+      intervalId: undefined
     }
 
     this.slowClick = this.slowClick.bind(this)
@@ -24,7 +25,14 @@ export default class FeedbackMenu extends Component {
   componentDidMount () {
     // Activate button every x min
     // TODO: set to 5 x 6000 after testing
-    this.interval = setInterval(this.activateButtons, 3000)
+    var interval = setInterval(this.activateButtons, 3000)
+    this.setState({intervalId: interval})
+    console.log("componentDidMount: FeedbackMenu")
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.state.intervalId)
+    console.log("componentWillUnmount: FeedbackMenu")
   }
 
   activateButtons () {
