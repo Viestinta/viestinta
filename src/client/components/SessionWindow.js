@@ -114,9 +114,12 @@ export default class SessionWindow extends Component {
         })
     }
 
-    createNewLecture () {
+    createNewLecture (courseCode, lectureName) {
         //TODO: Håndteres av Socket?
         //TODO: Kan ikke være mulig for hvem som helst å lage via et API call
+        axios.post('/create-lecture', {courseCode: courseCode, lectureName: lectureName}).then(function () {
+            console.log('[SessionWindow][Axios] Create new lecture, course: ' + courseCode + ' name: ' + lectureName)
+        })
     }
 
     handleChange (event, index, value) {
@@ -196,8 +199,8 @@ export default class SessionWindow extends Component {
                 */}
                 <RaisedButton
                     primary={true}
-                    label= { !this.state.selectedLecture ? "Koble til" : "Koble fra" }
-                    onTouchTap={ !this.state.selectedLecture ? this.connectToLectureButton : this.disconnectFromLecture }
+                    label= { !this.state.selectedLecture ? "Lag ny" : "Koble fra" }
+                    onTouchTap={ !this.state.selectedLecture ? this.createNewLecture : this.disconnectFromLecture }
                 />
             </Paper>
             { this.state.selectedLecture ? 

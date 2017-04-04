@@ -41,14 +41,22 @@ export default class FeedbackMenu extends Component {
   }
 
   slowClick () {
-    socket.emit('new-feedback', -1)
+    let feedback =  {
+      value: -1,
+      courseCode: this.props.courseCode
+    }
+    socket.emit('new-feedback', feedback)
     this.setState({
       disabled: true
     })
   }
 
   fastClick () {
-    socket.emit('new-feedback', 1)
+    let feedback =  {
+      value: 1,
+      courseCode: this.props.courseCode
+    }
+    socket.emit('new-feedback', feedback)
     this.setState({
       disabled: true
     })

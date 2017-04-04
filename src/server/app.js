@@ -287,13 +287,13 @@ io.sockets.on('connection', function (socket) {
 
   // When somebody gives feedback
   socket.on('new-feedback', function (feedback) {
-    console.log('[app] new-feedback: ' + feedback)
-    feedbacksController.create({
-      value: feedback
+    console.log('[app] new-feedback: ' + feedback.value + ' to room: ' + feedback.courseCode)
+    feedbacksController.createFeedback({
+      value: feedback.value
     }).then(function (result) {
       // Create association between feedback and lecture
       result.setLecture(socket.lecture)
-      io.sockets.emit('receive-feedback', {value: result.value})
+      io.sockets.in(feedback.courseCode).emit('receive-feedback', {value: result.value})
     })
   })
 
@@ -314,3 +314,14 @@ if(process.env.NODE_ENV !== 'test'){
   var redis = 10
 }
 module.exports = redis
+
+const viestinta = [
+  "       _           _   _       _        ",
+  "__   _(_) ___  ___| |_(_)_ __ | |_ __ _ ",
+  "\\ \\ / / |/ _ \\/ __| __| | '_ \\| __/ _` |",
+  " \\ \V /| |  __/\\__ \\ |_| | | | | || (_| |",
+  "  \\_/ |_|\\___||___/\\__|_|_| |_|\\__\\__,_|",
+  "                                        ",
+]
+
+console.log(viestinta.join('\n'))

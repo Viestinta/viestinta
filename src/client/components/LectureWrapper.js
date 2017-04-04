@@ -22,7 +22,7 @@ export default class LectureWrapper extends Component {
                 {/* List of messages */}
                 <MessageList />
                 {/* Sidebar with feedback-options */}
-                <FeedbackBox />
+                <FeedbackBox courseCode={this.props.courseCode}/>
                 {/* Inputfield for user */}
                 <ChatBox courseCode={this.props.courseCode}/>
             </div>

@@ -36,7 +36,9 @@ module.exports = {
    */
   createFeedback (feedback) {
     return Feedback.create({
-      value: feedback.value
+      value: feedback.value,
+      UserId: feedback.UserId,
+      LectureId: feedback.LectureId
     })
   },
 

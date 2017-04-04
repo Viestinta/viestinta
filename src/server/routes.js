@@ -59,22 +59,33 @@ module.exports = (app) => {
   app.get('/lectures', (req, res) => {
     if(req.user){
       res.status(200)
+      console.log('[routes][database] Getting all active lectures')
       lecturesController.getAllActive().then(function (lectures, info) {
-        let counter = 0
-        lectures.map((lecture) => {
-          courseController.getById(lecture.CourseId).then(function (course) {
-            lecture = lecture.toJSON()
-            lecture.course = course
-            counter ++
-            if(counter === lectures.length) {
-              res.json(lectures)
-            }
+        if (!lectures.length) {
+          res.status(404)
+          res.json([])
+          console.log('[routes][database] Found no active lectures, returning empty list')
+        } else {
+          console.log('[routes][database] Found active lectures, finding corresponding courses')
+          console.log(lectures)
+          let counter = 0
+          lectures.map((lecture) => {
+            courseController.getById(lecture.CourseId).then(function (course) {
+              lecture = lecture.toJSON()
+              lecture.course = course
+              counter ++
+              if(counter === lectures.length) {
+                console.log('[routes][database] Found all corresponding courses, sending response to client')
+                res.json(lectures)
+              }
+            })
           })
-        })
+        }
       })
     } else {
       res.status(401)
       res.json([])
+      consloe.log('[routes][database] User not authrorized for databse access, returnign empty list')
     }
   })
 
