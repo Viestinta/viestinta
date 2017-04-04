@@ -31,22 +31,8 @@ const TABLE_COLUMNS = [
   {
     key: 'course',
     label: 'course',
-  }, {
-    key: 'action',
-    label: 'action',
+    sortable: true,
   },
-]
-
-const TABLE_DATA = [
-    {
-        course: 'TDT0000',
-    },
-    {
-        course: 'TTK0000'
-    },
-    {
-        course: 'TIØ0000'
-    }
 ]
 
 export default class SessionWindow extends Component {
@@ -61,6 +47,7 @@ export default class SessionWindow extends Component {
                When 'getAvailableLectures()' works */
             lectureList: ['TDT0000', 'TTK0000', 'TIØ0000'],
             selectedLecture: undefined,
+            filteredLectureList: undefined,
             value: 1,
             disable: false
         }
@@ -72,6 +59,8 @@ export default class SessionWindow extends Component {
         this.connectToLectureButton = this.connectToLectureButton.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.disconnectFromLecture = this.disconnectFromLecture.bind(this)
+        this.handleFilterValueChange = this.handleFilterValueChange.bind(this)
+        this.getLectures = this.getLectures.bind(this)
     }
 
     componentDidMount() {
@@ -85,6 +74,8 @@ export default class SessionWindow extends Component {
         .then(lectureList => {
           this.setState({
             lectureList: lectureList
+          }, function () {
+              this.handleFilterValueChange("")
           })
           console.log("Returning list of lectures: " + lectureList)
         })
@@ -94,19 +85,19 @@ export default class SessionWindow extends Component {
     }
 
     getLectures () {
-        let L = this.state.lectureList
-        console.log(L)
-        return L.map((a) => {
-            return {
-                course: a,
-                action: <RaisedButton
-                    primary={true}
-                    label="Koble til"
-                    disabled={this.state.disable}
-                    onTouchTap={this.connectToLectureButton}
-                />
-            }
-        })
+        if (this.state.filteredLectureList) {
+            return this.state.filteredLectureList.map((a) => {
+                return {
+                    course: a
+                }
+            })
+        } else {
+            return this.state.lectureList.map((a) => {
+                return {
+                    course: a
+                }
+            })
+        } 
     }
 
     connectToLecture () {
@@ -157,7 +148,7 @@ export default class SessionWindow extends Component {
         console.log('[SessionWindow] handleCellClick')
         console.log('[SessionWindow] row: ' + row + ' col: ' + col + ' event: ' + event)
         let ll = this.state.lectureList
-        console.log('[SessionWindow] ll: ' + ll + ' row: ' +  row + ' ll[row]: ' + ll[row])
+        console.log('[SessionWindow] ll: ' + JSON.stringify(ll) + ' row: ' +  row + ' ll[row]: ' + ll[row])
         this.setState({
             disable: true,
             selectedLecture: ll[row]
@@ -165,6 +156,19 @@ export default class SessionWindow extends Component {
             console.log('[SessionWindow] lectureList: '+ this.state.lectureList + 'selectedLecture: ' + this.state.selectedLecture)
             this.connectToLecture()
         })
+    }
+
+    handleFilterValueChange (value) {
+        console.log('[SessionWindow][DataTables] Filter by value: ' + value)
+        if (value === '') {
+            this.setState({
+                filteredLectureList: this.state.lectureList
+            })
+        } else {
+            this.setState({
+                filteredLectureList: this.state.lectureList.filter((a) => a.indexOf(value) > -1)  
+            })
+        }
     }
 
     render () {
@@ -192,8 +196,8 @@ export default class SessionWindow extends Component {
                 */}
                 <RaisedButton
                     primary={true}
-                    label= { !this.state.disable ? "Koble til" : "Koble fra" }
-                    onTouchTap={ !this.state.disable ? this.connectToLectureButton : this.disconnectFromLecture }
+                    label= { !this.state.selectedLecture ? "Koble til" : "Koble fra" }
+                    onTouchTap={ !this.state.selectedLecture ? this.connectToLectureButton : this.disconnectFromLecture }
                 />
             </Paper>
             { this.state.selectedLecture ? 
@@ -212,6 +216,7 @@ export default class SessionWindow extends Component {
                         }
                     })}
                     showCheckboxes = { false }
+                    showHeaderToolbar = { true }
                     onCellClick = { this.handleCellClick }
                     onCellDoubleClick= { this.handleCellDoubleClick }
                     onFilterValueChange = { this.handleFilterValueChange }

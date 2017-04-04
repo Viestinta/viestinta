@@ -63,6 +63,7 @@ module.exports = (app) => {
       })
     } else {
       res.status(401)
+      res.json([])
     }
   })
 

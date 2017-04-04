@@ -79,7 +79,7 @@ if (process.env.NODE_ENV !== 'test') {
 
   //Declaring session options
   let sess = {
-    secret: 'MagicSealsAndNarwalsDancingTogetherInRainbows',
+    secret: process.env.VIESTINTA_SESSION_SECRET || 'MagicSealsAndNarwalsDancingTogetherInRainbows',
     resave: false,
     saveUninitialized: true,
     store: sessionStore,
@@ -110,7 +110,21 @@ if (process.env.NODE_ENV !== 'test') {
 // Passport/Dataporten setup
 // ///////////////////////////////////////////////////
 
-var pd = new PDStrategy(nconf.get('dataporten'))
+// Get all the config items from nconf in one request
+let pd_config_nconf = nconf.get('dataporten')
+
+// Set OAUTH2 config with either environment variables
+// or if they are not available, get them from nconf (./etc/config.json)
+let pd_config = {
+    "issuerHost": process.env.VIESTINTA_OAUTH2_HOST_URL || pd_config_nconf.issuerHost,
+    "client_id": process.env.VIESTINTA_OAUTH2_CLIENT_ID || pd_config_nconf.client_id,
+    "client_secret": process.env.VIESTINTA_OAUTH2_CLIENT_SECRET || pd_config_nconf.client_secret,
+    "redirect_uri": process.env.VIESTINTA_OAUTH2_REDIRECT_URI || pd_config_nconf.redirect_uri,
+    "scope": process.env.VIESTINTA_OAUTH2_SCOPE || pd_config_nconf.scope
+  }
+
+// Initialize a PassportDataportenStrategy with the OAUTH2 config 
+var pd = new PDStrategy(pd_config)
 
 passport.use(pd)
 passport.serializeUser(PDStrategy.serializeUser)
