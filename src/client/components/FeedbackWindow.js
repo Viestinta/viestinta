@@ -35,12 +35,10 @@ export default class FeedbackWindow extends Component {
     this.setState({intervalId: interval})
     socket.on('receive-feedback', this.receiveFeedback)
     socket.on('update-feedback-interval', this.updateFeedbackInterval)
-    console.log("componentDidMount: FeedbackWindow")
   }
 
   componentWillUnmount () {
     clearInterval(this.state.intervalId)
-    console.log("componentWillUnmount: FeedbackWindow")
   }
 
   receiveFeedback (feedback) {

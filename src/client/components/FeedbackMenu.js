@@ -27,12 +27,10 @@ export default class FeedbackMenu extends Component {
     // TODO: set to 5 x 6000 after testing
     var interval = setInterval(this.activateButtons, 3000)
     this.setState({intervalId: interval})
-    console.log("componentDidMount: FeedbackMenu")
   }
 
   componentWillUnmount () {
     clearInterval(this.state.intervalId)
-    console.log("componentWillUnmount: FeedbackMenu")
   }
 
   activateButtons () {
