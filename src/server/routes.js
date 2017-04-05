@@ -85,7 +85,7 @@ module.exports = (app) => {
     } else {
       res.status(401)
       res.json([])
-      consloe.log('[routes][database] User not authrorized for databse access, returnign empty list')
+      console.log('[routes][database] User not authrorized for databse access, returnign empty list')
     }
   })
 
