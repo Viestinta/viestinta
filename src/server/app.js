@@ -200,23 +200,37 @@ io.sockets.on('connection', function (socket) {
   })
 
 
-  socket.on('create-lecture', function (lecture) {
+  socket.on('create-lecture', function (socketLecture) {
     console.log('[app] create-lecture')
     
     // TODO: missing
   })
 
-  socket.on('leave-lecture', function (courseCode) {
-    console.log('[app][socket] leave-lecture ' + courseCode)
-    socket.leave(courseCode)
+  /**
+   * @template socketLecture: {
+      id: (int),
+      code: (string),
+      room: (string),
+    }
+   */
+  socket.on('leave-lecture', function (socketLecture) {
+    console.log('[app][socket] leave-lecture ' + socketLecture.room)
+    socket.leave(socketLecture.room)
   })
 
-  socket.on('join-lecture', function (courseCode) {
-    console.log('[app][socket] join-lecture ' + courseCode)
+  /**
+   * @template socketLecture: {
+      id: (int),
+      code: (string),
+      room: (string),
+    }
+   */
+  socket.on('join-lecture', function (socketLecture) {
+    console.log('[app][socket] join-lecture ' + socketLecture.room)
 
     courseController.findOrCreateCourse({
         name:"ITSGK",
-        code: courseCode
+        code: socketLecture.code
     })
     .spread(function(course, created){
 
@@ -225,14 +239,15 @@ io.sockets.on('connection', function (socket) {
       lecturesController.createLecture({
         name: "Introduction to IE",
         CourseId: testCourse.id
+
       }).then(function(lecture){
         
         console.log('[app][socket] Retriveing lecture with ID: ' + lecture.id)
-        socket.lecture = lecture.id
+        socket.LectureId = lecture.id
         console.log('[app][socket] Connected to lecture with ID: ' + socket.lecture)
 
-        socket.join(courseCode)
-        console.log('[app][socket] Joined course courseCode: ' + courseCode)
+        socket.join(socketLecture.room)
+        console.log('[app][socket] Joined course identifier: ' + socketLecture.room)
 
         // Get feedback status for last x min
         feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
@@ -254,15 +269,24 @@ io.sockets.on('connection', function (socket) {
     socket.emit('messages', 'Goodbye from server')
   })
 
-  // When a new message is sent from somebody
+  /**
+   * @template msg: {
+      text: (string),
+      lecture: {
+        id: (int),
+        code: (string),
+        room: (string),
+      }
+    }
+   */
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg.text)
-    console.log('[app][socket] Message destined for Room: ' + msg.courseCode)
+    console.log('[app][socket] Message destined for Room: ' + msg.lecture.room)
 
     messagesController.create(msg).then(function (result) {
       //result.setUser(socket.user)
       //result.setLecture(socket.lecture)
-      io.sockets.in(msg.courseCode).emit('receive-message', {
+      io.sockets.in(msg.lecture.room).emit('receive-message', {
         text: result.text,
         time: result.time,
         votesUp: result.votesUp,
@@ -286,20 +310,33 @@ io.sockets.on('connection', function (socket) {
   })
 
   // When somebody gives feedback
+
+  /**
+   * @template feedback: {
+      value: (int),
+      lecture: {
+        id: (int),
+        code: (string),
+        room: (string),
+      }
+    }
+   */
   socket.on('new-feedback', function (feedback) {
-    console.log('[app] new-feedback: ' + feedback.value + ' to room: ' + feedback.courseCode)
+    console.log('[app] new-feedback: ' + feedback.value + ' to room: ' + feedback.lecture.room)
     feedbacksController.createFeedback({
       value: feedback.value
     }).then(function (result) {
       // Create association between feedback and lecture
       result.setLecture(socket.lecture)
-      io.sockets.in(feedback.courseCode).emit('receive-feedback', {value: result.value})
+      io.sockets.in(feedback.lecture.room).emit('receive-feedback', {value: result.value})
     })
   })
 
   // Called every x minuts
-  socket.on('update-feedback-interval', function () {
+  socket.on('update-feedback-interval', function (courseCode) {
     // Get feedback from database for past x minuts
+    socket.lecture
+    feedbacksController.getAllToLecture()
     feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
       feedbacksController.getLastIntervalPos().then(function (resultPos) {
         io.sockets.emit('update-feedback-interval', [resultNeg, resultPos])
@@ -318,7 +355,7 @@ module.exports = redis
 const viestinta = [
   "       _           _   _       _        ",
   "__   _(_) ___  ___| |_(_)_ __ | |_ __ _ ",
-  "\\ \\ / / |/ _ \\/ __| __| | '_ \\| __/ _` |",
+  "\\ \\ / / |/ _ \\/ __| __| | '_ \\| __/ _` |", 
   " \\ \V /| |  __/\\__ \\ |_| | | | | || (_| |",
   "  \\_/ |_|\\___||___/\\__|_|_| |_|\\__\\__,_|",
   "                                        ",

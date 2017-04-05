@@ -52,11 +52,15 @@ export default class ChatBox extends Component {
   }
 
   sendMessage () {
-    console.log('[ChatBox] sendMessage to course: ' + this.props.courseCode)
+    console.log('[ChatBox] sendMessage to room: ' + this.props.lecture.room)
     // Setting msg.text to written input
     var msg = {
       text: this.state.text,
-      courseCode: this.props.courseCode,
+      lecture: {
+        id:  JSON.stringify(this.props.lecture.id),
+        code: this.props.lecture.course.code,
+        room: this.props.lecture.room,
+      }
     }
 
     // Emtpy input field

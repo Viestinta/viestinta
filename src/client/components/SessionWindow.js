@@ -30,9 +30,19 @@ const styles = {
 const TABLE_COLUMNS = [
   {
     key: 'course',
-    label: 'course',
+    label: 'Course',
     sortable: true,
   },
+  {
+    key: 'courseName',
+    label: 'Course Name',
+    sortable: true,
+  }, 
+  {
+    key: 'lectureName',
+    label: 'Lecture Name',
+    sortable: true,
+  }
 ]
 
 export default class SessionWindow extends Component {
@@ -45,7 +55,7 @@ export default class SessionWindow extends Component {
             /* Set default values for develop
                Set empty [] when done
                When 'getAvailableLectures()' works */
-            lectureList: ['TDT0000', 'TTK0000', 'TIØ0000'],
+            lectureList: [],
             selectedLecture: undefined,
             filteredLectureList: undefined,
             value: 1,
@@ -69,15 +79,18 @@ export default class SessionWindow extends Component {
     }
 
     getAvailableLectures () {
+      console.log('[SessionWindow][getAvailableLectures] Trying to get available lectures')
       axios
         .get("/lectures")
-        .then(lectureList => {
+        .then(request => {
+          console.log('[SessionWindow][getAvailableLectures][axios] got list of lectures: ' + JSON.stringify(request.data))
+          let data = request.data
+          // Add the room to the data to make it more easily accessible
+          data.map((data) => data.room = data.course.code + '-' + JSON.stringify(data.id))
           this.setState({
-            lectureList: lectureList
-          }, function () {
-              this.handleFilterValueChange("")
+            lectureList: data
           })
-          console.log("Returning list of lectures: " + lectureList)
+          //console.log("Returning list of lectures: " + lectureList)
         })
         .catch(err => {
           console.log(err)
@@ -101,13 +114,13 @@ export default class SessionWindow extends Component {
     }
 
     connectToLecture () {
-        console.log('[SessionWindow] Connect to lecture: ' + this.state.selectedLecture)
-        socket.emit('join-lecture', this.state.selectedLecture)
+        console.log('[SessionWindow] Connect to lecture: ' + this.state.selectedLecture.room)
+        socket.emit('join-lecture', {code: this.state.selectedLecture.course.code, id:this.state.selectedLecture.id, room:this.state.selectedLecture.room})
     }
 
     disconnectFromLecture () {
-        console.log('[SessionWindow] Leave lecture: ' + this.state.selectedLecture)
-        socket.emit('leave-lecture', this.state.selectedLecture)
+        console.log('[SessionWindow] Leave lecture: ' + this.state.selectedLecture.room)
+        socket.emit('leave-lecture', {code: this.state.selectedLecture.course.code, id:this.state.selectedLecture.id, room:this.state.selectedLecture.room})
         this.setState({
             disable:false,
             selectedLecture: undefined,
@@ -175,21 +188,11 @@ export default class SessionWindow extends Component {
     }
 
     render () {
-        var menuItems = this.state.lectureList.map((lecture, i) => {
-            return (
-                <MenuItem
-                    value={i+2}
-                    key={i} /* All menu items need unique key */
-                    primaryText={lecture}
-                />
-            )
-        })
-
         return (
             <div>
             <Paper zDepth={3} style={styles.container}>
                 <Subheader style={{width: 'auto'}}>
-                    FORELESNING: {this.state.selectedLecture}
+                    {this.state.selectedLecture ? this.state.selectedLecture.course.code + ' : ' + this.state.selectedLecture.course.name : 'Velg forelesning fra listen under'}
                 </Subheader>
                 {/*
                 <DropDownMenu value={this.state.value} onChange={this.handleChange}>
@@ -205,7 +208,7 @@ export default class SessionWindow extends Component {
             </Paper>
             { this.state.selectedLecture ? 
                 <LectureWrapper 
-                    courseCode={this.state.selectedLecture}
+                    lecture={this.state.selectedLecture}
                 /> 
                 : 
                 <DataTables
@@ -213,9 +216,11 @@ export default class SessionWindow extends Component {
                     selectable = { false }
                     showRowHover = { true }
                     columns = {TABLE_COLUMNS}
-                    data = { this.state.lectureList.map((a) => {
+                    data = { this.state.lectureList.map(lecture => {
                         return {
-                            course:a
+                            course:lecture.course.code,
+                            courseName:lecture.course.name,
+                            lectureName:lecture.name
                         }
                     })}
                     showCheckboxes = { false }

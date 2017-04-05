@@ -88,12 +88,12 @@ export default class FeedbackBox extends Component {
             <p>Vennligst gi tilbakemelding på hvordan du opplever 
             forelesningen akkurat nå.</p> 
             <Subheader>Tempo:</Subheader> 
-            <FeedbackMenu onClick={this.onClick} courseCode={this.props.courseCode}/> 
+            <FeedbackMenu onClick={this.onClick} lecture={this.props.lecture}/> 
             <FeedbackWindow 
               slow={this.state.feedback[0]} 
               fast={this.state.feedback[1]} 
               updateFeedbackInterval={this.updateFeedbackInterval}
-              courseCode={this.props.courseCode} 
+              lecture={this.props.lecture} 
             /> 
           </div> 
         </Drawer>

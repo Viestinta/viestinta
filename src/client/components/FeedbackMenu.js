@@ -43,7 +43,11 @@ export default class FeedbackMenu extends Component {
   slowClick () {
     let feedback =  {
       value: -1,
-      courseCode: this.props.courseCode
+      lecture: {
+        id:  JSON.stringify(this.props.lecture.id),
+        code: this.props.lecture.course.code,
+        room: this.props.lecture.room,
+      }
     }
     socket.emit('new-feedback', feedback)
     this.setState({
@@ -54,7 +58,11 @@ export default class FeedbackMenu extends Component {
   fastClick () {
     let feedback =  {
       value: 1,
-      courseCode: this.props.courseCode
+      lecture: {
+        id:  JSON.stringify(this.props.lecture.id),
+        code: this.props.lecture.course.code,
+        room: this.props.lecture.room,
+      }
     }
     socket.emit('new-feedback', feedback)
     this.setState({
