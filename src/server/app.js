@@ -229,35 +229,36 @@ io.sockets.on('connection', function (socket) {
     console.log('[app][socket] join-lecture ' + socketLecture.room)
 
     courseController.findOrCreateCourse({
-        name:"ITSGK",
-        code: socketLecture.code
+      name: "ITSGK",
+      code: socketLecture.code
     })
-    .spread(function(course, created){
+      .spread(function (course, created) {
 
-      let testCourse = course
+        let testCourse = course
 
-      lecturesController.createLecture({
-        name: "Introduction to IE",
-        CourseId: testCourse.id
+        lecturesController.createLecture({
+          name: "Introduction to IE",
+          CourseId: testCourse.id
 
-      }).then(function(lecture){
-        
-        console.log('[app][socket] Retriveing lecture with ID: ' + lecture.id)
-        socket.LectureId = lecture.id
-        console.log('[app][socket] Connected to lecture with ID: ' + socket.lecture)
+        }).then(function (lecture) {
 
-        socket.join(socketLecture.room)
-        console.log('[app][socket] Joined course identifier: ' + socketLecture.room)
+          console.log('[app][socket] Retriveing lecture with ID: ' + lecture.id)
+          socket.LectureId = lecture.id
+          console.log('[app][socket] Connected to lecture with ID: ' + socket.lecture)
 
-        // Get feedback status for last x min
-        feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
-          feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
-            socket.emit('update-feedback-interval', [resultNeg, resultPos])
+          socket.join(socketLecture.room)
+          console.log('[app][socket] Joined course identifier: ' + socketLecture.room)
+
+          // Get feedback status for last x min
+          feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+            feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
+              socket.emit('update-feedback-interval', [resultNeg, resultPos])
+            })
           })
-        })
-        // Get last 10 messages
-        messagesController.getLastTen(lecture).then(function (result) {
-          socket.emit('last-ten-messages', result.reverse())
+
+          messagesController.getAllToLecture(lecture).then(function (result) {
+            socket.emit('all-messages', result.reverse())
+          })
         })
       })
     })

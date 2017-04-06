@@ -108,7 +108,7 @@ module.exports = {
         text: text
       }
     })
-  }
+  },
 
 
 
