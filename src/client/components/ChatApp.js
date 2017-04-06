@@ -40,7 +40,7 @@ export default class ChatApp extends Component {
     super(props)
 
     this.state = {
-      username: undefined,
+      user: undefined,
       isAdmin: false
     }
 
@@ -58,7 +58,7 @@ export default class ChatApp extends Component {
       .then(userinfo => {
         console.log("Returning user info: " + JSON.stringify(userinfo.data.user))
         this.setState({
-          username: userinfo.data.user.name
+          user: userinfo.data.user
         })
       })
       .catch(err => {
@@ -75,7 +75,7 @@ export default class ChatApp extends Component {
   render () {
     const User = (
       <div>
-        <p>Logget inn som: {this.state.username}</p>
+        <p>Logget inn som: {this.state.user ? this.state.user.name : undefined}</p>
       </div>
     )
     return (
@@ -83,13 +83,9 @@ export default class ChatApp extends Component {
         <div style={styles.container}>
           <Header isAdmin={this.state.isAdmin} toggleAdmin={this.toggleAdmin}/>
           {/* Login button or username */}
-          { !this.state.username ? <Login/> : User }
-          {/* List of messages */}
-          <MessageList isAdmin={this.state.isAdmin} />
-          {/* Sidebar with feedback-options */}
-          { !this.state.isAdmin ? <FeedbackBox /> : undefined }
-          {/* Inputfield for user */}
-          { !this.state.isAdmin ? <ChatBox /> : undefined }
+          { !this.state.user ? <Login/> : User }
+          {/* Session */}
+          <SessionWindow user={this.state.user} isAdmin={this.state.isAdmin} />
         </div>
       </MuiThemeProvider>
     )
