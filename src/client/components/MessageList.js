@@ -122,8 +122,6 @@ export default class MessageList extends Component {
           time={time}
           text={message.text}
           id={message.id}
-          up={message.votesUp}
-          dw={message.votesDown}
         />
       )
     })

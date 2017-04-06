@@ -132,7 +132,6 @@ export default class Message extends React.Component {
       <div style={styles.footer}>
         <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
         <p style={{flexBasis: '82%'}}>{this.props.time}</p>
-        <p>{"Up: " + this.props.up + " Down: " + this.props.dw}</p>
         {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
       </div>
     )
