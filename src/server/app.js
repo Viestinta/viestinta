@@ -200,16 +200,9 @@ io.sockets.on('connection', function (socket) {
       // Get all messages
 
       // If lecturer
-      // TODO
-      if (true) {
-        messagesController.getInPrioritizedOrder(lecture).then(function (result) {
-          socket.emit('all-messages-prioritized', result.reverse())
-        })
-      } else {
-        messagesController.getAllMessages(lecture).then(function (result) {
+      messagesController.getAllToLecture(lecture).then(function (result) {
         socket.emit('all-messages', result.reverse())
-      })
-      }   
+      })   
     })
   })
 

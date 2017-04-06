@@ -13,7 +13,9 @@ module.exports = {
   create (req) {
     return Message.create({
       time: new Date(),
-      text: req.text
+      text: req.text,
+      UserId: req.UserId,
+      LectureId: req.LectureId
     })
   },
 
@@ -67,10 +69,10 @@ module.exports = {
   getAllToLecture (lecture) {
     return Message.findAll({
       where: {
-        LectureId: null
+        LectureId: lecture.id
       },
+      raw: true,
       order: '"time" DESC',
-      limit: 10
     })
   },
 
