@@ -129,7 +129,7 @@ export default class MessageList extends Component {
     return (
       <Paper zDepth={3} style={styles.parent}>
         <List style={styles.child}>
-          {list}
+          {list.reverse()}
         </List>
       </Paper>
     )
