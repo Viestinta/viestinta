@@ -6,6 +6,18 @@ import ChatBox from './ChatBox'
 import MessageList from './MessageList'
 import FeedbackBox from './FeedbackBox'
 
+const styles = {
+
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+
+    width: '100%',
+    height: '100%',
+  }
+};
+
 export default class LectureWrapper extends Component {
 
     constructor (props) {
@@ -18,7 +30,7 @@ export default class LectureWrapper extends Component {
 
     render() {
         return (
-            <div>
+            <div style={styles.container}>
                 {/* List of messages */}
                 <MessageList isAdmin={this.props.isAdmin}/>
                 {/* Sidebar with feedback-options */}

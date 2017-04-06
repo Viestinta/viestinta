@@ -148,7 +148,7 @@ export default class Message extends React.Component {
     const footerAdmin = (
       <div style={styles.footer}>
         {timestamp}
-        <p>Jane Doe</p>
+        <p>Student</p>
       </div>
     )
     /* This menu is not yet in use */

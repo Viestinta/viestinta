@@ -12,7 +12,17 @@ import LectureWrapper from './LectureWrapper'
 import DataTables from 'material-ui-datatables';    
 
 const styles = {
+
     container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+
+        maxWidth: '500px',
+        width: '100%',
+        height: '100%'
+    },
+    session: {
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -189,8 +199,8 @@ export default class SessionWindow extends Component {
 
     render () {
         return (
-            <div>
-            <Paper zDepth={3} style={styles.container}>
+            <div style={styles.container}>
+            <Paper zDepth={3} style={styles.session}>
                 <Subheader style={{width: 'auto'}}>
                     {this.state.selectedLecture ? this.state.selectedLecture.course.code + ' : ' + this.state.selectedLecture.course.name : 'Velg forelesning fra listen under'}
                 </Subheader>
