@@ -39,11 +39,7 @@ module.exports = {
    * @returns {Promise}
    */
   deleteMessage (message) {
-    return Message.destroy({
-      where: {
-        id: message.id
-      }
-    })
+    return message.destroy()
   },
 
 
