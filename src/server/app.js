@@ -173,29 +173,85 @@ const adminRoleController = require('./database/controllers/adminRoles')
 
 //io server is defined in the Redis/Express section further up
 
+
+let initCourse = undefined
+
+setTimeout(function () {
+  lecturesController.getByName("Enkle matriseoperasjoner").then(function (lecture) {
+    if (!lecture) {
+      initCourse = true
+    }
+  })
+}, 5000)
+
 // When a new user connects
 io.sockets.on('connection', function (socket) {
 
-  let testCourse = undefined
-  let testCourseName = "Testing"
-  let testCourseCode = "TEST512"
 
-  let testLecture = undefined
-  let testLectureName = "TestingLectures"
-/*
-  courseController.findOrCreateCourse({
-    name: testCourseName,
-    code: testCourseCode
-  }).spread(function (course, created) {
-    testCourse = course
-    lecturesController.createLecture({
-      name: testLectureName,
-      CourseId: testCourse.id
-    }).then(function (lecture) {
-      testLecture = lecture
+  if(initCourse) {
+
+    let testCourse1 = undefined
+    let testCourseName1 = "Matematikk 3"
+    let testCourseCode1 = "TMA4115"
+
+    let testLecture1 = undefined
+    let testLectureName1 = "Enkle matriseoperasjoner"
+
+    courseController.findOrCreateCourse({
+      name: testCourseName1,
+      code: testCourseCode1
+    }).spread(function (course, created) {
+      testCourse1 = course
+      lecturesController.createLecture({
+        name: testLectureName1,
+        CourseId: testCourse1.id
+      }).then(function (lecture) {
+        testLecture1 = lecture
+      })
     })
-  })
-*/
+
+    let testCourse2 = undefined
+    let testCourseName2 = "Krets- og digitalteknikk"
+    let testCourseCode2 = "TFE4101"
+
+    let testLecture2 = undefined
+    let testLectureName2 = "Ohms Lov"
+
+    courseController.findOrCreateCourse({
+      name: testCourseName2,
+      code: testCourseCode2
+    }).spread(function (course, created) {
+      testCourse2 = course
+      lecturesController.createLecture({
+        name: testLectureName2,
+        CourseId: testCourse2.id
+      }).then(function (lecture) {
+        testLecture2 = lecture
+      })
+    })
+
+    let testCourse3 = undefined
+    let testCourseName3 = "Objektorientert programmering"
+    let testCourseCode3 = "TDT4100"
+
+    let testLecture3 = undefined
+    let testLectureName3 = "Intro til Java"
+
+    courseController.findOrCreateCourse({
+      name: testCourseName3,
+      code: testCourseCode3
+    }).spread(function (course, created) {
+      testCourse3 = course
+      lecturesController.createLecture({
+        name: testLectureName3,
+        CourseId: testCourse3.id
+      }).then(function (lecture) {
+        testLecture3 = lecture
+      })
+    })
+
+    initCourse = false
+  }
   // Reports when it finds a connection
   console.log('[app] connection')
 
@@ -249,6 +305,7 @@ io.sockets.on('connection', function (socket) {
     console.log('[app][socket] For course with code: ' + socket.CourseCode)
     console.log('[app][socket] as user with username: ' + socket.user.name)
     console.log('[app][socket] Joined room identifier: ' + socket.room)
+
 
     // Get feedback status for last x min
     feedbacksController.getLastIntervalNeg({id: socket.LectureId}).then(function (resultNeg) {

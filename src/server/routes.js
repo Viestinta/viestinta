@@ -68,7 +68,7 @@ module.exports = (app) => {
     if (req.user) {
       req.session.user = req.user
       let userinfo = req.user.data
-      userController.findOrCreate({
+      userController.findOrCreateUser({
         name: userinfo.name,
         sub: userinfo.sub,
         email: userinfo.email,
