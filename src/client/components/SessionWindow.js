@@ -207,7 +207,8 @@ export default class SessionWindow extends Component {
                 />
             </Paper>
             { this.state.selectedLecture ? 
-                <LectureWrapper 
+                <LectureWrapper
+                    isAdmin={this.props.isAdmin} 
                     lecture={this.state.selectedLecture}
                 /> 
                 : 
