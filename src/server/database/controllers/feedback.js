@@ -54,11 +54,6 @@ module.exports = {
     return Feedback.count({
       where: {
         LectureId: lecture.id,
-        // TODO: just use createdAt?
-        time: {
-            // Set to 5 * MIN
-          $between: [new Date(new Date() - 5 * MIN), new Date()]
-        },
         value: -1
       }
     })
@@ -75,11 +70,6 @@ module.exports = {
     return Feedback.count({
      where: {
         LectureId: lecture.id,
-        // TODO: just use createdAt?
-        time: {
-          // Set to 5 * MIN
-          $between: [new Date(new Date() - 5 * MIN), new Date()]
-        },
         value: 1
       }
     })
