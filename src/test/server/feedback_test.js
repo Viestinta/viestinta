@@ -19,6 +19,8 @@ describe('Testing feedback: ', function () {
   let testFeedback2 = undefined
   let testFeedback3 = undefined
 
+  let preexistingFeedbackCount = undefined
+
   before(function (done) {
     courseController.findOrCreateCourse({
       name: "TestCourse",
@@ -30,7 +32,10 @@ describe('Testing feedback: ', function () {
         CourseId: testCourse.id
       }).then(function (lecture) {
         testLecture = lecture
-        done()
+        feedbackController.getAll().then(function (feedback) {
+          preexistingFeedbackCount = feedback.length
+          done()
+        })
       })
     })
   })
@@ -108,7 +113,7 @@ describe('Testing feedback: ', function () {
 
   it('Get all feedback', function (done) {
     feedbackController.getAll().then(function (feedback) {
-      assert.equal(feedback.length, 3)
+      assert.equal(feedback.length, preexistingFeedbackCount + 3)
       done()
     })
   })
@@ -131,7 +136,7 @@ describe('Testing feedback: ', function () {
   it('Delete feedback', function (done) {
     feedbackController.deleteFeedback(testFeedback1).then(function () {
       feedbackController.getAll().then(function (feedback) {
-        assert.equal(feedback.length,2)
+        assert.equal(feedback.length,preexistingFeedbackCount + 2)
         done()
       })
     })
