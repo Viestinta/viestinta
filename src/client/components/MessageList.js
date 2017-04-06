@@ -39,20 +39,22 @@ export default class MessageList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      messages: []
+      messages: [], 
+      sortByVotes: false
     }
 
     this.receiveMessage = this.receiveMessage.bind(this)
     this.getAllMessages = this.getAllMessages.bind(this)
-    this.updateMessageListOrder = this.updateMessageListOrder.bind(this)
-    this.sort = this.sort.bind(this) 
+    this.sortMessageList = this.sortMessageList.bind(this)
+    this.sortListByTime = this.sortListByTime.bind(this)
+    this.sortListByVotes = this.sortListByVotes.bind(this) 
     this.getClock = this.getClock.bind(this)
   }
 
   componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
     socket.on('all-messages', this.getAllMessages)
-    socket.on('update-message-order', this.updateMessageListOrder)
+    socket.on('update-message-order', this.sortMessageList)
   }
 
   receiveMessage (msg) {
@@ -61,7 +63,8 @@ export default class MessageList extends Component {
 
     // Adds the message
     messages.push(msg)
-    this.setState({ messages: messages })
+
+    this.sortMessageList(messages)
     console.log("Messages in receiveMessage: ", this.state.messages)
   }
 
@@ -71,31 +74,32 @@ export default class MessageList extends Component {
     })
   }
 
-  updateMessageListOrder (msgList) {
-    this.setState({ messages: msgList})
-    this.sort()
+  sortMessageList (list) {
+    console.log("sortMessageList(), sortByVotes: " + this.state.sortByVotes)
+    if (this.state.sortByVotes) {
+      this.sortListByVotes(list)
+    }
+    else {
+      this.sortListByTime(list)
+    }
   }
 
-  sort () {
-    var list = this.state.messages.slice()
+  sortListByTime (list) {
+    console.log("Sort list by time")
+    list.sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
     
-    list.sort(function(msgOne, msgTwo) {
-      var msgOneVotes = msgOne.votesUp - msgOne.votesDown
-      var msgTwoVotes = msgTwo.votesUp - msgTwo.votesDown
-    
-      if (msgOneVotes > msgTwoVotes) {
-        return -1
-      } else if (msgOneVotes < msgTwoVotes) {
-        return 1
-      } else {
-        return 0
-      }
-    })
-
     this.setState({
       messages: list
     })
+  }
 
+  sortListByVotes (list) {
+    console.log("Sort list by votes")
+    list.sort( (a, b) => { return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown)) } )
+    
+    this.setState({
+      messages: list
+    })
   }
 
   getClock(time) {
