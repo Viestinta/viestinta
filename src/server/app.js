@@ -235,12 +235,15 @@ io.sockets.on('connection', function (socket) {
   socket.on('join-lecture', function (socketLecture) {
     console.log('[app][socket] join-lecture ' + socketLecture.room)
 
+    socket.user = socketLecture.user
     socket.LectureId = socketLecture.id
     socket.CourseCode = socketLecture.code
     socket.room = socketLecture.room
     socket.join(socketLecture.room)
 
     console.log('[app][socket] Connected to lecture with ID: ' + socket.LectureId)
+    console.log('[app][socket] For course with code: ' + socket.CourseCode)
+    console.log('[app][socket] as user with username' + socketLecture.user.name)
     console.log('[app][socket] Joined room identifier: ' + socket.room)
 
     // Get feedback status for last x min
