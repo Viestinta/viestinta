@@ -19,6 +19,7 @@ let findOrCreateUser = function(user) {
       name: user.name,
       student_id: user.student_id,
       email: user.email,
+      email_verified: user.email_verified,
       sub: user.sub
     }
   })

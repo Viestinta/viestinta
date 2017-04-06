@@ -155,10 +155,12 @@ let activateAdminRole = function (adminRole) {
  * @description Creates an AdminRole for the given course and user
  * @param user
  * @param course
+ * @param roleType
  * @returns {Promise.<AdminRole>}
  */
-let addUserAsAdminToCourse = function (user, course){
+let addUserAsAdminToCourse = function (user, course, roleType){
   return findOrCreateAdminRole({
+    roleType: roleType,
     CourseId: course.id,
     UserId: user.id,
   })

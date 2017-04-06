@@ -4,6 +4,8 @@ const passport = require('passport')
 const db = require('./database/models/index')
 const lecturesController = require('./database/controllers/lectures')
 const courseController = require('./database/controllers/courses')
+const userController = require('./database/controllers/users')
+const adminRoleController = require('./database/controllers/adminRoles')
 const redis = require('../server/app.js')
 
 // ///////////////////////////////////////////////////
@@ -25,13 +27,38 @@ module.exports = (app) => {
   })
 
   // API request for serving user data to frontend
-  // serves only teh data part of the user to not compromise tokens
+  // serves only the data part of the user to not compromise tokens
   app.get('/user', (req, res) => {
     if (req.user) {
       res.status(200)
       res.json({user: req.user.data})
     } else {
       res.status(404)
+    }
+  })
+
+
+  // API request for getting admin information
+  // for the corresponding user in the database
+  app.get('/admin', (req, res) => {
+    if(req.user){
+      let userinfo = req.user.data
+      userController.getByEmail(userinfo.email).then(function (user) {
+        adminRoleController.getAllByUserId(user.id).then(function (adminRoles) {
+          let counter = 0
+          adminRoles.map((adminRole) => {
+            courseController.getById(adminRole.CourseId).then(function (course) {
+              adminRole = adminRole.toJSON()
+              adminRole.course = course
+              counter ++
+              if(counter === adminRoles.length) {
+                console.log('[routes][database] Found all adminRoles for user, sending response to client')
+                res.json(adminRoles)
+              }
+            })
+          })
+        })
+      })
     }
   })
 
@@ -42,7 +69,12 @@ module.exports = (app) => {
       req.session.user = req.user
       let userinfo = req.user.data
       db['User'].findOrCreate({
-        where: {name: userinfo.name, sub: userinfo.sub, email: userinfo.email, email_verified: userinfo.email_verified}
+        where: {
+          name: userinfo.name,
+          sub: userinfo.sub,
+          email: userinfo.email,
+          email_verified: userinfo.email_verified
+        }
       })
       .spread(function (user, created) {
         console.log("Created user:", user.name)
@@ -53,6 +85,7 @@ module.exports = (app) => {
     } else {
       res.status(403)
     }
+    res.redirect('/')
   })
 
   // API request for gegtting all Lectures
@@ -100,7 +133,7 @@ module.exports = (app) => {
 
   // API requests for Passport and OAUTH2 authentication with FEIDE
   app.get('/login', passport.authenticate('passport-openid-connect', {'successReturnToOrRedirect': '/'}))
-  app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/'}))
+  app.get('/callback', passport.authenticate('passport-openid-connect', {'callback': true, 'successReturnToOrRedirect': '/connect'}))
 
   // To get static files
   app.use('/', express.static(path.join(__dirname, '../static')))

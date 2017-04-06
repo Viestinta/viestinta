@@ -335,7 +335,7 @@ io.sockets.on('connection', function (socket) {
   // Called every x minuts
   socket.on('update-feedback-interval', function (courseCode) {
     // Get feedback from database for past x minuts
-    socket.lecture
+
     feedbacksController.getAllToLecture()
     feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
       feedbacksController.getLastIntervalPos().then(function (resultPos) {

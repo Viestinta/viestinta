@@ -22,6 +22,16 @@ let findOrCreateCourse = function (course) {
 
 
 /**
+ * @description Gets all courses
+ * @returns {Promise.<Course>}
+ */
+let getAll = function () {
+  return Course.findAll()
+}
+
+
+
+/**
  * @description Returns course by code and returns a Promise for that course
  * @param code
  * @returns {Promise.<Course>}
@@ -137,6 +147,7 @@ let deleteCourse=function(courseCode) {
 
 module.exports = {
   findOrCreateCourse:       findOrCreateCourse,
+  getAll:                   getAll,
   getByCode:                getByCode,
   getById:                  getById,
   getAllUsersForCourse:     getAllUsersForCourse,
