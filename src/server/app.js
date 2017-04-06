@@ -237,6 +237,9 @@ io.sockets.on('connection', function (socket) {
     console.log('[app][socket] join-lecture ' + socketLecture.room)
 
     socket.user = socketLecture.user
+    usersController.getByEmail(socket.user.email).then(function (user) {
+      socket.UserId = user.id
+    })
     socket.LectureId = socketLecture.id
     socket.CourseCode = socketLecture.code
     socket.room = socketLecture.room
@@ -258,7 +261,9 @@ io.sockets.on('connection', function (socket) {
     })
   })
 
-  /**
+
+  /** TODO: lecture can be removed, because of the new socket variables
+   * @deprecated
    * @template msg: {
       text: (string),
       lecture: {
@@ -271,14 +276,14 @@ io.sockets.on('connection', function (socket) {
   socket.on('new-message', function (msg) {
     console.log('[app] new-message: ' + msg.text)
     console.log('[app][socket] Message destined for Room: ' + socket.room)
+
     let databaseMsg = {
       text: msg.text,
       LectureId: socket.LectureId,
-      //UserId:
+      UserId: socket.UserId
     }
+
     messagesController.createMessage(databaseMsg).then(function (result) {
-      //result.setUser(socket.user)
-      //TODO: Uncomment above
       io.sockets.in(socket.room).emit('receive-message', {
         text: result.text,
         time: result.time,
@@ -295,7 +300,8 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] new-voting-message: ' + msgId + " with " + value)
 
     messagesController.vote({
-      id: msgId, value: value
+      id: msgId,
+      value: value
     }).then(function () {
 
       messagesController.getAllToLecture({
@@ -311,6 +317,7 @@ io.sockets.on('connection', function (socket) {
   // When somebody gives feedback
 
   /** TODO: Remove lecture, it's defined in the socket itself now
+   * @deprecated
    * @template feedback: {
       value: (int),
       lecture: {
@@ -324,9 +331,9 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] new-feedback: ' + feedback.value + ' to room: ' + socket.room)
     feedbacksController.createFeedback({
       value: feedback.value,
-      LectureId: socket.LectureId
+      LectureId: socket.LectureId,
+      UserId: socket.UserId
     }).then(function (result) {
-      // Create association between feedback and lecture
       io.sockets.in(socket.room).emit('receive-feedback', {value: result.value})
     })
   })
