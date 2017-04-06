@@ -219,6 +219,7 @@ io.sockets.on('connection', function (socket) {
    */
   socket.on('leave-lecture', function (socketLecture) {
     console.log('[app][socket] leave-lecture ' + socketLecture.room)
+    socket.user = undefined
     socket.LectureId = undefined
     socket.CourseCode = undefined
     socket.room = undefined
@@ -309,7 +310,7 @@ io.sockets.on('connection', function (socket) {
 
   // When somebody gives feedback
 
-  /**
+  /** TODO: Remove lecture, it's defined in the socket itself now
    * @template feedback: {
       value: (int),
       lecture: {
@@ -331,7 +332,7 @@ io.sockets.on('connection', function (socket) {
   })
 
   // Called every x minuts
-  socket.on('update-feedback-interval', function (courseCode) {
+  socket.on('update-feedback-interval', function () {
     // Get feedback from database for past x minuts
 
     feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
