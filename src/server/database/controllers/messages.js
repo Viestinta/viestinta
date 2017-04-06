@@ -83,7 +83,6 @@ module.exports = {
   getAll () {
     return Message.findAll({
       raw: true,
-      limit: 4,
       order: '"time" DESC'
     })
   },
