@@ -163,6 +163,10 @@ if(process.env.NODE_ENV !== 'test'){
 // When a new user connects
 io.sockets.on('connection', function (socket) {
 
+  messagesController.getAll().then(function (msgList) {
+    io.sockets.emit('update-message-order', msgList)
+  })
+
   // Reports when it finds a connection
   console.log('[app] connection')
 
@@ -202,7 +206,7 @@ io.sockets.on('connection', function (socket) {
       // If lecturer
       messagesController.getAllToLecture(lecture).then(function (result) {
         socket.emit('all-messages', result.reverse())
-      })   
+      })
     })
   })
 
