@@ -125,12 +125,12 @@ export default class SessionWindow extends Component {
 
     connectToLecture () {
         console.log('[SessionWindow] Connect to lecture: ' + this.state.selectedLecture.room)
-        socket.emit('join-lecture', {code: this.state.selectedLecture.course.code, id:this.state.selectedLecture.id, room:this.state.selectedLecture.room})
+        socket.emit('join-lecture', {user:this.props.user, code:this.state.selectedLecture.course.code, id:this.state.selectedLecture.id, room:this.state.selectedLecture.room})
     }
 
     disconnectFromLecture () {
         console.log('[SessionWindow] Leave lecture: ' + this.state.selectedLecture.room)
-        socket.emit('leave-lecture', {code: this.state.selectedLecture.course.code, id:this.state.selectedLecture.id, room:this.state.selectedLecture.room})
+        socket.emit('leave-lecture', {user:this.props.user, code: this.state.selectedLecture.course.code, id:this.state.selectedLecture.id, room:this.state.selectedLecture.room})
         this.setState({
             disable:false,
             selectedLecture: undefined,
