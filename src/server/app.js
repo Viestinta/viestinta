@@ -243,7 +243,7 @@ io.sockets.on('connection', function (socket) {
 
     console.log('[app][socket] Connected to lecture with ID: ' + socket.LectureId)
     console.log('[app][socket] For course with code: ' + socket.CourseCode)
-    console.log('[app][socket] as user with username' + socketLecture.user.name)
+    console.log('[app][socket] as user with username: ' + socket.user.name)
     console.log('[app][socket] Joined room identifier: ' + socket.room)
 
     // Get feedback status for last x min

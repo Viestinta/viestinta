@@ -68,13 +68,11 @@ module.exports = (app) => {
     if (req.user) {
       req.session.user = req.user
       let userinfo = req.user.data
-      db['User'].findOrCreate({
-        where: {
-          name: userinfo.name,
-          sub: userinfo.sub,
-          email: userinfo.email,
-          email_verified: userinfo.email_verified
-        }
+      userController.findOrCreate({
+        name: userinfo.name,
+        sub: userinfo.sub,
+        email: userinfo.email,
+        email_verified: userinfo.email_verified
       })
       .spread(function (user, created) {
         console.log("Created user:", user.name)
