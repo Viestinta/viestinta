@@ -28,6 +28,21 @@ let findOrCreateUser = function(user) {
 
 
 /**
+ * @description Gets a user by UserId and returns a Promise for that user
+ * @param UserId
+ * @returns {Promise.<User>}
+ */
+let getById = function (UserId) {
+  return User.find({
+    where: {
+      id: UserId
+    }
+  })
+}
+
+
+
+/**
  * @description Gets a user by name and returns a Promise for that user
  * @param name
  * @returns {Promise.<User>}
@@ -90,6 +105,7 @@ let updateUser = function(user, updates) {
 let getAllLectureForUser = function (user) {
   return user.getLectures()
 }
+
 
 
 /**
@@ -160,6 +176,7 @@ let deleteUser = function(user, callback) {
 
 module.exports = {
   findOrCreateUser:       findOrCreateUser,
+  getById:                getById,
   getByName:              getByName,
   getBySub:               getBySub,
   getByEmail:             getByEmail,

@@ -38,7 +38,8 @@ module.exports = {
     return Feedback.create({
       value: feedback.value,
       UserId: feedback.UserId,
-      LectureId: feedback.LectureId
+      LectureId: feedback.LectureId,
+      time: feedback.time
     })
   },
 
@@ -104,9 +105,6 @@ module.exports = {
   getAllToLecture (lecture) {
     return Feedback.findAll({
       where: {
-        createdAt: {
-          $between: [new Date(), new Date(new Date() - 120 * MIN)]
-        },
         LectureId: lecture.id
       }
     })
