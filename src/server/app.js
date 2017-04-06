@@ -405,6 +405,11 @@ io.sockets.on('connection', function (socket) {
       })
     })
   })
+
+  socket.on('disconnect', function() {
+    //TODO: Do something on disconnect?
+  })
+
 })
 
 //For fake module export in test env

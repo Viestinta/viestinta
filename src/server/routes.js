@@ -124,6 +124,7 @@ module.exports = (app) => {
   // Currently not working
   app.get('/logout', (req, res) => {
     req.user = undefined
+    req.session.destroy()
     res.redirect('https://auth.dataporten.no/logout')
   })
 
