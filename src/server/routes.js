@@ -100,7 +100,6 @@ module.exports = (app) => {
           console.log('[routes][database] Found no active lectures, returning empty list')
         } else {
           console.log('[routes][database] Found active lectures, finding corresponding courses')
-          console.log(lectures)
           let counter = 0
           lectures.map((lecture) => {
             courseController.getById(lecture.CourseId).then(function (course) {

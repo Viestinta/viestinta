@@ -472,7 +472,9 @@ describe('Test suite: Course and Lecture testing', function () {
         lectureController.getAll().then(function (lectures) {
           //assert.equal(lectures[lectures.length-1].id, testLecture.id)
           //TODO: Need to find a better way to test this
-          done()
+          testLecture.destroy().then(function () {
+            done()
+          })
         })
       })
 

@@ -140,8 +140,10 @@ describe('Testing feedback: ', function () {
   after(function (done) {
     testFeedback2.destroy().then(function () {
       testFeedback3.destroy().then(function () {
-        testCourse.destroy().then(function () {
-          done()
+        testLecture.destroy().then(function () {
+          testCourse.destroy().then(function () {
+            done()
+          })
         })
       })
     })
