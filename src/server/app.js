@@ -163,11 +163,16 @@ if(process.env.NODE_ENV !== 'test'){
 // When a new user connects
 io.sockets.on('connection', function (socket) {
 
+  messagesController.getAll().then(function (msgList) {
+    io.sockets.emit('update-message-order', msgList)
+  })
+
   // Reports when it finds a connection
   console.log('[app] connection')
 
   socket.on('login', function (data) {
     console.log('[app] login')
+
     //Create test user
     user.create({name: 'Pekka'})
       .then(function () {
@@ -196,9 +201,11 @@ io.sockets.on('connection', function (socket) {
           socket.emit('update-feedback-interval', [resultNeg, resultPos])
         })
       })
-      // Get last 10 messages
-      messagesController.getLastTen(lecture).then(function (result) {
-        socket.emit('last-ten-messages', result.reverse())
+      // Get all messages
+
+      // If lecturer
+      messagesController.getAllToLecture(lecture).then(function (result) {
+        socket.emit('all-messages', result.reverse())
       })
     })
   })
@@ -215,24 +222,29 @@ io.sockets.on('connection', function (socket) {
     messagesController.create(msg).then(function (result) {
       //result.setUser(socket.user)
       //result.setLecture(socket.lecture)
+      
       io.sockets.emit('receive-message', {
+        id: result.id,
         text: result.text,
         time: result.time,
+        votesUp: result.votesUp,
+        votesDown: result.votesDown,
         UserId: result.UserId,
         LectureId: result.LectureId
       })
     })
   })
 
-  // When a new message is sendt from somebody
-  socket.on('new-voting-message', function (id, value) {
-    console.log('[app] new-voting-message: ' + value)
-    messagesController.vote({
-      msgId: id,
-      value: value
-    }).then(function (result) {
-      io.sockets.emit('updated-message', result)
+  // When somebody votes on a message
+  socket.on('new-vote-on-message', function (id, value) {
+    console.log('[app] new-voting-message: ' + id + " with " + value)       
+    messagesController.vote({id: id, value: value}).then(function () {
+      // TODO: change to getAllToLecture
+      messagesController.getAll().then(function (msgList) {
+        io.sockets.emit('update-message-order', msgList)  
+      })
     })
+      
   })
 
   // When somebody gives feedback

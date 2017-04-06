@@ -13,7 +13,9 @@ module.exports = {
   create (req) {
     return Message.create({
       time: new Date(),
-      text: req.text
+      text: req.text,
+      UserId: req.UserId,
+      LectureId: req.LectureId
     })
   },
 
@@ -21,29 +23,23 @@ module.exports = {
 
   /**
    * @description Edit an existing Message details using model.update()
-   * @param req
+   * @param message
+   * @param updates
    * @returns {Promise.<Message>}
    */
-  update (req) {
-    return Message.update(req.body, {
-      where: {
-        id: req.id
-      }
-    })
+  update (message, updates) {
+    return message.update(message, updates)
   },
 
 
 
   /**
-   * @description Delete an existing Message by the unique ID using model.destroy()
-   * @param req
+   * @description Delete an existing message
+   * @param message
+   * @returns {Promise.<Message>}
    */
-  delete (req) {
-    Message.destroy({
-      where: {
-        id: req.id
-      }
-    })
+  delete (message) {
+    return message.destroy()
   },
 
 
@@ -74,12 +70,27 @@ module.exports = {
     return Message.findAll({
       where: {
         LectureId: lecture.id
-      }
+      },
+      raw: true,
+      order: '"time" DESC',
+    })
+  },
+
+  
+
+/**
+   * @description Get all 
+   * @returns {Promise.<Message>}
+   */
+  getAll () {
+    return Message.findAll({
+      raw: true,
+      order: '"time" DESC'
     })
   },
 
 
-
+  
   /**
    * @description Retrieve an existing Message by the unique ID
    * @param req
@@ -87,28 +98,43 @@ module.exports = {
    */
   retrieve (req) {
     return Message
-      .findById(req.params.MessageId, {
-        include: [{
-          model: Message,
-          as: 'message'
-        }]
+      .find({
+        where: {
+          id: req.id
+        },
       })
   },
 
 
 
   /**
-   * @description
+   * @description Changes voting attributes in message
    * @param req
-   * @returns {Promise.<Message>}
+   * @param callback
+   * @callback Callbacks when voting attributes have been updated
    */
-  vote (req) {
-    var msg = Message.findById(req.id).then(function (result) {
-      if (req.value === -1) {
-        msg.votesDown ++
-      } else {
-        msg.votesUp ++
-      }
-    })
+  vote (req, callback) {
+    return Message.find({where: {id: req.id}})
+      .then(function (msg) {
+        if (req.value === 1) {
+          msg.increment('votesUp', {
+            where: 
+            { id: req.id }
+          }).then( function() {
+            if (callback) {
+              callback()
+            }
+          })
+        } else if (req.value === -1) {
+          msg.increment('votesDown', {
+            where: 
+            { id: req.id }
+          }).then( function() {
+            if (callback) {
+              callback()
+            }
+          })
+        }
+      })
   }
 }

@@ -62,7 +62,8 @@ module.exports = function (sequelize, DataTypes) {
     instanceMethods: {
 
     }
+    
   })
-
+  
   return Message
 }
