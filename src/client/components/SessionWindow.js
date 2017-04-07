@@ -210,11 +210,14 @@ export default class SessionWindow extends Component {
                     {menuItems}
                 </DropDownMenu>
                 */}
-                <RaisedButton
-                    primary={true}
-                    label= { !this.state.selectedLecture ? "Lag ny" : "Koble fra" }
-                    onTouchTap={ !this.state.selectedLecture ? this.createNewLecture : this.disconnectFromLecture }
-                />
+                
+                { (this.state.selectedLecture || this.props.isAdmin) ?
+                    <RaisedButton
+                        primary={true}
+                        label= { this.state.selectedLecture ? "Koble fra" : "Lag ny" }
+                        onTouchTap={ this.state.selectedLecture ? this.disconnectFromLecture : this.createNewLecture }
+                    /> : undefined
+                }
             </Paper>
             { this.state.selectedLecture ? 
                 <LectureWrapper
