@@ -41,23 +41,23 @@ export default class FeedbackBox extends Component {
 
 	// Receiving updated feedback values
   updateFeedback (feedback) {
-    console.log('In updateFeedback:', feedback)
+    console.log('[FeedbackBox] In updateFeedback:', feedback)
 
     this.state.feedback = feedback
   }
 
   updateFeedbackInterval () {
-    console.log('In updateFeedbackInterval')
+    console.log('[FeedbackBox] In updateFeedbackInterval')
   }
 
   onClick (feedback) {
-    console.log('In onClick')
+    console.log('[FeedbackBox] In onClick')
     if (feedback.type === 'slow') {
       feedbackList[0] = feedbackList[0] + 1
     } else if (feedback.type === 'fast') {
       feedbackList[1] = feedbackList[1] + 1
     } else {
-      console.log('No valid type for buttonClick')
+      console.log('[FeedbackBox] No valid type for buttonClick')
     }
     this.setState({feedback: feedbackList})
     this.props.sendFeedback(feedback)

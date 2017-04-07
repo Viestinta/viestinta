@@ -69,7 +69,7 @@ export default class MessageList extends Component {
     messages.push(msg)
 
     this.sortMessageList(messages)
-    console.log("Messages in receiveMessage: ", this.state.messages)
+    console.log("[MessageList] Messages in receiveMessage: ", this.state.messages)
   }
 
   getAllMessages (msgList) {
@@ -79,7 +79,7 @@ export default class MessageList extends Component {
   }
 
   sortMessageList (list) {
-    console.log("sortMessageList(), sortByVotes: " + this.state.sortByVotes)
+    console.log("[MessageList] sortMessageList(), sortByVotes: " + this.state.sortByVotes)
     if (this.state.sortByVotes) {
       this.sortListByVotes(list)
     }
@@ -89,7 +89,7 @@ export default class MessageList extends Component {
   }
 
   sortListByTime (list = this.state.messages.slice()) {
-    console.log("Sort list by time")
+    console.log("[MessageList] Sort list by time")
     list.sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
     
     this.setState({
@@ -99,7 +99,7 @@ export default class MessageList extends Component {
   }
 
   sortListByVotes (list = this.state.messages.slice()) {
-    console.log("Sort list by votes")
+    console.log("[MessageList] Sort list by votes")
     list.sort( (a, b) => { return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown)) } )
     
     this.setState({

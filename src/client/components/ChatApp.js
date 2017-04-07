@@ -56,7 +56,7 @@ export default class ChatApp extends Component {
     axios
       .get("/user")
       .then(userinfo => {
-        console.log("Returning user info: " + JSON.stringify(userinfo.data.user))
+        console.log("[ChatApp] Returning user info: " + JSON.stringify(userinfo.data.user))
         this.setState({
           user: userinfo.data.user
         })
