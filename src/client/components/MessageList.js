@@ -88,9 +88,9 @@ export default class MessageList extends Component {
     }
   }
 
-  sortListByTime (list = this.state.messages.slice()) {
+  sortListByTime (list) {
     console.log("[MessageList] Sort list by time")
-    list.sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
+    list.slice().sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
     
     this.setState({
       selectedIndex: 0
@@ -98,9 +98,9 @@ export default class MessageList extends Component {
     /* TODO: Sort messages on time */
   }
 
-  sortListByVotes (list = this.state.messages.slice()) {
+  sortListByVotes (list) {
     console.log("[MessageList] Sort list by votes")
-    list.sort( (a, b) => { return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown)) } )
+    list.slice().sort( (a, b) => { return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown)) } )
     
     this.setState({
       selectedIndex: 1
@@ -130,12 +130,12 @@ export default class MessageList extends Component {
           <BottomNavigationItem
             label="Siste"
             icon={<ActionSchedule />}
-            onTouchTap={this.sortListByTime}
+            onTouchTap={() => this.sortListByTime(this.state.messages)}
           />
           <BottomNavigationItem
             label="Stemmer"
             icon={<ActionThumbsUpDown />}
-            onTouchTap={this.sortListByVotes}
+            onTouchTap={() => this.sortListByVotes(this.state.messages)}
           />
         </BottomNavigation>
       </Paper>
