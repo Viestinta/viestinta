@@ -342,6 +342,7 @@ io.sockets.on('connection', function (socket) {
 
     messagesController.createMessage(databaseMsg).then(function (result) {
       io.sockets.in(socket.room).emit('receive-message', {
+        id: result.id,
         text: result.text,
         time: result.time,
         votesUp: result.votesUp,
