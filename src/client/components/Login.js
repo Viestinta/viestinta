@@ -13,7 +13,7 @@ const styles = {
   },
   logo: {
     position: 'fixed',
-    top: '10%',
+    top: '10px',
 
     maxWidth: '600px',
     width: '100%',
@@ -27,7 +27,7 @@ const styles = {
   },
   img: {
     position: 'fixed',
-    bottom: 0,
+    bottom: '10px',
 
     maxWidth: '600px',
     width: '100%',
