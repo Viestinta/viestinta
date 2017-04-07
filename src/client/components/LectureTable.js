@@ -1,7 +1,17 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
+import Paper from 'material-ui/Paper'
 import DataTables from 'material-ui-datatables'   
+
+const styles = {
+  container: {
+    width: '100%',
+    height: '100%',
+
+    marginTop: '10px'
+  }
+};
 
 const TABLE_COLUMNS = [
   {
@@ -101,27 +111,29 @@ export default class LectureTable extends Component {
 
     render () {
         return (
-            <DataTables
-                height = { 'auto' }
-                selectable = { false }
-                showRowHover = { true }
-                columns = {TABLE_COLUMNS}
-                data = { this.state.lectureList.map(lecture => {
-                    return {
-                        course:lecture.course.code,
-                        courseName:lecture.course.name,
-                        lectureName:lecture.name
-                    }
-                })}
-                showCheckboxes = { false }
-                showHeaderToolbar = { true }
-                onCellClick = { this.handleCellClick }
-                onCellDoubleClick= { this.handleCellDoubleClick }
-                onFilterValueChange = { this.handleFilterValueChange }
-                onSortOrderChange = { this.handleSortOrderChange }
-                page = { 1 }
-                count = { 100 }
-            /> 
+            <Paper zDepth={3} style={styles.container}>
+                <DataTables
+                    height = { 'auto' }
+                    selectable = { false }
+                    showRowHover = { true }
+                    columns = {TABLE_COLUMNS}
+                    data = { this.state.lectureList.map(lecture => {
+                        return {
+                            course:lecture.course.code,
+                            courseName:lecture.course.name,
+                            lectureName:lecture.name
+                        }
+                    })}
+                    showCheckboxes = { false }
+                    showHeaderToolbar = { true }
+                    onCellClick = { this.handleCellClick }
+                    onCellDoubleClick= { this.handleCellDoubleClick }
+                    onFilterValueChange = { this.handleFilterValueChange }
+                    onSortOrderChange = { this.handleSortOrderChange }
+                    page = { 1 }
+                    count = { 100 }
+                />
+            </Paper> 
         )
     }
 }
