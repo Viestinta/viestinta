@@ -15,8 +15,6 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
 
-    maxWidth: 500,
-    maxHeight: 400,
     width: '100%',
     height: '100%',
   },
@@ -24,6 +22,7 @@ const styles = {
     marginTop: 10,
     paddingRight: 20,
 
+    maxHeight: 400,
     width: '100%',
     height: '100%',
 

@@ -10,7 +10,6 @@ import FeedbackWindow from './FeedbackWindow'
 const styles = {
   container: {
     width: '100%',
-    maxWidth: '500px',
 
     marginTop: '10px'
   }, 
