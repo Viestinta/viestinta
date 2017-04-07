@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import socket from '../socket'
 import axios from 'axios'
 
+import Header from './Header'
+
 import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -82,6 +84,7 @@ export default class SessionWindow extends Component {
     render () {
         return (
             <div style={styles.container}>
+            <Header isAdmin={this.props.isAdmin} toggleAdmin={this.props.toggleAdmin}/>
             <Paper zDepth={3} style={styles.session}>
                 <Subheader style={{width: 'auto'}}>
                     {this.state.selectedLecture ? this.state.selectedLecture.course.code + ' : ' + this.state.selectedLecture.course.name : 'Velg forelesning fra listen under'}

@@ -9,7 +9,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 // Components
-import Header from './Header'
 import Login from './Login'
 import SessionWindow from './SessionWindow'
 
@@ -81,11 +80,8 @@ export default class ChatApp extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div style={styles.container}>
-          <Header isAdmin={this.state.isAdmin} toggleAdmin={this.toggleAdmin}/>
-          {/* Login button or username */}
-          { !this.state.user ? <Login/> : User }
-          {/* Session */}
-          <SessionWindow user={this.state.user} isAdmin={this.state.isAdmin} />
+          {/* Login screen or Session */}
+          { !this.state.user ? <Login/> : <SessionWindow user={this.state.user} isAdmin={this.state.isAdmin} toggleAdmin={this.toggleAdmin}/> }
         </div>
       </MuiThemeProvider>
     )
