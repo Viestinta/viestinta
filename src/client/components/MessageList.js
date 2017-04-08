@@ -45,13 +45,16 @@ export default class MessageList extends Component {
     super(props)
     this.state = {
       messages: [],
-      selectedIndex: 0
+      selectedIndex: 0,
+      sortByVotes: false
     }
 
     this.receiveMessage = this.receiveMessage.bind(this)
-    this.lastTenMessages = this.lastTenMessages.bind(this)
-    this.sortTime = this.sortTime.bind(this)
-    this.sortVotes = this.sortVotes.bind(this)
+    this.getAllMessages = this.getAllMessages.bind(this)
+    this.sortMessageList = this.sortMessageList.bind(this)
+    this.sortListByTime = this.sortListByTime.bind(this)
+    this.sortListByVotes = this.sortListByVotes.bind(this)
+    this.getClock = this.getClock.bind(this)
   }
 
   componentDidMount () {
@@ -92,20 +95,31 @@ export default class MessageList extends Component {
     list.slice().sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
     
     this.setState({
-      selectedIndex: 0
+      selectedIndex: 0,
+      messages: list
     })
-    /* TODO: Sort messages on time */
   }
 
   sortListByVotes (list) {
     console.log("[MessageList] Sort list by votes")
-    list.slice().sort( (a, b) => { return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown)) } )
-    
-    this.setState({
-      selectedIndex: 1
+    list.slice().sort((a, b) => {
+      return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown))
     })
-    /* TODO: Sort messages on votes */
+
+    this.setState({
+      selectedIndex: 1,
+      messages: list
+    })
   }
+
+  getClock(time) {
+    if(time.length > 5) {
+      return time.substring(11, 16)
+    }
+
+    return time
+  }
+
 
   render () {
 
@@ -118,6 +132,7 @@ export default class MessageList extends Component {
           key={i}
           time={time}
           text={message.text}
+          id={message.id}
           isAdmin={this.props.isAdmin}
         />
       )

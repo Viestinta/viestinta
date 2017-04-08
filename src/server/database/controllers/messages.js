@@ -109,20 +109,44 @@ module.exports = {
 
 
   /**
+   * @description Get all
+   * @returns {Promise.<Message>}
+   */
+  getAll () {
+    return Message.findAll({
+      raw: true,
+      order: '"time" DESC'
+    })
+  },
+
+
+
+/**
    * @description Changes voting attributes in message
    * @param req
    * @param callback
    * @callback Callbacks when voting attributes have been updated
    */
-/*
-  vote (req) {
-    var msg = Message.findById(req.id).then(function (result) {
-      if (req.value === -1) {
-        msg.votesDown ++
-      } else {
-        msg.votesUp ++
-      }
-    })
+  vote (req, callback) {
+    return Message.find({where: {id: req.id}})
+      .then(function (msg) {
+        if (req.value === 1) {
+          msg.increment('votesUp', {
+            where: {id: req.id}
+          }).then(function () {
+            if (callback) {
+              callback()
+            }
+          })
+        } else if (req.value === -1) {
+          msg.increment('votesDown', {
+            where: {id: req.id}
+          }).then(function () {
+            if (callback) {
+              callback()
+            }
+          })
+        }
+      })
   }
-  */
 }
