@@ -16,17 +16,17 @@ const styles = {
 const TABLE_COLUMNS = [
   {
     key: 'course',
-    label: 'Course',
+    label: 'Emnekode',
     sortable: true,
   },
   {
     key: 'courseName',
-    label: 'Course Name',
+    label: 'Navn',
     sortable: true,
   }, 
   {
     key: 'lectureName',
-    label: 'Lecture Name',
+    label: 'Tema',
     sortable: true,
   }
 ]
@@ -92,7 +92,7 @@ export default class LectureTable extends Component {
     handleCellClick (row, col, event) {
         console.log('[LectureTable] handleCellClick')
         console.log('[LectureTable] row: ' + row + ' col: ' + col + ' event: ' + event)
-        let ll = this.state.lectureList
+        let ll = this.state.filteredLectureList
         console.log('[LectureTable] ll: ' + JSON.stringify(ll) + ' row: ' +  row + ' ll[row]: ' + ll[row])
         this.props.setSelectedLecture(ll[row])
     }
