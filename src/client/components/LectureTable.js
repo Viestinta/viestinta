@@ -38,7 +38,7 @@ export default class LectureTable extends Component {
 
         this.state = {
             lectureList: [],
-            filteredLectureList: undefined,
+            filteredLectureList: [],
             disable: false
         }
 
@@ -63,7 +63,8 @@ export default class LectureTable extends Component {
           // Add the room to the data to make it more easily accessible
           data.map((data) => data.room = data.course.code + '-' + JSON.stringify(data.id))
           this.setState({
-            lectureList: data
+            lectureList: data,
+            filteredLectureList: data,
           })
           //console.log("Returning list of lectures: " + lectureList)
         })
@@ -98,13 +99,22 @@ export default class LectureTable extends Component {
 
     handleFilterValueChange (value) {
         console.log('[SessionWindow][DataTables] Filter by value: ' + value)
-        if (value === '') {
+        if (value === '' || value === undefined) {
+            console.log('[SessionWindow][DataTables] set original value')
             this.setState({
                 filteredLectureList: this.state.lectureList
             })
         } else {
+            // Create a new list based on this.state.lectureList
+            let list = this.state.lectureList.slice()
+
+            // Create a single string to search for the information in and filter it by the value in the search field
+            list.map((lecture) => lecture.filterString = lecture.course.code + ' ' + lecture.course.name + ' ' + lecture.name)
+            list = list.filter((lecture) => lecture.filterString.toLowerCase().includes(value.toLowerCase()))
+            
+            // Set the filtered list
             this.setState({
-                filteredLectureList: this.state.lectureList.filter((a) => a.indexOf(value) > -1)  
+                filteredLectureList: list 
             })
         }
     }
@@ -117,7 +127,7 @@ export default class LectureTable extends Component {
                     selectable = { false }
                     showRowHover = { true }
                     columns = {TABLE_COLUMNS}
-                    data = { this.state.lectureList.map(lecture => {
+                    data = { this.state.filteredLectureList.map(lecture => {
                         return {
                             course:lecture.course.code,
                             courseName:lecture.course.name,
