@@ -16,17 +16,17 @@ const styles = {
 const TABLE_COLUMNS = [
   {
     key: 'course',
-    label: 'Course',
+    label: 'Emnekode',
     sortable: true,
   },
   {
     key: 'courseName',
-    label: 'Course Name',
+    label: 'Navn',
     sortable: true,
   }, 
   {
     key: 'lectureName',
-    label: 'Lecture Name',
+    label: 'Tema',
     sortable: true,
   }
 ]
