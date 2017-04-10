@@ -7,15 +7,15 @@ module.exports = {
 
   /**
    * @description Create a new Message using model.create()
-   * @param req
+   * @param message
    * @returns {Promise.<Message>}
    */
-  create (req) {
+  createMessage (message) {
     return Message.create({
-      time: new Date(),
-      text: req.text,
-      UserId: req.UserId,
-      LectureId: req.LectureId
+      time: message.time,
+      text: message.text,
+      LectureId: message.LectureId,
+      UserId: message.UserId
     })
   },
 
@@ -27,18 +27,18 @@ module.exports = {
    * @param updates
    * @returns {Promise.<Message>}
    */
-  update (message, updates) {
-    return message.update(message, updates)
+  updateMessage (message, updates) {
+    return message.update(updates)
   },
 
 
 
   /**
-   * @description Delete an existing message
+   * @description Delete an existing Message by the unique ID using model.destroy()
    * @param message
-   * @returns {Promise.<Message>}
+   * @returns {Promise}
    */
-  delete (message) {
+  deleteMessage (message) {
     return message.destroy()
   },
 
@@ -76,10 +76,40 @@ module.exports = {
     })
   },
 
-  
 
-/**
-   * @description Get all 
+
+  /**
+   * @descriptio Gets all to a specific user
+   * @param user
+   * @returns {Promise.<Message>}
+   */
+  getAllToUser(user){
+    return Message.findAll({
+      where: {
+        UserId: user.id
+      }
+    })
+  },
+
+
+
+  /**
+   * @description Gets all messages containing the given text
+   * @param text
+   * @returns {Promise.<Array.<Message>>}
+   */
+  getAllByText(text){
+    return Message.findAll({
+      where: {
+        text: text
+      }
+    })
+  },
+
+
+
+  /**
+   * @description Get all
    * @returns {Promise.<Message>}
    */
   getAll () {
@@ -90,24 +120,8 @@ module.exports = {
   },
 
 
-  
-  /**
-   * @description Retrieve an existing Message by the unique ID
-   * @param req
-   * @returns {Promise.<Message>}
-   */
-  retrieve (req) {
-    return Message
-      .find({
-        where: {
-          id: req.id
-        },
-      })
-  },
 
-
-
-  /**
+/**
    * @description Changes voting attributes in message
    * @param req
    * @param callback
@@ -118,18 +132,16 @@ module.exports = {
       .then(function (msg) {
         if (req.value === 1) {
           msg.increment('votesUp', {
-            where: 
-            { id: req.id }
-          }).then( function() {
+            where: {id: req.id}
+          }).then(function () {
             if (callback) {
               callback()
             }
           })
         } else if (req.value === -1) {
           msg.increment('votesDown', {
-            where: 
-            { id: req.id }
-          }).then( function() {
+            where: {id: req.id}
+          }).then(function () {
             if (callback) {
               callback()
             }

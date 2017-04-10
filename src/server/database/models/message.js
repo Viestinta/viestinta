@@ -51,10 +51,10 @@ module.exports = function (sequelize, DataTypes) {
        * @param models
        */
       associate: function (models) {
-        Message.belongsTo(models.User, {
-          onDelete: 'CASCADE'
-        }),
         Message.belongsTo(models.Lecture, {
+          onDelete: 'CASCADE'
+        })
+        Message.belongsTo(models.User, {
           onDelete: 'CASCADE'
         })
       }

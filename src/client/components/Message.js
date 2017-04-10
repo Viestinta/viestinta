@@ -33,6 +33,11 @@ const styles = {
 
     borderRadius: '2px'
   },
+  timestamp: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   footer: {
     display: 'flex', 
     flexDirection: 'row', 
@@ -122,17 +127,28 @@ export default class Message extends React.Component {
   }
 
   render () {
+    const timestamp = (
+      <div style={styles.timestamp}>
+        <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
+        <p>{this.props.time}</p>
+      </div>
+    )
     const voteMenu = (
       <IconMenu iconButtonElement={iconButtonVote}>
-        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp}>Stem opp</MenuItem>
-        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown}>Stem ned</MenuItem>
+        <MenuItem primaryText="Stem opp" rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp} />
+        <MenuItem primaryText="Stem ned" rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown} />
       </IconMenu>
     )
     const footer = (
       <div style={styles.footer}>
-        <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
-        <p style={{flexBasis: '82%'}}>{this.props.time}</p>
+        {timestamp}
         {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
+      </div>
+    )
+    const footerAdmin = (
+      <div style={styles.footer}>
+        {timestamp}
+        <p>Student</p>
       </div>
     )
     /* This menu is not yet in use */
@@ -147,7 +163,7 @@ export default class Message extends React.Component {
     		<ListItem
           style={styles.listItem}
           primaryText={this.props.text}
-          secondaryText={footer}
+          secondaryText={this.props.isAdmin ? footerAdmin : footer}
         />
         <Snackbar
           style={{textAlign: 'center'}}

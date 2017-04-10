@@ -1,7 +1,5 @@
 const Feedback = require('../models/index').Feedback
 
-const Lecture = require('../models/index').Lecture
-
 // Controller for Feedback model
 
 const MIN = 60000
@@ -10,40 +8,38 @@ module.exports = {
 
   /**
    * @description Edit an existing Feedback details using model.update()
-   * @param req
+   * @param feedback
+   * @param updates
+   * @returns {Promise<Feedback>}
    */
-  update (req) {
-    Feedback.update(req.body, {
-      where: {
-        id: req.params.id
-      }
-    })
+  updateFeedback (feedback, updates) {
+    return feedback.update(updates)
   },
 
 
 
   /**
    * @description Delete an existing Feedback by the unique ID using model.destroy()
-   * @param req
+   * @param feedback
+   * @returns {Promise}
    */
-  delete (req) {
-    Feedback.destroy({
-      where: {
-        id: req.id
-      }
-    })
+  deleteFeedback (feedback) {
+    return feedback.destroy()
   },
 
 
 
   /**
    * @description Create a new Feedback using model.create()
-   * @param req
+   * @param feedback
    * @returns {Promise.<Feedback>}
    */
-  create (req) {
+  createFeedback (feedback) {
     return Feedback.create({
-      value: req.value,
+      value: feedback.value,
+      UserId: feedback.UserId,
+      LectureId: feedback.LectureId,
+      time: feedback.time
     })
   },
 
@@ -52,17 +48,12 @@ module.exports = {
   /**
    * @description Gets number of negative feedback for a lecture For the last 5 min
    * @param lecture
-   * @returns {Promise.<Integer>}
+   * @returns {Promise.<int>}
    */
   getLastIntervalNeg (lecture) {
     return Feedback.count({
       where: {
         LectureId: lecture.id,
-        // TODO: just use createdAt?
-        time: {
-            // Set to 5 * MIN
-          $between: [new Date(new Date() - 5 * MIN), new Date()]
-        },
         value: -1
       }
     })
@@ -73,17 +64,12 @@ module.exports = {
   /**
    * @description Gets number of positive feedback for a lecture For the last 5 min
    * @param lecture
-   * @returns {Promise.<Integer>}
+   * @returns {Promise.<int>}
    */
   getLastIntervalPos (lecture) {
     return Feedback.count({
      where: {
         LectureId: lecture.id,
-        // TODO: just use createdAt?
-        time: {
-          // Set to 5 * MIN
-          $between: [new Date(new Date() - 5 * MIN), new Date()]
-        },
         value: 1
       }
     })
@@ -92,7 +78,7 @@ module.exports = {
 
 
   /**
-   * @description Gets all lectures
+   * @description Gets all feedback
    * @returns {Promise.<Array.<Feedback>>}
    */
   getAll () {
@@ -102,17 +88,14 @@ module.exports = {
 
 
   /**
-   * @description Gets all lectures from the last 2 hours
-   * @param req
+   * @description Gets all feedback from the last 2 hours for a lecture
+   * @param lecture
    * @returns {Promise.<Array.<Feedback>>}
    */
   getAllToLecture (lecture) {
     return Feedback.findAll({
       where: {
-        createdAt: {
-          $between: [new Date(), new Date(new Date() - 120 * MIN)]
-        }
-        // TODO connect to lecture
+        LectureId: lecture.id
       }
     })
   }

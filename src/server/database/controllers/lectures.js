@@ -2,121 +2,177 @@
 
 var Lecture = require('../models/index').Lecture
 var Message = require('../models/index').Message
+var User = require('../models/index').User
+
+let courseController = require('../controllers/index').courses
+
+
+/**
+ * @description Create a new Lecture using model.create()
+ * @param lecture
+ * @returns {Promise.<Lecture>}
+ */
+let createLecture = function(lecture) {
+  return Lecture.create({
+    name: lecture.name,
+    CourseId: lecture.CourseId,
+    startDate: lecture.startDate,
+    endDate: lecture.endDate,
+    location: lecture.loc,
+    description: lecture.description,
+    isActive: lecture.isActive
+  })
+}
+
+
+
+/**
+ * @description Edit an existing Lecture details using model.update()
+ * @param lecture
+ * @param updates
+ * @returns {Promise.<Lecture>}
+ */
+let updateLecture = function(lecture, updates) {
+  return lecture.update(updates)
+}
+
+
+
+/**
+ * @description Delete an existing Lecture by the unique ID using model.destroy()
+ * @param lecture
+ * @returns {Promise.<Lecture>}
+ */
+let deleteLecture = function(lecture) {
+  return Lecture.destroy({
+    where: {
+      id: lecture.id
+    }
+  })
+}
+
+
+
+/**
+ * @description Get all lectures
+ * @returns {Promise.<Lecture>}
+ */
+let getAll = function() {
+  return Lecture.findAll()
+}
+
+
+
+/**
+ * @description Gets all currently active lectures
+ * @returns {Promise.<Array.<Lecture>>}
+ */
+let getAllActive = function () {
+  return Lecture.findAll({
+    where: {
+      isActive: true
+    }
+  })
+}
+
+
+
+/**
+ * @description Retrive an existing Lecture by the unique ID
+ * @param id
+ * @returns {Promise.<Lecture>}
+ */
+let getById = function(id) {
+  return Lecture
+    .find({
+        where: {
+          id: id
+        }
+      })
+}
+
+
+
+/**
+ * @description Returns Lecture matching parameter name
+ * @param name
+ * @returns {Promise.<Lecture>}
+ */
+let getByName = function(name) {
+  return Lecture.find({
+    where: {
+      name: name
+    }
+  })
+}
+
+
+
+/**
+ * @description Returns all messages in lecture
+ * @param lecture
+ * @returns {Promise.<Lecture>}
+ */
+let getAllMessages = function(lecture) {
+  return Message.findAll({
+    where: {
+      LectureId: lecture.id
+    },
+  })
+}
+
+
+
+/**
+ * @description Returns all users related to a lecture
+ * @param lecture
+ * @returns {Promise.<Array<User>>}
+ */
+
+let getAllUsers = function (lecture) {
+  return User.findAll({
+    where: {
+      LectureId: lecture.id
+    }
+  })
+}
+
+
+
+/**
+ * @description Gets the CourseId from the lecture
+ * @param lecture
+ * @returns Integer
+ */
+let getCourse = function (lecture) {
+  return lecture.CourseId
+}
+
+
+
+/**
+ * @description Gets admins for the lecture's course
+ * @param lecture
+ * @returns {Promise.<Course>}
+ * @deprecated TODO: Needs update
+ */
+let getAdmins = function (lecture) {
+  return courseController.getAdminsForCourse(lecture.CourseId)
+
+}
+
+
 
 module.exports = {
-
-  /**
-   * @description Create a new Lecture using model.create()
-   * @param req
-   * @returns {Promise.<Lecture>}
-   */
-  create (req) {
-    return Lecture.create({
-      startDate: new Date(req.startDate),
-      endDate: new Date(req.endDate),
-      location: req.loc,
-      description: req.description
-    })
-  },
-
-
-
-  /**
-   * @description Edit an existing Lecture details using model.update()
-   * @param req
-   * @returns {Promise.<Lecture>}
-   */
-  update (req) {
-    return Lecture.update(req.body, {
-      where: {
-        id: req.params.id
-      }
-    })
-  },
-
-
-
-  /**
-   * @description Delete an existing Lecture by the unique ID using model.destroy()
-   * @param req
-   * @returns {Promise.<Lecture>}
-   */
-  delete (req) {
-    return Lecture.destroy({
-      where: {
-        id: req.params.id
-      }
-    })
-  },
-
-
-
-  /**
-   * @description Get all lectures
-   * @returns {Promise.<Lecture>}
-   */
-  getAll () {
-    return Lecture.findAll()
-  },
-
-
-
-  /**
-   * @description Retrive an existing Lecture by the unique ID
-   * @param req
-   * @param res
-   * @returns {Promise.<Lecture>}
-   */
-  retrieve (req, res) {
-    return Lecture
-      .findById(req.params.id, {
-        include: [{
-          model: Lecture,
-          as: 'lecture'
-        }]
-      })
-      .then(lecture => {
-        if (!lecture) {
-          return res.status(404).send({
-            message: 'Lecture Not Found'
-          })
-        }
-        return res.status(200).send(lecture)
-      })
-      .catch(error => res.status(400).send(error))
-  },
-
-
-
-  /**
-   * @description Returns Lecture matching parameter name
-   * @param name
-   * @returns {Promise.<Lecture>}
-   */
-  retriveByName (name) {
-    return Lecture.find({
-      where: {
-        name: name
-      }
-    })
-  },
-
-
-
-  /**
-   * @description Returns all messages in lecture
-   * @param lecture
-   * @returns {Promise.<Lecture>}
-   */
-  getAllMessages (lecture) {
-    return Lecture.findAll({
-      where: {
-        id: lecture.id
-      },
-      include: [
-      {
-        model: Message, as: 'messages'
-      }]
-    })
-  }
+  createLecture:        createLecture,
+  updateLecture:        updateLecture,
+  deleteLecture:        deleteLecture,
+  getAll:               getAll,
+  getAllActive:         getAllActive,
+  getById:              getById,
+  getByName:            getByName,
+  getAllMessages:       getAllMessages,
+  getAllUsers:          getAllUsers,
+  getCourse:            getCourse,
+  getAdmins:            getAdmins
 }

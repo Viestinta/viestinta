@@ -31,7 +31,13 @@ services:
       - .:/srv/app/
       - /arv/app/node_modules
     environment:
-      DATABASE_URL: postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
+      - DATABASE_URL=postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
+      - VIESTINTA_OAUTH2_HOST_URL
+      - VIESTINTA_OAUTH2_CLIENT_ID
+      - VIESTINTA_OAUTH2_CLIENT_SECRET
+      - VIESTINTA_OAUTH2_REDIRECT_URI
+      - VIESTINTA_OAUTH2_SCOPE
+      - VIESTINTA_SESSION_SECRET
     tty: true
     stdin_open: true
 

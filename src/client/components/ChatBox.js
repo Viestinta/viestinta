@@ -12,7 +12,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
 
-    maxWidth: 500,
     width: '100%',
     height: 80,
 
@@ -52,10 +51,15 @@ export default class ChatBox extends Component {
   }
 
   sendMessage () {
-    console.log('[ChatBox] sendMessage')
+    console.log('[ChatBox] sendMessage to room: ' + this.props.lecture.room)
     // Setting msg.text to written input
     var msg = {
-      text: this.state.text
+      text: this.state.text,
+      lecture: {
+        id:  JSON.stringify(this.props.lecture.id),
+        code: this.props.lecture.course.code,
+        room: this.props.lecture.room,
+      }
     }
 
     // Emtpy input field
