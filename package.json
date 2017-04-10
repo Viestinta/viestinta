@@ -44,6 +44,7 @@
     "codecov": "^1.0.1",
     "connect-redis": "^3.2.0",
     "cookie-parser": "^1.4.3",
+    "d3": "^4.7.4",
     "express": "^4.14.1",
     "express-session": "^1.15.0",
     "fs": "0.0.1-security",
