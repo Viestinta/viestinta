@@ -86,7 +86,3 @@ export default class FeedbackMenu extends Component {
     )
   }
 }
-
-FeedbackMenu.propTypes = {
-  onClick: React.PropTypes.func
-}

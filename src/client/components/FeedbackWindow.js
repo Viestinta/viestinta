@@ -74,9 +74,3 @@ export default class FeedbackWindow extends Component {
     )
   }
 }
-
-FeedbackWindow.propTypes = {
-  slow: React.PropTypes.number,
-  fast: React.PropTypes.number,
-  updateFeedbackInterval: React.PropTypes.func
-}
