@@ -25,7 +25,7 @@ export default class FeedbackWindow extends Component {
       minsElapsed: minsElapsed
     })
     if (this.state.minsElapsed === 5) {
-      this.state.updateFeedbackInterval()
+      this.updateFeedbackInterval()
     }
   }
 

@@ -30,7 +30,7 @@ const styles = {
     minHeight: 0
   },
   child: {
-    height: 500,
+    height: 390,
     width: '100%',
 
     padding: 0,
