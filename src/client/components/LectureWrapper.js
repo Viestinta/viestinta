@@ -10,11 +10,19 @@ const styles = {
 
   container: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
 
+    maxWidth: '910px',
     width: '100%',
     height: '100%',
+  },
+  chat: {
+    maxWidth: '600px',
+    width: '100%',
+    height: '100%'
   }
 };
 

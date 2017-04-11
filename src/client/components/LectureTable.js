@@ -9,6 +9,8 @@ const styles = {
     width: '100%',
     height: '100%',
 
+    maxWidth: '600px',
+
     marginTop: '10px'
   }
 };
