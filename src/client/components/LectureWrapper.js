@@ -39,12 +39,13 @@ export default class LectureWrapper extends Component {
     render() {
         return (
             <div style={styles.container}>
-                {/* List of messages */}
-                <MessageList isAdmin={this.props.isAdmin}/>
-                {/* Sidebar with feedback-options */}
-                { !this.props.isAdmin ? <FeedbackBox lecture={this.props.lecture}/> : undefined }
-                {/* Inputfield for user */}
-                { !this.props.isAdmin ? <ChatBox lecture={this.props.lecture}/> : undefined }
+                <div style={styles.chat}>
+                    {/* List of messages */}
+                    <MessageList isAdmin={this.props.isAdmin}/>
+                    {/* Inputfield for user */}
+                    { !this.props.isAdmin ? <ChatBox lecture={this.props.lecture}/> : undefined }
+                </div>
+                <FeedbackBox lecture={this.props.lecture} isAdmin={this.props.isAdmin}/>
             </div>
         )
     }

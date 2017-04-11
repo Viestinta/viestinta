@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import socket from '../socket'
 
+import Subheader from 'material-ui/Subheader'
 import RaisedButton from 'material-ui/RaisedButton'
 
 const style = {
@@ -72,9 +73,15 @@ export default class FeedbackMenu extends Component {
 
   render () {
     return (
-      <div id='feedbackMenuBar'>
-        <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
-        <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
+      <div>
+        <h3>Tilbakemelding til foreleser</h3> 
+        <p>Vennligst gi tilbakemelding på hvordan du opplever 
+        forelesningen akkurat nå.</p> 
+        <Subheader>Tempo:</Subheader>
+        <div>
+          <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
+          <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
+        </div>
       </div>
     )
   }

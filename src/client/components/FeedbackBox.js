@@ -1,24 +1,21 @@
 import React, { Component } from 'react'
 import socket from '../socket'
-import Drawer from 'material-ui/Drawer'
-import RaisedButton from 'material-ui/RaisedButton'
-import Subheader from 'material-ui/Subheader'
+import Paper from 'material-ui/Paper'
 
 import FeedbackMenu from './FeedbackMenu'
 import FeedbackWindow from './FeedbackWindow'
 
 const styles = {
-  container: {
-    width: '100%',
-
-    marginTop: '10px'
-  }, 
-  menu: { 
+  container: { 
     display: 'flex', 
     flexDirection: 'column', 
     alignItems: 'flex-start', 
     justifyContent: 'flex-start', 
 
+    maxWidth: '300px',
+    width: '100%',
+
+    marginTop: '10px',
     padding: '20px'
   }
 }
@@ -68,35 +65,17 @@ export default class FeedbackBox extends Component {
 
   render () {
     return (
-      <div style={styles.container}>
-        <RaisedButton
-          primary={true}
-          label="Tilbakemelding"
-          fullWidth={true}
-          onTouchTap={this.openFeedbackMenu}
-        />
-        <Drawer
-          docked={false}
-          width={300}
-          openSecondary={true}
-          open={this.state.open}
-          onRequestChange={(open) => this.setState({open})}
-        >
-          <div style={styles.menu}> 
-            <h3>Tilbakemelding til foreleser</h3> 
-            <p>Vennligst gi tilbakemelding på hvordan du opplever 
-            forelesningen akkurat nå.</p> 
-            <Subheader>Tempo:</Subheader> 
-            <FeedbackMenu onClick={this.onClick} lecture={this.props.lecture}/> 
-            <FeedbackWindow 
-              slow={this.state.feedback[0]} 
-              fast={this.state.feedback[1]} 
-              updateFeedbackInterval={this.updateFeedbackInterval}
-              lecture={this.props.lecture} 
-            /> 
-          </div> 
-        </Drawer>
-      </div>
+      <Paper style={styles.container}>
+        {this.props.isAdmin ? 
+          <FeedbackWindow 
+            slow={this.state.feedback[0]} 
+            fast={this.state.feedback[1]} 
+            updateFeedbackInterval={this.updateFeedbackInterval}
+            lecture={this.props.lecture} 
+          /> 
+          : <FeedbackMenu onClick={this.onClick} lecture={this.props.lecture}/> 
+        }
+      </Paper>
     )
   }
 }
