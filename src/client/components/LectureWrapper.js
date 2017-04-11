@@ -15,7 +15,7 @@ const styles = {
     alignItems: 'flex-start',
     flexWrap: 'wrap',
 
-    maxWidth: '910px',
+    maxWidth: '960px',
     width: '100%',
     height: '100%',
   },

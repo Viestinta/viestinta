@@ -3,6 +3,14 @@ import socket from '../socket'
 
 import LineChart from './LineChart'
 
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }
+}
+
 export default class FeedbackWindow extends Component {
 
   constructor (props) {
@@ -69,7 +77,8 @@ export default class FeedbackWindow extends Component {
 
   render () {
     return (
-      <div>
+      <div style={styles.container}>
+        <LineChart />
         <p>Antall som synes det går for tregt: {this.state.feedback[0]}</p>
         <p>Antall som synes det går for fort: {this.state.feedback[1]}</p>
       </div>

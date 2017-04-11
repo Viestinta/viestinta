@@ -7,16 +7,10 @@ import FeedbackWindow from './FeedbackWindow'
 
 const styles = {
   container: { 
-    display: 'flex', 
-    flexDirection: 'column', 
-    alignItems: 'flex-start', 
-    justifyContent: 'flex-start', 
-
-    maxWidth: '300px',
+    maxWidth: '350px',
     width: '100%',
 
     marginTop: '10px',
-    padding: '20px'
   }
 }
 

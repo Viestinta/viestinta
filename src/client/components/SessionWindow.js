@@ -29,7 +29,7 @@ const styles = {
         alignItems: 'baseline',
         justifyContent: 'space-between',
 
-        maxWidth: '910px',
+        maxWidth: '960px',
         width: '100%',
 
         marginTop: '10px',
