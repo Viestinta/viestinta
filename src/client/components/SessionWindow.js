@@ -83,28 +83,28 @@ export default class SessionWindow extends Component {
     render () {
         return (
             <div style={styles.container}>
-            <Header userName={this.props.user.name} isAdmin={this.props.isAdmin} toggleAdmin={this.props.toggleAdmin}/>
-            <Paper zDepth={3} style={styles.session}>
-                <Subheader style={{width: 'auto'}}>
-                    {this.state.selectedLecture ? this.state.selectedLecture.course.code + ' : ' + this.state.selectedLecture.course.name : 'Velg forelesning fra listen under'}
-                </Subheader>
-                
-                { (this.state.selectedLecture || this.props.isAdmin) ?
-                    <RaisedButton
-                        primary={true}
-                        label= { this.state.selectedLecture ? "Koble fra" : "Lag ny" }
-                        onTouchTap={ this.state.selectedLecture ? this.disconnectFromLecture : this.createNewLecture }
-                    /> : undefined
+                <Header userName={this.props.user.name} isAdmin={this.props.isAdmin} toggleAdmin={this.props.toggleAdmin}/>
+                <Paper zDepth={3} style={styles.session}>
+                    <Subheader style={{width: 'auto'}}>
+                        {this.state.selectedLecture ? this.state.selectedLecture.course.code + ' : ' + this.state.selectedLecture.course.name : 'Velg forelesning fra listen under'}
+                    </Subheader>
+                    
+                    { (this.state.selectedLecture || this.props.isAdmin) ?
+                        <RaisedButton
+                            primary={true}
+                            label= { this.state.selectedLecture ? "Koble fra" : "Lag ny" }
+                            onTouchTap={ this.state.selectedLecture ? this.disconnectFromLecture : this.createNewLecture }
+                        /> : undefined
+                    }
+                </Paper>
+                { this.state.selectedLecture ? 
+                    <LectureWrapper
+                        isAdmin={this.props.isAdmin} 
+                        lecture={this.state.selectedLecture}
+                    /> 
+                    : 
+                    <LectureTable setSelectedLecture={this.setSelectedLecture}/> 
                 }
-            </Paper>
-            { this.state.selectedLecture ? 
-                <LectureWrapper
-                    isAdmin={this.props.isAdmin} 
-                    lecture={this.state.selectedLecture}
-                /> 
-                : 
-                <LectureTable setSelectedLecture={this.setSelectedLecture}/> 
-            }
             </div>
         )
     }
