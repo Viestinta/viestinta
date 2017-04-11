@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import socket from '../socket'
 
+import LineChart from './LineChart'
+
 export default class FeedbackWindow extends Component {
 
   constructor (props) {
