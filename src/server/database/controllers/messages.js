@@ -7,13 +7,15 @@ module.exports = {
 
   /**
    * @description Create a new Message using model.create()
-   * @param req
+   * @param message
    * @returns {Promise.<Message>}
    */
-  create (req) {
+  createMessage (message) {
     return Message.create({
-      time: new Date(),
-      text: req.text
+      time: message.time,
+      text: message.text,
+      LectureId: message.LectureId,
+      UserId: message.UserId
     })
   },
 
@@ -21,29 +23,23 @@ module.exports = {
 
   /**
    * @description Edit an existing Message details using model.update()
-   * @param req
+   * @param message
+   * @param updates
    * @returns {Promise.<Message>}
    */
-  update (req) {
-    return Message.update(req.body, {
-      where: {
-        id: req.id
-      }
-    })
+  updateMessage (message, updates) {
+    return message.update(updates)
   },
 
 
 
   /**
    * @description Delete an existing Message by the unique ID using model.destroy()
-   * @param req
+   * @param message
+   * @returns {Promise}
    */
-  delete (req) {
-    Message.destroy({
-      where: {
-        id: req.id
-      }
-    })
+  deleteMessage (message) {
+    return message.destroy()
   },
 
 
@@ -74,6 +70,23 @@ module.exports = {
     return Message.findAll({
       where: {
         LectureId: lecture.id
+      },
+      raw: true,
+      order: '"time" DESC',
+    })
+  },
+
+
+
+  /**
+   * @descriptio Gets all to a specific user
+   * @param user
+   * @returns {Promise.<Message>}
+   */
+  getAllToUser(user){
+    return Message.findAll({
+      where: {
+        UserId: user.id
       }
     })
   },
@@ -81,34 +94,59 @@ module.exports = {
 
 
   /**
-   * @description Retrieve an existing Message by the unique ID
-   * @param req
+   * @description Gets all messages containing the given text
+   * @param text
+   * @returns {Promise.<Array.<Message>>}
+   */
+  getAllByText(text){
+    return Message.findAll({
+      where: {
+        text: text
+      }
+    })
+  },
+
+
+
+  /**
+   * @description Get all
    * @returns {Promise.<Message>}
    */
-  retrieve (req) {
-    return Message
-      .findById(req.params.MessageId, {
-        include: [{
-          model: Message,
-          as: 'message'
-        }]
+  getAll () {
+    return Message.findAll({
+      raw: true,
+      order: '"time" DESC'
+    })
+  },
+
+
+
+/**
+   * @description Changes voting attributes in message
+   * @param req
+   * @param callback
+   * @callback Callbacks when voting attributes have been updated
+   */
+  vote (req, callback) {
+    return Message.find({where: {id: req.id}})
+      .then(function (msg) {
+        if (req.value === 1) {
+          msg.increment('votesUp', {
+            where: {id: req.id}
+          }).then(function () {
+            if (callback) {
+              callback()
+            }
+          })
+        } else if (req.value === -1) {
+          msg.increment('votesDown', {
+            where: {id: req.id}
+          }).then(function () {
+            if (callback) {
+              callback()
+            }
+          })
+        }
       })
-  },
-
-
-
-  /**
-   * @description
-   * @param req
-   * @returns {Promise.<Message>}
-   */
-  vote (req) {
-    var msg = Message.findById(req.id).then(function (result) {
-      if (req.value === -1) {
-        msg.votesDown ++
-      } else {
-        msg.votesUp ++
-      }
-    })
   }
 }

@@ -1,4 +1,6 @@
 import React from 'react'
+import socket from '../socket'
+
 import Paper from 'material-ui/Paper'
 import FlatButton from 'material-ui/FlatButton'
 import ActionSchedule from 'material-ui/svg-icons/action/schedule'
@@ -30,6 +32,11 @@ const styles = {
     paddingBottom: '10px',
 
     borderRadius: '2px'
+  },
+  timestamp: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   footer: {
     display: 'flex', 
@@ -85,27 +92,32 @@ export default class Message extends React.Component {
     this.handleVoteUp = this.handleVoteUp.bind(this)
     this.handleVoteDown = this.handleVoteDown.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
+    this.sendVote = this.sendVote.bind(this)
   }
 
   handleVoteUp () {
-    console.log('Voted: up')
-    /* TODO: Send vote up to database*/
     this.setState({
       voteEnabled: false,
+      voteUp: true,
       open: true,
       actionInfo: 'Stemte melding opp.'
     })
+    this.sendVote(1)
   }
 
   handleVoteDown () {
-    console.log('Voted: down')
-    /* TODO: Send vote up to database*/
     this.setState({
       voteEnabled: false,
       voteUp: false,
       open: true,
       actionInfo: 'Stemte melding ned.'
     })
+    this.sendVote(-1)
+  }
+
+  sendVote (value) {
+    var msgId = this.props.id
+    socket.emit('new-vote-on-message', msgId, value)
   }
 
   handleRequestClose () {
@@ -115,17 +127,28 @@ export default class Message extends React.Component {
   }
 
   render () {
+    const timestamp = (
+      <div style={styles.timestamp}>
+        <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
+        <p>{this.props.time}</p>
+      </div>
+    )
     const voteMenu = (
       <IconMenu iconButtonElement={iconButtonVote}>
-        <MenuItem rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp}>Stem opp</MenuItem>
-        <MenuItem rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown}>Stem ned</MenuItem>
+        <MenuItem primaryText="Stem opp" rightIcon={<ActionThumbUp/>} onTouchTap={this.handleVoteUp} />
+        <MenuItem primaryText="Stem ned" rightIcon={<ActionThumbDown/>} onTouchTap={this.handleVoteDown} />
       </IconMenu>
     )
     const footer = (
       <div style={styles.footer}>
-        <ActionSchedule color={grey400} style={{width: '18px', height: '18px', marginRight: '2px'}}/>
-        <p style={{flexBasis: '82%'}}>{this.props.time}</p>
+        {timestamp}
         {this.state.voteEnabled ? voteMenu : (this.state.voteUp ? iconVoteUp : iconVoteDown)}
+      </div>
+    )
+    const footerAdmin = (
+      <div style={styles.footer}>
+        {timestamp}
+        <p>Student</p>
       </div>
     )
     /* This menu is not yet in use */
@@ -140,7 +163,7 @@ export default class Message extends React.Component {
     		<ListItem
           style={styles.listItem}
           primaryText={this.props.text}
-          secondaryText={footer}
+          secondaryText={this.props.isAdmin ? footerAdmin : footer}
         />
         <Snackbar
           style={{textAlign: 'center'}}

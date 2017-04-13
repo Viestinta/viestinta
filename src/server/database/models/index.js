@@ -21,6 +21,10 @@ let db = {}
 if (process.env['DATABASE_URL']) {
   var options = {}
 
+  if (process.env.DISABLE_DB_OUTPUT) {
+    options.logging = false
+  }
+
   //Disable logging while testing
   if (process.env.NODE_ENV === 'test') {
     options = {logging: false}

@@ -50,6 +50,7 @@
     "istanbul": "^0.4.5",
     "latest-version": "^3.0.0",
     "loadash": "0.0.1",
+    "material-ui-datatables": "^0.16.7",
     "mocha": "^3.2.0",
     "morgan": "^1.7.0",
     "nconf": "^0.8.4",

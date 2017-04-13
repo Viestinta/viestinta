@@ -9,12 +9,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 // Components
-import ChatBox from './ChatBox'
-import MessageList from './MessageList'
-import Header from './Header'
 import Login from './Login'
-import FeedbackBox from './FeedbackBox'
-import RaisedButton from 'material-ui/RaisedButton'
+import SessionWindow from './SessionWindow'
 
 
 const styles = {
@@ -43,10 +39,12 @@ export default class ChatApp extends Component {
     super(props)
 
     this.state = {
-      username: undefined
+      user: undefined,
+      isAdmin: false
     }
 
     this.getUserInfo = this.getUserInfo.bind(this)
+    this.toggleAdmin = this.toggleAdmin.bind(this)
   }
 
   componentDidMount() {
@@ -57,9 +55,9 @@ export default class ChatApp extends Component {
     axios
       .get("/user")
       .then(userinfo => {
-        console.log("Returning user info: " + JSON.stringify(userinfo.data.user))
+        console.log("[ChatApp] Returning user info: " + JSON.stringify(userinfo.data.user))
         this.setState({
-          username: userinfo.data.user.name
+          user: userinfo.data.user
         })
       })
       .catch(err => {
@@ -67,24 +65,23 @@ export default class ChatApp extends Component {
       })
   }
 
+  toggleAdmin () {
+    this.setState({
+      isAdmin: !this.state.isAdmin
+    })
+  }
+
   render () {
     const User = (
       <div>
-        <p>Logget inn som: {this.state.username}</p>
+        <p>Logget inn som: {this.state.user ? this.state.user.name : undefined}</p>
       </div>
     )
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div style={styles.container}>
-          <Header />
-          {/* Login button or username */}
-          { !this.state.username ? <Login/> : User }
-          {/* List of messages */}
-          <MessageList />
-          {/* Sidebar with feedback-options */}
-          <FeedbackBox />
-          {/* Inputfield for user */}
-          <ChatBox />
+          {/* Login screen or Session */}
+          { !this.state.user ? <Login/> : <SessionWindow user={this.state.user} isAdmin={this.state.isAdmin} toggleAdmin={this.toggleAdmin}/> }
         </div>
       </MuiThemeProvider>
     )

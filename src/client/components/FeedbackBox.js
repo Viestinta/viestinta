@@ -10,7 +10,6 @@ import FeedbackWindow from './FeedbackWindow'
 const styles = {
   container: {
     width: '100%',
-    maxWidth: '500px',
 
     marginTop: '10px'
   }, 
@@ -41,23 +40,23 @@ export default class FeedbackBox extends Component {
 
 	// Receiving updated feedback values
   updateFeedback (feedback) {
-    console.log('In updateFeedback:', feedback)
+    console.log('[FeedbackBox] In updateFeedback:', feedback)
 
     this.state.feedback = feedback
   }
 
   updateFeedbackInterval () {
-    console.log('In updateFeedbackInterval')
+    console.log('[FeedbackBox] In updateFeedbackInterval')
   }
 
   onClick (feedback) {
-    console.log('In onClick')
+    console.log('[FeedbackBox] In onClick')
     if (feedback.type === 'slow') {
       feedbackList[0] = feedbackList[0] + 1
     } else if (feedback.type === 'fast') {
       feedbackList[1] = feedbackList[1] + 1
     } else {
-      console.log('No valid type for buttonClick')
+      console.log('[FeedbackBox] No valid type for buttonClick')
     }
     this.setState({feedback: feedbackList})
     this.props.sendFeedback(feedback)
@@ -88,11 +87,12 @@ export default class FeedbackBox extends Component {
             <p>Vennligst gi tilbakemelding på hvordan du opplever 
             forelesningen akkurat nå.</p> 
             <Subheader>Tempo:</Subheader> 
-            <FeedbackMenu onClick={this.onClick} /> 
+            <FeedbackMenu onClick={this.onClick} lecture={this.props.lecture}/> 
             <FeedbackWindow 
               slow={this.state.feedback[0]} 
               fast={this.state.feedback[1]} 
-              updateFeedbackInterval={this.updateFeedbackInterval} 
+              updateFeedbackInterval={this.updateFeedbackInterval}
+              lecture={this.props.lecture} 
             /> 
           </div> 
         </Drawer>

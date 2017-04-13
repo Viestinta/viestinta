@@ -3,8 +3,8 @@
 // User model
 
 module.exports = function (sequelize, DataTypes) {
-    // Definition of User attributes
 
+  // Definition of User attributes
   var User = sequelize.define('User', {
     name: DataTypes.STRING,
     student_id: DataTypes.INTEGER,
@@ -22,6 +22,17 @@ module.exports = function (sequelize, DataTypes) {
        */
         // Associations to other models
       associate: function (models) {
+        User.hasMany(models.AdminRole, {
+         foreignKey: {
+           allowNull: true
+         }
+        })
+        User.belongsToMany(models.Lecture, {
+          through: 'UserLecture',
+        })
+        User.belongsToMany(models.Course, {
+          through: 'UserCourse',
+        })
       }
     }
   })
