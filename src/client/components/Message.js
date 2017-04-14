@@ -32,8 +32,7 @@ const styles = {
     paddingBottom: '10px',
 
     borderRadius: '2px',
-    backgroundColor: 'white',
-    cursor: 'auto'
+
   },
   timestamp: {
     display: 'flex',
@@ -169,6 +168,7 @@ export default class Message extends React.Component {
           style={styles.listItem}
           primaryText={this.props.text}
           secondaryText={this.props.isAdmin ? footerAdmin : footer}
+          disabled={true}
         />
         <Snackbar
           style={{textAlign: 'center'}}
