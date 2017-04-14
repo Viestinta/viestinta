@@ -33,7 +33,7 @@ const styles = {
 
     borderRadius: '2px',
     backgroundColor: 'white',
-    
+    cursor: 'auto'
   },
   timestamp: {
     display: 'flex',
