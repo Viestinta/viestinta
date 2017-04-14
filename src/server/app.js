@@ -319,6 +319,7 @@ io.sockets.on('connection', function (socket) {
   })
 
 
+
   /** TODO: lecture can be removed, because of the new socket variables
    * @deprecated
    * @template msg: {
