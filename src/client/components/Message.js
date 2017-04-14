@@ -93,6 +93,9 @@ export default class Message extends React.Component {
     this.handleVoteDown = this.handleVoteDown.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
     this.sendVote = this.sendVote.bind(this)
+
+    ListItem.defaultProps.disableTouchRipple = true
+    ListItem.defaultProps.disableFocusRipple = true
   }
 
   handleVoteUp () {
@@ -172,6 +175,7 @@ export default class Message extends React.Component {
           autoHideDuration={2000}
           onRequestClose={this.handleRequestClose}
         />
+
       </Paper>
     )
   }
