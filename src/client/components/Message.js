@@ -24,14 +24,16 @@ const styles = {
 
 		padding: '0px',
 		margin: '10px',
-		textAlign: 'left'
+		textAlign: 'left',
 	},
   listItem: {
     paddingTop: '20px',
     paddingSide: '10px',
     paddingBottom: '10px',
 
-    borderRadius: '2px'
+    borderRadius: '2px',
+    backgroundColor: 'white',
+    
   },
   timestamp: {
     display: 'flex',
