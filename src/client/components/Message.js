@@ -1,6 +1,7 @@
 import React from 'react'
 import socket from '../socket'
 
+import {Card, CardText } from 'material-ui/Card'
 import Paper from 'material-ui/Paper'
 import FlatButton from 'material-ui/FlatButton'
 import ActionSchedule from 'material-ui/svg-icons/action/schedule'
@@ -32,7 +33,7 @@ const styles = {
     paddingBottom: '10px',
 
     borderRadius: '2px',
-
+    overflowWrap: 'break-word'
   },
   timestamp: {
     display: 'flex',
@@ -94,9 +95,6 @@ export default class Message extends React.Component {
     this.handleVoteDown = this.handleVoteDown.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
     this.sendVote = this.sendVote.bind(this)
-
-    ListItem.defaultProps.disableTouchRipple = true
-    ListItem.defaultProps.disableFocusRipple = true
   }
 
   handleVoteUp () {
@@ -164,12 +162,16 @@ export default class Message extends React.Component {
     )
     return (
     	<Paper zDepth={3} style={styles.container}>
-    		<ListItem
-          style={styles.listItem}
-          primaryText={this.props.text}
-          secondaryText={this.props.isAdmin ? footerAdmin : footer}
-          disabled={true}
-        />
+    		<Card style={styles.listItem} expanded={true}>
+          <CardText>
+            {this.props.text}
+          </CardText>
+          <CardText expandable={false}>
+           {this.props.isAdmin ? footerAdmin : footer}
+          </CardText>
+          
+          
+        </Card>
         <Snackbar
           style={{textAlign: 'center'}}
           open={this.state.open}

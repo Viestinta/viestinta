@@ -40,6 +40,7 @@ export default class ChatBox extends Component {
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
     this.cleanInput = this.cleanInput.bind(this)
+    this.validateMessage = this.validateMessage.bind(this)
   }
 
   componentDidMount () {
@@ -52,26 +53,48 @@ export default class ChatBox extends Component {
 
   sendMessage () {
     console.log('[ChatBox] sendMessage to room: ' + this.props.lecture.room)
-    // Setting msg.text to written input
-    var msg = {
-      text: this.state.text,
-      lecture: {
-        id:  JSON.stringify(this.props.lecture.id),
-        code: this.props.lecture.course.code,
-        room: this.props.lecture.room,
+    if (this.validateMessage(this.state.text)) {
+      // Setting msg.text to written input
+      var msg = {
+        text: this.state.text,
+        lecture: {
+          id:  JSON.stringify(this.props.lecture.id),
+          code: this.props.lecture.course.code,
+          room: this.props.lecture.room,
+        },
+        errorText: ''
+
       }
+       // Emtpy input field
+      this.setState({text: ''})
+
+      socket.emit('new-message', msg)
+      console.log('[ChatBox] After sending message')
+   
     }
-
-    // Emtpy input field
-    this.setState({text: ''})
-
-    socket.emit('new-message', msg)
-    console.log('[ChatBox] After sending message')
+    
   }
   // Listen and update field dynamically when something is written
   changeHandler (e) {
     this.setState({ text: e.target.value })
     console.log('[ChatBox] changeHandler')
+  }
+
+  validateMessage (msg) {
+    console.log("Length: ", msg.length)
+    if (msg.length < 3 ) {
+      // Error message that message is to short
+      console.log("Error: message is to short: ", msg.length)
+      this.setState({'errorText': 'Meldingen må være på minst 3 tegn.'})
+      return false
+    } else if (msg.length > 250) {
+      // Error message that message is to long
+      console.log("Error: message is to long: ", msg.length)    
+      this.setState({'errorText': 'Meldingen må være under 250 tegn.'})
+      return false
+    }
+    return true
+
   }
 
   render () {
@@ -85,6 +108,7 @@ export default class ChatBox extends Component {
           rowsMax={2}
           onChange={this.changeHandler}
           value={this.state.text}
+          errorText={this.state.errorText}
             />
         <RaisedButton
           style={styles.btn}
