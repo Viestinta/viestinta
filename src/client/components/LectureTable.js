@@ -51,6 +51,7 @@ export default class LectureTable extends Component {
     componentDidMount() {
         /* This method is called after first render */
         this.getAvailableLectures()
+        console.log(new Date())
     }
 
     getAvailableLectures () {

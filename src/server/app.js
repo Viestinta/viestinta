@@ -335,7 +335,10 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] new-message: ' + msg.text)
     console.log('[app][socket] Message destined for Room: ' + socket.room)
 
+    var timeNow = new Date()
+    timeNow.setHours(timeNow.getHours()+2)
     let databaseMsg = {
+      time: timeNow,
       text: msg.text,
       LectureId: socket.LectureId,
       UserId: socket.UserId
