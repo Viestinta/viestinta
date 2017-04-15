@@ -12,7 +12,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
     flexWrap: 'wrap',
 
     maxWidth: '960px',
