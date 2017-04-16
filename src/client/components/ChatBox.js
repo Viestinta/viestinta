@@ -41,6 +41,7 @@ export default class ChatBox extends Component {
 
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   componentDidMount () {
@@ -86,6 +87,12 @@ export default class ChatBox extends Component {
     console.log('[ChatBox] changeHandler')
   }
 
+  handleKeyPress (key) {
+    if (key.key === 'Enter') {
+      this.sendMessage()
+    }
+  }
+
   render () {
     return (
       <Paper zDepth={3} style={styles.parent}>
@@ -99,6 +106,7 @@ export default class ChatBox extends Component {
           rowsMax={2}
           onChange={this.changeHandler}
           value={this.state.text}
+          onKeyPress={this.handleKeyPress}
         />
         <RaisedButton
           style={styles.btn}
