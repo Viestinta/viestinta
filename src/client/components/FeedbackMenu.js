@@ -8,7 +8,7 @@ const style = {
   minWidth: '105px'
 }
 
-var MIN = 6000*60
+var MIN = 1000*60
 
 export default class FeedbackMenu extends Component {
 
