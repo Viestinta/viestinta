@@ -13,7 +13,7 @@ const styles = {
     justifyContent: 'space-between',
 
     width: '100%',
-    height: 80,
+    height: 116,
 
     marginTop: 10,
     padding: 10
@@ -34,67 +34,56 @@ export default class ChatBox extends Component {
     // Starting with empty inputfield
     super(props)
     this.state = {
-      text: ''
+      text: '',
+      textLength: 0,
+      sendDisabled: true
     }
 
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
-    this.cleanInput = this.cleanInput.bind(this)
-    this.validateMessage = this.validateMessage.bind(this)
   }
 
   componentDidMount () {
     socket.on('send-message', this.sendMessage)
   }
 
-  cleanInput () {
-    this.setState({text: ''})
-  }
-
   sendMessage () {
     console.log('[ChatBox] sendMessage to room: ' + this.props.lecture.room)
-    if (this.validateMessage(this.state.text)) {
-      // Setting msg.text to written input
-      var msg = {
-        text: this.state.text,
-        lecture: {
-          id:  JSON.stringify(this.props.lecture.id),
-          code: this.props.lecture.course.code,
-          room: this.props.lecture.room,
-        },
-        errorText: ''
-
+    // Setting msg.text to written input
+    var msg = {
+      text: this.state.text,
+      lecture: {
+        id:  JSON.stringify(this.props.lecture.id),
+        code: this.props.lecture.course.code,
+        room: this.props.lecture.room,
       }
-       // Emtpy input field
-      this.setState({text: ''})
-
-      socket.emit('new-message', msg)
-      console.log('[ChatBox] After sending message')
-   
     }
-    
+      // Emtpy input field
+    this.setState({text: ''})
+
+    socket.emit('new-message', msg)
+    console.log('[ChatBox] After sending message')
   }
+
   // Listen and update field dynamically when something is written
   changeHandler (e) {
-    this.setState({ text: e.target.value })
-    console.log('[ChatBox] changeHandler')
-  }
-
-  validateMessage (msg) {
-    console.log("Length: ", msg.length)
-    if (msg.length < 3 ) {
-      // Error message that message is to short
-      console.log("Error: message is to short: ", msg.length)
-      this.setState({'errorText': 'Meldingen må være på minst 3 tegn.'})
-      return false
-    } else if (msg.length > 250) {
-      // Error message that message is to long
-      console.log("Error: message is to long: ", msg.length)    
-      this.setState({'errorText': 'Meldingen må være under 250 tegn.'})
-      return false
+    var text = e.target.value
+    var length = e.target.value.length
+    var disable = false
+    
+    if (length == 0) {
+      disable = true
+    } else if (length > 250) {
+      text = e.target.value.substring(0, 250)
+      length = 250
     }
-    return true
 
+    this.setState({ 
+      text: text,
+      textLength: length,
+      sendDisabled: disable
+    })
+    console.log('[ChatBox] changeHandler')
   }
 
   render () {
@@ -102,20 +91,22 @@ export default class ChatBox extends Component {
       <Paper zDepth={3} style={styles.parent}>
         <TextField
           style={styles.textField}
+          floatingLabelText={this.state.textLength + "/250 tegn."}
+          floatingLabelFixed={true}
           hintText='Skriv ny melding her.'
-          multiLine
+          multiLine={true}
           rows={1}
           rowsMax={2}
           onChange={this.changeHandler}
           value={this.state.text}
-          errorText={this.state.errorText}
-            />
+        />
         <RaisedButton
           style={styles.btn}
           primary={true}
           label='Send'
           onTouchTap={this.sendMessage}
-            />
+          disabled={this.state.sendDisabled}
+        />
       </Paper>
     )
   }
