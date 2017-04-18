@@ -41,7 +41,6 @@ export default class ChatBox extends Component {
 
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
-    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   componentDidMount () {
