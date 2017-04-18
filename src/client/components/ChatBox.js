@@ -72,11 +72,11 @@ export default class ChatBox extends Component {
     var length = e.target.value.length
     var disable = false
     
-    if (length == 0) {
+    if (length == 3) {
       disable = true
-    } else if (length > 250) {
-      text = e.target.value.substring(0, 250)
-      length = 250
+    } else if (length > 1000) {
+      text = e.target.value.substring(0, 1000)
+      length = 1000
     }
 
     this.setState({ 
@@ -87,18 +87,12 @@ export default class ChatBox extends Component {
     console.log('[ChatBox] changeHandler')
   }
 
-  handleKeyPress (key) {
-    if (key.key === 'Enter') {
-      this.sendMessage()
-    }
-  }
-
   render () {
     return (
       <Paper zDepth={3} style={styles.parent}>
         <TextField
           style={styles.textField}
-          floatingLabelText={this.state.textLength + "/250 tegn."}
+          floatingLabelText={this.state.textLength + "/1000 tegn."}
           floatingLabelFixed={true}
           hintText='Skriv ny melding her.'
           multiLine={true}
@@ -106,7 +100,6 @@ export default class ChatBox extends Component {
           rowsMax={2}
           onChange={this.changeHandler}
           value={this.state.text}
-          onKeyPress={this.handleKeyPress}
         />
         <RaisedButton
           style={styles.btn}

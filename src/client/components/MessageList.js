@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from'react-dom'
 import socket from '../socket'
 import Paper from 'material-ui/Paper'
 import {List} from 'material-ui/List'
@@ -55,12 +56,22 @@ export default class MessageList extends Component {
     this.sortListByTime = this.sortListByTime.bind(this)
     this.sortListByVotes = this.sortListByVotes.bind(this)
     this.getClock = this.getClock.bind(this)
+    this.scrollToBottom = this.scrollToBottom.bind(this)
+    this.scrollToTop = this.scrollToTop.bind(this)
   }
 
   componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
     socket.on('all-messages', this.getAllMessages)
     socket.on('update-message-order', this.sortMessageList)
+
+    // Scroll to top if admin, or bottom if student
+    {this.props.isAdmin ? this.scrollToTop : this.scrollToBottom}
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Scroll to top if admin, or bottom if student
+    {this.props.isAdmin ? this.scrollToTop : this.scrollToBottom}
   }
 
   receiveMessage (msg) {
@@ -96,7 +107,7 @@ export default class MessageList extends Component {
     
     this.setState({
       selectedIndex: 0,
-      messages: list
+      messages: list.reverse()
     })
   }
 
@@ -120,6 +131,20 @@ export default class MessageList extends Component {
     return time
   }
 
+  scrollToBottom() {
+    const node = ReactDOM.findDOMNode(this.refs[2])
+    if (node) {
+      node.scrollIntoView()
+    }
+  }
+
+  scrollToTop() {
+    const node = ReactDOM.findDOMNode(this.refs[0])
+    if (node) {
+      node.scrollIntoView()
+    }
+
+  }
 
   render () {
 
@@ -134,6 +159,7 @@ export default class MessageList extends Component {
           text={message.text}
           id={message.id}
           isAdmin={this.props.isAdmin}
+          ref={i}
         />
       )
     })
