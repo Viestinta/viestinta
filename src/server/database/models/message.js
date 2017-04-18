@@ -27,7 +27,7 @@ module.exports = function (sequelize, DataTypes) {
 
     },
     text: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: {
         min: {

@@ -92,7 +92,7 @@ export default class SessionWindow extends Component {
                     { (this.state.selectedLecture || this.props.isAdmin) ?
                         <RaisedButton
                             primary={true}
-                            label= { this.state.selectedLecture ? "Koble fra" : "Lag ny" }
+                            label= { this.state.selectedLecture ? "Forlat forelesning" : "Lag ny" }
                             onTouchTap={ this.state.selectedLecture ? this.disconnectFromLecture : this.createNewLecture }
                         /> : undefined
                     }

@@ -1,6 +1,7 @@
 import React, {Component } from 'react'
 import socket from '../socket'
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from 'material-ui/RaisedButton'
+import IconButton from 'material-ui/IconButton'
 
 const styles = {
   container: {
@@ -8,7 +9,6 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
 
-    maxWidth: '600px',
     width: '100%'
   },
   logo: {
@@ -25,13 +25,24 @@ const styles = {
 
     marginTop: '10px'
   },
-  img: {
+  footer: {
     position: 'fixed',
-    bottom: '10px',
-
-    maxWidth: '600px',
+    bottom: '0px',
     width: '100%',
-    height: 'auto'
+
+    textAlign: 'center',
+
+    paddingTop: '12px',
+    paddingRight: '24px',
+    paddingBottom: '12px',
+    paddingLeft: '24px',
+
+    backgroundColor: '#212121'
+  },
+  text: {
+    margin: 'auto', 
+    color: 'rgba(255, 255, 255, 0.541176)', 
+    maxWidth: '356px'
   }
 }
 
@@ -61,9 +72,26 @@ export default class Login extends Component {
             labelColor="#ffffff"
             href="/login"
             label="Logg inn"
-            icon={<img src="images/feide_100px_white.png" style={{width: 20, height: 'auto'}}/>}
+            icon={<img src="images/feide_100px_white.png" style={{width: 20, height: 'auto', marginBottom: '3px'}}/>}
         />
-        <img src="images/technologies.png" style={styles.img}/>
+        
+        <div style={styles.footer}>
+          <p style={styles.text}>
+            Viestintä - Making communication and feedback easy.
+          </p>
+          <IconButton 
+            //iconClassName="muidocs-icon-custom-github"
+            //iconStyle={{color: 'rgba(255, 255, 255, 0.87)'}}
+            href="https://github.com/Viestinta/viestinta" 
+          >
+            <img src="images/GitHub-Mark-Light-32px.png" width="24px" />
+          </IconButton>
+          <p style={styles.text}>
+            &copy; &nbsp;
+            <a href="https://github.com/Viestinta/viestinta/graphs/contributors" style={{color: 'rgba(255, 255, 255, 0.870588)'}}>The Viestintä Team</a> 
+            &nbsp; 2017
+          </p>
+        </div>
       </div>
     )
   }

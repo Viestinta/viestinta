@@ -41,7 +41,6 @@ export default class Header extends React.Component {
 				<MenuItem>
 					<Toggle label="Foreleser" defaultToggled={this.props.isAdmin} onToggle={this.props.toggleAdmin}/>
 				</MenuItem>
-				<MenuItem primaryText="Hjelp" />
 				<MenuItem primaryText="Logg ut"
 					href="/logout"
 					rightIcon={<img src="images/feide_32px.png"

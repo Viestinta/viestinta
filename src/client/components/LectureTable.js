@@ -143,7 +143,7 @@ export default class LectureTable extends Component {
                     onFilterValueChange = { this.handleFilterValueChange }
                     onSortOrderChange = { this.handleSortOrderChange }
                     page = { 1 }
-                    count = { 100 }
+                    count = { this.state.filteredLectureList.length }
                 />
             </Paper> 
         )

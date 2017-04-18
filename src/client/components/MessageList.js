@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from'react-dom'
 import socket from '../socket'
 import Paper from 'material-ui/Paper'
 import {List} from 'material-ui/List'
@@ -55,12 +56,21 @@ export default class MessageList extends Component {
     this.sortListByTime = this.sortListByTime.bind(this)
     this.sortListByVotes = this.sortListByVotes.bind(this)
     this.getClock = this.getClock.bind(this)
+    this.scrollToLast = this.scrollToLast.bind(this)
   }
 
   componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
     socket.on('all-messages', this.getAllMessages)
     socket.on('update-message-order', this.sortMessageList)
+
+    // Scroll to last message
+    this.scrollToLast();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Scroll to last message
+    this.scrollToLast();
   }
 
   receiveMessage (msg) {
@@ -120,6 +130,13 @@ export default class MessageList extends Component {
     return time
   }
 
+  scrollToLast() {
+    var len = this.state.messages.length - 1;
+    const node = ReactDOM.findDOMNode(this['_div' + len])
+    if (node) {
+      node.scrollIntoView()
+    }
+  }
 
   render () {
 
@@ -134,6 +151,7 @@ export default class MessageList extends Component {
           text={message.text}
           id={message.id}
           isAdmin={this.props.isAdmin}
+          ref={(ref) => this['_div' + i] = ref}
         />
       )
     })
@@ -159,7 +177,7 @@ export default class MessageList extends Component {
       <div style={styles.container}>
         <Paper zDepth={3} style={styles.parent}>
           <List style={styles.child}>
-            {list.reverse()}
+            {this.props.isAdmin ? list.reverse() : list}
           </List>
         </Paper>
         {this.props.isAdmin ? sortMenu : undefined}
