@@ -319,6 +319,7 @@ io.sockets.on('connection', function (socket) {
   })
 
 
+
   /** TODO: lecture can be removed, because of the new socket variables
    * @deprecated
    * @template msg: {
@@ -334,7 +335,10 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] new-message: ' + msg.text)
     console.log('[app][socket] Message destined for Room: ' + socket.room)
 
+    var timeNow = new Date()
+    timeNow.setHours(timeNow.getHours()+2)
     let databaseMsg = {
+      time: timeNow,
       text: msg.text,
       LectureId: socket.LectureId,
       UserId: socket.UserId
@@ -366,7 +370,7 @@ io.sockets.on('connection', function (socket) {
         id: socket.LectureId
       }).then(function (msgList) {
 
-        io.sockets.in(socket.room).emit('update-message-order', msgList)
+        io.sockets.in(socket.room).emit('update-message-order', msgList.reverse())
       })
     })
       
