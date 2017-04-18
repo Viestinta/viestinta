@@ -71,7 +71,7 @@ export default class ChatBox extends Component {
     var length = e.target.value.length
     var disable = false
     
-    if (length == 3) {
+    if (length <= 3) {
       disable = true
     } else if (length > 1000) {
       text = e.target.value.substring(0, 1000)
