@@ -370,7 +370,7 @@ io.sockets.on('connection', function (socket) {
         id: socket.LectureId
       }).then(function (msgList) {
 
-        io.sockets.in(socket.room).emit('update-message-order', msgList)
+        io.sockets.in(socket.room).emit('update-message-order', msgList.reverse())
       })
     })
       

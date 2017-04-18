@@ -107,7 +107,7 @@ export default class MessageList extends Component {
     
     this.setState({
       selectedIndex: 0,
-      messages: list.reverse()
+      messages: list
     })
   }
 
@@ -185,7 +185,7 @@ export default class MessageList extends Component {
       <div style={styles.container}>
         <Paper zDepth={3} style={styles.parent}>
           <List style={styles.child}>
-            {list.reverse()}
+            {this.props.isAdmin ? list.reverse() : list}
           </List>
         </Paper>
         {this.props.isAdmin ? sortMenu : undefined}
