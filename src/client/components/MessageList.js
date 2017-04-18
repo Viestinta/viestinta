@@ -56,8 +56,7 @@ export default class MessageList extends Component {
     this.sortListByTime = this.sortListByTime.bind(this)
     this.sortListByVotes = this.sortListByVotes.bind(this)
     this.getClock = this.getClock.bind(this)
-    this.scrollToBottom = this.scrollToBottom.bind(this)
-    this.scrollToTop = this.scrollToTop.bind(this)
+    this.scrollToLast = this.scrollToLast.bind(this)
   }
 
   componentDidMount () {
@@ -65,13 +64,13 @@ export default class MessageList extends Component {
     socket.on('all-messages', this.getAllMessages)
     socket.on('update-message-order', this.sortMessageList)
 
-    // Scroll to top if admin, or bottom if student
-    {this.props.isAdmin ? this.scrollToTop : this.scrollToBottom}
+    // Scroll to last message
+    this.scrollToLast();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Scroll to top if admin, or bottom if student
-    {this.props.isAdmin ? this.scrollToTop : this.scrollToBottom}
+    // Scroll to last message
+    this.scrollToLast();
   }
 
   receiveMessage (msg) {
@@ -131,19 +130,12 @@ export default class MessageList extends Component {
     return time
   }
 
-  scrollToBottom() {
-    const node = ReactDOM.findDOMNode(this.refs[2])
+  scrollToLast() {
+    var len = this.state.messages.length - 1;
+    const node = ReactDOM.findDOMNode(this['_div' + len])
     if (node) {
       node.scrollIntoView()
     }
-  }
-
-  scrollToTop() {
-    const node = ReactDOM.findDOMNode(this.refs[0])
-    if (node) {
-      node.scrollIntoView()
-    }
-
   }
 
   render () {
@@ -159,7 +151,7 @@ export default class MessageList extends Component {
           text={message.text}
           id={message.id}
           isAdmin={this.props.isAdmin}
-          ref={i}
+          ref={(ref) => this['_div' + i] = ref}
         />
       )
     })
