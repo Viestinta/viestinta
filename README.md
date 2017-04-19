@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://nodejs.org/">
-    <img src="https://lh4.googleusercontent.com/s5PKf2BMemMaghONmt4VZpFbhbw-2hC2hn-d7hCTuc656FHQjDN5HOh3kPvTO6rYkrEa7-ZFW1gKKyw=w1920-h928-rw" width="448">
+  <a href="https://viestinta.eu">
+    <img src="https://github.com/Viestinta/viestinta/blob/master/src/static/images/logo_shadow.png" width="448">
   </a>
 </p>
 
