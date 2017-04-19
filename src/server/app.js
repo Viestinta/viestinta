@@ -148,10 +148,12 @@ router(app)
 
 // Prevent NodeJS container from locking into listen when running in test env
 
+const port = process.env.VIESTINTA_OVERWRITE_PORT || app.get('port')
+
 if (process.env.NODE_ENV !== 'test') {
-  server.listen(app.get('port'), (err) => {
+  server.listen(port, (err) => {
     if (err) throw err
-    console.log('Node app is running on port', app.get('port'))
+    console.log('Node app is running on port', port)
   })
 }
 
