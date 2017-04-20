@@ -27,8 +27,6 @@ services:
       - redis
     ports:
       - "8000:8000"
-      - "8010:8010"
-      - "8011:8011"
     volumes:
       - .:/srv/app/
     environment:
