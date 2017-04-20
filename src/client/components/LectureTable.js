@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import socket from '../socket'
 import axios from 'axios'
 
 import Paper from 'material-ui/Paper'
@@ -49,6 +50,7 @@ export default class LectureTable extends Component {
 
     componentDidMount() {
         /* This method is called after first render */
+        socket.on('new-lecture', this.getAvailableLectures)
         this.getAvailableLectures()
     }
 
