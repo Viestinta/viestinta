@@ -24,6 +24,7 @@ module.exports = (io) => {
 // When a new user connects
   io.sockets.on('connection', function (socket) {
 
+    /* istanbul ignore next */
 
     if (initCourse) {
 

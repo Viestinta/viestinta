@@ -5,6 +5,24 @@ const app = require('../../server/app').app;
 const lectureController = require('../../server/database/controllers/lectures')
 const courseController = require('../../server/database/controllers/courses')
 
+
+describe('GET /', function() {
+
+  it('Test 200 and HTML', function (done) {
+    request(app)
+      .get('/')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end(function (err, res) {
+        if (err) {
+          return done(err)
+        }
+        done()
+      })
+  })
+})
+
+
 describe('GET /lectures', function() {
 
   it('Unauthorized', function(done) {
@@ -17,7 +35,6 @@ describe('GET /lectures', function() {
         if (err) {
           return done(err)
         }
-        res.user = 'Test'
         done()
       })
   })
@@ -66,4 +83,4 @@ describe('GET /lectures', function() {
       })
     })
   })
-})q
+})

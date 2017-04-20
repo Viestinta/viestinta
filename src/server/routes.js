@@ -14,17 +14,19 @@ const redis = require('../server/app.js')
 
 module.exports = (app) => {
 
-  
+  /* istanbul ignore next */
   const authorized = function (req) {
     return process.env.NODE_ENV === 'test' || req.user
   }
+
   // Serves the root of the page
   // used to serve React frontend via index.html abd bundle.js
   app.get('/', (req, res) => {
-    if(authorized(req)){
-      req.session.key = req.user.data.sub
-      req.session.name = req.user.data.name
-      console.log("Session key: " + req.session.key, "Name: " + req.session.name)
+    /* istanbul ignore if */
+    if(authorized(req) && req.user) {
+        req.session.key = req.user.data.sub
+        req.session.name = req.user.data.name
+        console.log("Session key: " + req.session.key, "Name: " + req.session.name)
     }
 
     res.sendFile(path.resolve(__dirname, '../client/index.html'))
@@ -32,6 +34,7 @@ module.exports = (app) => {
 
   // API request for serving user data to frontend
   // serves only the data part of the user to not compromise tokens
+  /* istanbul ignore next */
   app.get('/user', (req, res) => {
     if (authorized(req)) {
       res.status(200)
@@ -44,6 +47,7 @@ module.exports = (app) => {
 
   // API request for getting admin information
   // for the corresponding user in the database
+  /* istanbul ignore next */
   app.get('/admin', (req, res) => {
     if(authorized(req)){
       let userinfo = req.user.data
@@ -68,6 +72,7 @@ module.exports = (app) => {
 
   // API request for connecting the session user object
   // with the corresponding user in the database
+  /* istanbul ignore next */
   app.get('/connect', (req, res) => {
     if (authorized(req)) {
       req.session.user = req.user
@@ -126,6 +131,7 @@ module.exports = (app) => {
 
   // API request for logging out
   // Currently not working
+  /* istanbul ignore next */
   app.get('/logout', (req, res) => {
     req.user = undefined
     req.session.destroy()
