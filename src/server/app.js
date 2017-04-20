@@ -344,15 +344,20 @@ io.sockets.on('connection', function (socket) {
       UserId: socket.UserId
     }
 
-    messagesController.createMessage(databaseMsg).then(function (result) {
-      io.sockets.in(socket.room).emit('receive-message', {
-        id: result.id,
-        text: result.text,
-        time: result.time,
-        votesUp: result.votesUp,
-        votesDown: result.votesDown,
-        UserId: result.UserId,
-        LectureId: result.LectureId
+    usersController.getById(socket.UserId).then(function (user) {
+      let userName = user.name
+
+      messagesController.createMessage(databaseMsg).then(function (result) {
+        io.sockets.in(socket.room).emit('receive-message', {
+          id: result.id,
+          text: result.text,
+          time: result.time,
+          votesUp: result.votesUp,
+          votesDown: result.votesDown,
+          userName: userName,
+          UserId: result.UserId,
+          LectureId: result.LectureId
+        })
       })
     })
   })
