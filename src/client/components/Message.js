@@ -95,8 +95,6 @@ export default class Message extends React.Component {
     this.handleVoteDown = this.handleVoteDown.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
     this.sendVote = this.sendVote.bind(this)
-
-    console.log("Text in message: ", this.props.text)
   }
 
   handleVoteUp () {
