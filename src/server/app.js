@@ -262,8 +262,13 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('create-lecture', function (socketLecture) {
     console.log('[app] create-lecture')
-    
-    // TODO: us20 missing
+    courseController.getByCode(socketLecture.courseCode).then(function (course) {
+      socketLecture.CourseId = course.id
+      lecturesController.createLecture(socketLecture).then(function (lecture) {
+        lecture.course.code = course.code
+        io.sockets.emit('new-lecture', lecture.get({plain: true}))
+      })
+    })
   })
 
   /**
