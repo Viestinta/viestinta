@@ -8,6 +8,8 @@ const style = {
   minWidth: '105px'
 }
 
+var MIN = 1000*60
+
 export default class FeedbackMenu extends Component {
 
   constructor (props) {
@@ -24,8 +26,7 @@ export default class FeedbackMenu extends Component {
 
   componentDidMount () {
     // Activate button every x min
-    // TODO: set to 5 x 6000 after testing
-    var interval = setInterval(this.activateButtons, 3000)
+    var interval = setInterval(this.activateButtons, 5*MIN)
     this.setState({intervalId: interval})
   }
 

@@ -54,6 +54,7 @@ describe('Testing messages:', function () {
   let testDate = new Date()
 
   let hours = testDate.getHours()
+  console.log("Hours: ", hours)
   if (hours < 10) {
     hours = '0' + hours
   }

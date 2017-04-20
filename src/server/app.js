@@ -148,10 +148,12 @@ router(app)
 
 // Prevent NodeJS container from locking into listen when running in test env
 
+const port = process.env.VIESTINTA_OVERWRITE_PORT || app.get('port')
+
 if (process.env.NODE_ENV !== 'test') {
-  server.listen(app.get('port'), (err) => {
+  server.listen(port, (err) => {
     if (err) throw err
-    console.log('Node app is running on port', app.get('port'))
+    console.log('Node app is running on port', port)
   })
 }
 
@@ -319,6 +321,7 @@ io.sockets.on('connection', function (socket) {
   })
 
 
+
   /** TODO: lecture can be removed, because of the new socket variables
    * @deprecated
    * @template msg: {
@@ -334,7 +337,10 @@ io.sockets.on('connection', function (socket) {
     console.log('[app] new-message: ' + msg.text)
     console.log('[app][socket] Message destined for Room: ' + socket.room)
 
+    var timeNow = new Date()
+    timeNow.setHours(timeNow.getHours()+2)
     let databaseMsg = {
+      time: timeNow,
       text: msg.text,
       LectureId: socket.LectureId,
       UserId: socket.UserId
@@ -364,7 +370,7 @@ io.sockets.on('connection', function (socket) {
       messagesController.getAllToLecture({
         id: socket.LectureId
       }).then(function (msgList) {
-        io.sockets.in(socket.room).emit('update-message-order', msgList)
+        io.sockets.in(socket.room).emit('update-message-order', msgList.reverse())
       })
     })
   })

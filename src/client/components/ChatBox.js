@@ -13,7 +13,7 @@ const styles = {
     justifyContent: 'space-between',
 
     width: '100%',
-    height: 80,
+    height: 116,
 
     marginTop: 10,
     padding: 10
@@ -34,20 +34,17 @@ export default class ChatBox extends Component {
     // Starting with empty inputfield
     super(props)
     this.state = {
-      text: ''
+      text: '',
+      textLength: 0,
+      sendDisabled: true
     }
 
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
-    this.cleanInput = this.cleanInput.bind(this)
   }
 
   componentDidMount () {
     socket.on('send-message', this.sendMessage)
-  }
-
-  cleanInput () {
-    this.setState({text: ''})
   }
 
   sendMessage () {
@@ -61,16 +58,31 @@ export default class ChatBox extends Component {
         room: this.props.lecture.room,
       }
     }
-
-    // Emtpy input field
+      // Emtpy input field
     this.setState({text: ''})
 
     socket.emit('new-message', msg)
     console.log('[ChatBox] After sending message')
   }
+
   // Listen and update field dynamically when something is written
   changeHandler (e) {
-    this.setState({ text: e.target.value })
+    var text = e.target.value
+    var length = e.target.value.length
+    var disable = false
+    
+    if (length <= 3) {
+      disable = true
+    } else if (length > 1000) {
+      text = e.target.value.substring(0, 1000)
+      length = 1000
+    }
+
+    this.setState({ 
+      text: text,
+      textLength: length,
+      sendDisabled: disable
+    })
     console.log('[ChatBox] changeHandler')
   }
 
@@ -79,19 +91,22 @@ export default class ChatBox extends Component {
       <Paper zDepth={3} style={styles.parent}>
         <TextField
           style={styles.textField}
+          floatingLabelText={this.state.textLength + "/1000 tegn."}
+          floatingLabelFixed={true}
           hintText='Skriv ny melding her.'
-          multiLine
+          multiLine={true}
           rows={1}
           rowsMax={2}
           onChange={this.changeHandler}
           value={this.state.text}
-            />
+        />
         <RaisedButton
           style={styles.btn}
           primary={true}
           label='Send'
           onTouchTap={this.sendMessage}
-            />
+          disabled={this.state.sendDisabled}
+        />
       </Paper>
     )
   }
