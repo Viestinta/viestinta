@@ -11,11 +11,28 @@
   <a title="Website" href="https://viestinta.eu/"><img src="https://img.shields.io/badge/website-viestinta.eu-orange.svg"></a>
 </p>
 
-## Setup
-https://github.com/Viestinta/viestinta-config
-
 ## Team members
 * Dora Oline Eriksrud (teatimes)
 * Ole Anders Stokker (frozenlight)
 * Vetle Bjørngård Gundersen (weedle1912)
 * Jacob Odgård Tørring (odgaard)
+
+## Development setup
+1. Install docker: https://docs.docker.com/engine/installation/
+2. Install docker-compose: https://docs.docker.com/compose/install/
+3. Clone the repo: 
+    ```
+    git clone https://github.com/Viestinta/viestinta.git
+    ```
+4. Move into the repo: 
+    ```
+    cd viestinta
+    ```
+5. Fire up docker containers, which optionally builds the image if it doesn't exist (this can take a while):
+    ```
+    sudo docker-compose up
+    ```
+6. Connect to website by entering `localhost:8000` into your browser
+
+## Production setup
+* https://github.com/Viestinta/viestinta-config
