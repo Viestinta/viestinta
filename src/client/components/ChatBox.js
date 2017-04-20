@@ -43,7 +43,6 @@ export default class ChatBox extends Component {
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
     this.keyDown = this.keyDown.bind(this)
-    this.keyUp = this.keyUp.bind(this)
   }
 
   componentDidMount () {
@@ -97,26 +96,12 @@ export default class ChatBox extends Component {
   }
 
   keyDown (event) {
-    if (event.key === 'Enter' && !this.state.ctrlPushed) {
+    if (event.key === 'Enter' && !event.ctrlKey) {
       this.sendMessage()
       event.preventDefault()
-    } else if (event.keyCode === 17) {
-      this.setState({ctrlPushed: true})
-    }
-
-  }
-
-  keyUp (event) {
-    if (event.keyCode === 17) {
-      this.setState({ctrlPushed: false})
-    }
-    else if (event.key === 'Enter' && !this.state.ctrlPushed) {
-      event.preventDefault()
-    }
-    else if (event.key === 'Enter' && this.state.ctrlPushed) {
+    } else if (event.key === 'Enter' && event.ctrlKey) {
       this.setState({text: this.state.text + '\n'})
     }
-
   }
 
   render () {
@@ -133,8 +118,6 @@ export default class ChatBox extends Component {
           onChange={this.changeHandler}
           value={this.state.text}
           onKeyDown={this.keyDown}
-          onKeyUp={this.keyUp}
-          
         />
         <RaisedButton
           style={styles.btn}
