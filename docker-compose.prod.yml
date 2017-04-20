@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: viestintacentos
-      POSTGRES_DB: viestintadb_dev
+      POSTGRES_DB: viestinta_prod
     tty: true
     stdin_open: true
 
@@ -30,7 +30,7 @@ services:
     volumes:
       - .:/srv/app/
     environment:
-      - DATABASE_URL
+      - DATABASE_URL=postgres://postgres:viestintacentos@postgres:5432/viestinta_prod
       - VIESTINTA_OAUTH2_HOST_URL
       - VIESTINTA_OAUTH2_CLIENT_ID
       - VIESTINTA_OAUTH2_CLIENT_SECRET
