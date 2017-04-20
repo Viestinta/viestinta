@@ -39,6 +39,16 @@ const styles = {
 
         marginTop: '10px',
         padding: '10px'
+    },
+    stepContent: {
+        minHeight: '200px',
+        height: '100%'
+    },
+    dialogFooter: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: '0px 16px'
     }
 }
 
@@ -93,7 +103,7 @@ export default class SessionWindow extends Component {
         })
     }
 
-    createNewLecture (courseCode, lectureName) {
+    createNewLecture () {
         const lectureInfo = {
             courseCode: this.state.courseCode, 
             name: this.state.name, 
@@ -109,7 +119,8 @@ export default class SessionWindow extends Component {
         console.log('- description: ' + lectureInfo.description)
         console.log('- startTime:   ' + lectureInfo.startTime)
         console.log('- endTime:     ' + lectureInfo.endTime)
-        //socket.emit('create-lecture', lectureInfo)
+        
+        socket.emit('create-lecture', lectureInfo)
         this.handleClose()
     }
 
@@ -158,6 +169,29 @@ export default class SessionWindow extends Component {
     }
 
     render () {
+        const dialogActions = (
+            <div style={styles.dialogFooter}>
+                <div>
+                    <FlatButton
+                        label="Tilbake"
+                        disabled={this.state.stepIndex === 0}
+                        onTouchTap={this.handlePrev}
+                        style={{marginRight: 12}}
+                    />
+                    <RaisedButton
+                        label={this.state.stepIndex === 2 ? 'Fullfør' : 'Neste'}
+                        primary={true}
+                        onTouchTap={this.state.stepIndex === 2 ? this.createNewLecture : this.handleNext}
+                    />
+                </div>
+                <FlatButton 
+                    label="Avbryt" 
+                    primary={true} 
+                    onTouchTap={this.handleClose}
+                />
+            </div>
+
+        )
         return (
             <div style={styles.container}>
                 {/* App header */}
@@ -179,7 +213,7 @@ export default class SessionWindow extends Component {
                 {/* Dialog on 'create lecture' */}
                 <Dialog
                     title="Lag ny forelesning"
-                    actions={<FlatButton label="Avbryt" primary={true} onTouchTap={this.handleClose}/>}
+                    actions={dialogActions}
                     modal={false}
                     open={this.state.openDialog}
                     onRequestClose={this.handleClose}
@@ -196,21 +230,9 @@ export default class SessionWindow extends Component {
                         </Step>
                     </Stepper>
                     <div style={{margin: '0 16px'}}>
-                        <div>
+                        <div style={styles.stepContent}>
                             {this.getStepContent()}
-                            <div style={{marginTop: 12}}>
-                                <FlatButton
-                                label="Tilbake"
-                                disabled={this.state.stepIndex === 0}
-                                onTouchTap={this.handlePrev}
-                                style={{marginRight: 12}}
-                                />
-                                <RaisedButton
-                                label={this.state.stepIndex === 2 ? 'Fullfør' : 'Neste'}
-                                primary={true}
-                                onTouchTap={this.state.stepIndex === 2 ? this.createNewLecture : this.handleNext}
-                                />
-                            </div>
+                            
                         </div>
                     </div>
                 </Dialog>
