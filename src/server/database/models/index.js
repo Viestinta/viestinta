@@ -30,7 +30,9 @@ if (process.env['DATABASE_URL']) {
     options = {logging: false}
   }
 
-  var sequelize = new Sequelize(process.env['DATABASE_URL'], options)
+  const db_url = process.env.VIESTINTA_OVERWRITE_DATABASE_URL || process.env.DATABASE_URL
+
+  var sequelize = new Sequelize(db_url, options)
 }
 
 //Adds all models to the database dictionary, "db"
