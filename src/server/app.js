@@ -360,16 +360,13 @@ io.sockets.on('connection', function (socket) {
     messagesController.vote({
       id: msgId,
       value: value
-    }).then(function () {
-
+    }, function () {
       messagesController.getAllToLecture({
         id: socket.LectureId
       }).then(function (msgList) {
-
         io.sockets.in(socket.room).emit('update-message-order', msgList)
       })
     })
-      
   })
 
   // When somebody gives feedback
