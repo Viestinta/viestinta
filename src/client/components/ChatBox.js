@@ -37,7 +37,6 @@ export default class ChatBox extends Component {
       text: '',
       textLength: 0,
       sendDisabled: true,
-      ctrlPushed: false,
     }
 
     this.changeHandler = this.changeHandler.bind(this)
@@ -64,8 +63,7 @@ export default class ChatBox extends Component {
     }
       // Emtpy input field
     this.setState({
-      text: '',
-      ctrlPushed: false
+      text: ''
     })
 
     socket.emit('new-message', msg)
@@ -90,7 +88,6 @@ export default class ChatBox extends Component {
       text: text,
       textLength: length,
       sendDisabled: disable,
-      ctrlPushed: false
     })
     console.log('[ChatBox] changeHandler')
   }
