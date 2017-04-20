@@ -45,7 +45,6 @@ export default class LectureTable extends Component {
         this.getAvailableLectures = this.getAvailableLectures.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.handleFilterValueChange = this.handleFilterValueChange.bind(this)
-        this.getLectures = this.getLectures.bind(this)
     }
 
     componentDidMount() {
@@ -71,22 +70,6 @@ export default class LectureTable extends Component {
         .catch(err => {
           console.log(err)
         })
-    }
-
-    getLectures () {
-        if (this.state.filteredLectureList) {
-            return this.state.filteredLectureList.map((a) => {
-                return {
-                    course: a
-                }
-            })
-        } else {
-            return this.state.lectureList.map((a) => {
-                return {
-                    course: a
-                }
-            })
-        } 
     }
 
     handleCellClick (row, col, event) {
