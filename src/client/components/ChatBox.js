@@ -63,7 +63,9 @@ export default class ChatBox extends Component {
     }
       // Emtpy input field
     this.setState({
-      text: ''
+      text: '',
+      textLength: 0,
+      sendDisabled: true,
     })
 
     socket.emit('new-message', msg)
