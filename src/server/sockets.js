@@ -10,7 +10,7 @@ const adminRoleController = require('./database/controllers/adminRoles')
 // ///////////////////////////////////////////////////
 
 //io server is defined in the Redis/Express section in app.js
-module.exports.start = function (io) {
+module.exports = (io) => {
   let initCourse = undefined
 
   setTimeout(function () {

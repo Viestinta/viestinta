@@ -20,6 +20,7 @@ const path = require('path')
 
 const PDStrategy = require('passport-openid-connect').Strategy
 const router = require('./routes')
+const sockets = require('./sockets')
 
 // ///////////////////////////////////////////////////
 // Initial Server Setup
@@ -145,7 +146,8 @@ app.use(passport.session())
 // ///////////////////////////////////////////////////
 
 router(app)
-io = require('./sockets').start(io)
+sockets(io)
+
 
 // ///////////////////////////////////////////////////
 // End of file
@@ -166,7 +168,11 @@ if (process.env.NODE_ENV !== 'test') {
 if(process.env.NODE_ENV !== 'test'){
   var redis = 10
 }
-module.exports = redis
+
+module.exports = {
+  redis,
+  app
+}
 
 const viestinta = [
   "       _           _   _       _        ",
