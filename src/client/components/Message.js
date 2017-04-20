@@ -33,7 +33,8 @@ const styles = {
     paddingBottom: '10px',
 
     borderRadius: '2px',
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    whiteSpace: 'pre-wrap'
   },
   timestamp: {
     display: 'flex',
@@ -84,7 +85,6 @@ export default class Message extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      text: '',
       voteEnabled: true,
       voteUp: true,
       open: false,
@@ -95,6 +95,8 @@ export default class Message extends React.Component {
     this.handleVoteDown = this.handleVoteDown.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
     this.sendVote = this.sendVote.bind(this)
+
+    console.log("Text in message: ", this.props.text)
   }
 
   handleVoteUp () {
@@ -164,7 +166,7 @@ export default class Message extends React.Component {
     	<Paper zDepth={3} style={styles.container}>
     		<Card style={styles.listItem} expanded={true}>
           <CardText>
-            {this.props.text}
+            {this.props.text.split('\\n').join('\n')}
           </CardText>
           <CardText expandable={false}>
            {this.props.isAdmin ? footerAdmin : footer}

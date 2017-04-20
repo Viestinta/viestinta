@@ -20,7 +20,7 @@ const styles = {
   },
   textField: {
     width: '100%',
-    marginRight: 5
+    marginRight: 5,
   },
   btn: {
 
@@ -35,12 +35,17 @@ export default class ChatBox extends Component {
     super(props)
     this.state = {
       text: '',
+      textToSend: '',
       textLength: 0,
-      sendDisabled: true
+      sendDisabled: true,
+      ctrlPushed: false,
     }
 
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
+    this.keyPushedDown = this.keyPushedDown.bind(this)
+    this.keyPushedUp = this.keyPushedUp.bind(this)
+    this.createMessageWithLinebreaks = this.createMessageWithLinebreaks.bind(this)
   }
 
   componentDidMount () {
@@ -49,9 +54,12 @@ export default class ChatBox extends Component {
 
   sendMessage () {
     console.log('[ChatBox] sendMessage to room: ' + this.props.lecture.room)
+
+    this.createMessageWithLinebreaks()
+
     // Setting msg.text to written input
     var msg = {
-      text: this.state.text,
+      text: this.state.text.split('\n').join('\\n'),
       lecture: {
         id:  JSON.stringify(this.props.lecture.id),
         code: this.props.lecture.course.code,
@@ -59,7 +67,11 @@ export default class ChatBox extends Component {
       }
     }
       // Emtpy input field
-    this.setState({text: ''})
+    this.setState({
+      text: '',
+      textToSend: '',
+      ctrlPushed: false
+    })
 
     socket.emit('new-message', msg)
     console.log('[ChatBox] After sending message')
@@ -67,6 +79,7 @@ export default class ChatBox extends Component {
 
   // Listen and update field dynamically when something is written
   changeHandler (e) {
+    console.log("CHangehandler: ", e.target.value)
     var text = e.target.value
     var length = e.target.value.length
     var disable = false
@@ -81,9 +94,57 @@ export default class ChatBox extends Component {
     this.setState({ 
       text: text,
       textLength: length,
-      sendDisabled: disable
+      sendDisabled: disable,
+      ctrlPushed: false
     })
     console.log('[ChatBox] changeHandler')
+  }
+
+  createMessageWithLinebreaks () {
+    console.log("createMessageWithLinebreaks")
+    /*
+    let newline = '<br />'
+    let start = this.state.textToSend.replace('<br />', '').length
+    let end = this.state.text.length
+    console.log("Start: ", start, "end: ", end, "--> ", this.state.text.substring(start, end))
+    let newTextToSend = this.state.textToSend + this.state.text.substring(start, end) + newline
+
+    this.setState({textToSend: newTextToSend})
+    console.log("textToSend: ", this.state.textToSend)
+    */
+    //console.log(this.state.text," --> ", this.state.text.replaceAll('\n', '\\n'))
+  }
+
+  keyPushedDown (key) {
+    if (key.key === 'Enter') {
+      //this.sendMessage()
+      console.log("Enter pushed")
+
+      this.createMessageWithLinebreaks()
+      
+    }
+    /*
+    if (key.key === 'Enter' && !this.state.ctrlPushed) {
+        this.sendMessage()
+    }
+    else if (key.keyCode === 17) {
+
+      console.log("Ctrl down")
+      this.setState({ctrlPushed: true})
+    }
+  */
+  }
+
+  keyPushedUp (key) {
+    if (key.keyCode === 17) {
+      console.log("Ctrl up")
+      this.setState({ctrlPushed: false})
+    }
+    if (key.key === 'Enter') {
+      console.log("Enter up")
+      
+    }
+
   }
 
   render () {
@@ -99,6 +160,8 @@ export default class ChatBox extends Component {
           rowsMax={2}
           onChange={this.changeHandler}
           value={this.state.text}
+          onKeyPress={this.keyPushedDown}
+          
         />
         <RaisedButton
           style={styles.btn}
