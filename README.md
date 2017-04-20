@@ -11,7 +11,7 @@
   <a title="Website" href="https://viestinta.eu/"><img src="https://img.shields.io/badge/website-viestinta.eu-orange.svg"></a>
 </p>
 
-## See viestinta-config for setup
+## Setup
 https://github.com/Viestinta/viestinta-config
 
 ## Team members
