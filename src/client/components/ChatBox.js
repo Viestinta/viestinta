@@ -20,7 +20,7 @@ const styles = {
   },
   textField: {
     width: '100%',
-    marginRight: 5
+    marginRight: 5,
   },
   btn: {
 
@@ -36,11 +36,12 @@ export default class ChatBox extends Component {
     this.state = {
       text: '',
       textLength: 0,
-      sendDisabled: true
+      sendDisabled: true,
     }
 
     this.changeHandler = this.changeHandler.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
+    this.keyDown = this.keyDown.bind(this)
   }
 
   componentDidMount () {
@@ -49,9 +50,11 @@ export default class ChatBox extends Component {
 
   sendMessage () {
     console.log('[ChatBox] sendMessage to room: ' + this.props.lecture.room)
+
+
     // Setting msg.text to written input
     var msg = {
-      text: this.state.text,
+      text: this.state.text.split('\n').join('\\n'),
       lecture: {
         id:  JSON.stringify(this.props.lecture.id),
         code: this.props.lecture.course.code,
@@ -59,7 +62,11 @@ export default class ChatBox extends Component {
       }
     }
       // Emtpy input field
-    this.setState({text: ''})
+    this.setState({
+      text: '',
+      textLength: 0,
+      sendDisabled: true,
+    })
 
     socket.emit('new-message', msg)
     console.log('[ChatBox] After sending message')
@@ -67,6 +74,7 @@ export default class ChatBox extends Component {
 
   // Listen and update field dynamically when something is written
   changeHandler (e) {
+    console.log("CHangehandler: ", e.target.value)
     var text = e.target.value
     var length = e.target.value.length
     var disable = false
@@ -81,9 +89,18 @@ export default class ChatBox extends Component {
     this.setState({ 
       text: text,
       textLength: length,
-      sendDisabled: disable
+      sendDisabled: disable,
     })
     console.log('[ChatBox] changeHandler')
+  }
+
+  keyDown (event) {
+    if (event.key === 'Enter' && !event.ctrlKey) {
+      this.sendMessage()
+      event.preventDefault()
+    } else if (event.key === 'Enter' && event.ctrlKey) {
+      this.setState({text: this.state.text + '\n'})
+    }
   }
 
   render () {
@@ -99,6 +116,7 @@ export default class ChatBox extends Component {
           rowsMax={2}
           onChange={this.changeHandler}
           value={this.state.text}
+          onKeyDown={this.keyDown}
         />
         <RaisedButton
           style={styles.btn}
