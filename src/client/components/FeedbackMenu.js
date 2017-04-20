@@ -12,9 +12,7 @@ const styles = {
     justifyContent: 'flex-start', 
     
     width: '100%',
-    height: '100%',
-    
-    padding: '20px'
+    height: '100%'
   },
   button: {
     margin: '12px',
@@ -92,7 +90,7 @@ export default class FeedbackMenu extends Component {
         <p>Vennligst gi tilbakemelding på hvordan du opplever 
         forelesningen akkurat nå.</p> 
         <Subheader>Tempo:</Subheader>
-        <div>
+        <div style={{alignSelf: 'center'}}>
           <RaisedButton style={styles.button} primary={true} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
           <RaisedButton style={styles.button} primary={true} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
         </div>

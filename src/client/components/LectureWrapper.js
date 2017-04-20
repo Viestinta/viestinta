@@ -20,7 +20,7 @@ const styles = {
     height: '100%',
   },
   chat: {
-    maxWidth: '600px',
+    maxWidth: '550px',
     width: '100%',
     height: '100%'
   }
