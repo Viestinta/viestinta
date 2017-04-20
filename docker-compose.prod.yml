@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:9.6
+    container_name: viestinta_postgres
+    ports:
+        - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: viestintacentos
+      POSTGRES_DB: viestintadb_dev
+    tty: true
+    stdin_open: true
+
+
+  nodejs:
+    build: .
+    image: node:viestinta
+    container_name: viestinta_node
+    depends_on:
+      - postgres
+    command: bash -c "npm install && ./node_modules/.bin/webpack && sleep 5 && npm start"
+
+    links:
+      - postgres
+      - redis
+    ports:
+      - "8010:8000"
+    volumes:
+      - .:/srv/app/
+    environment:
+      - DATABASE_URL
+      - VIESTINTA_OAUTH2_HOST_URL
+      - VIESTINTA_OAUTH2_CLIENT_ID
+      - VIESTINTA_OAUTH2_CLIENT_SECRET
+      - VIESTINTA_OAUTH2_REDIRECT_URI
+      - VIESTINTA_OAUTH2_SCOPE
+      - VIESTINTA_SESSION_SECRET
+      - VIESTINTA_OVERWRITE_DATABASE_URL
+      - VIESTINTA_OVERWRITE_PORT
+      - VIESTINTA_OVERWRITE_URL
+    tty: true
+    stdin_open: true
+
+  redis:
+      image: redis
+      ports:
+          - "6379"
