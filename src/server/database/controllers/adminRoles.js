@@ -169,7 +169,6 @@ module.exports = {
   getAllByUserId:           getAllByUserId,
   getAllByCourseId:         getAllByCourseId,
   getSpecificAdminRole:     getSpecificAdminRole,
-  updateAdminRole:          updateAdminRole,
   updateAdminRoleType:      updateAdminRoleType,
   deleteAdminRole:          deleteAdminRole,
   deleteAllAdminRoles:      deleteAllAdminRoles,
