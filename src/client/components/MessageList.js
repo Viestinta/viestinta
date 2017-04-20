@@ -150,6 +150,7 @@ export default class MessageList extends Component {
           time={time}
           text={message.text}
           id={message.id}
+          userName={message.userName}
           isAdmin={this.props.isAdmin}
           ref={(ref) => this['_div' + i] = ref}
         />
