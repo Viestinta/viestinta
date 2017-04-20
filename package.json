@@ -101,7 +101,10 @@
     "webpack": "^2.2.1"
   },
   "nyc": {
-    "exclude": "src/test/**"
+    "exclude": [
+      "src/test/**",
+      "src/server/app.js"
+    ]
   },
   "babel": {
     "presets": [
