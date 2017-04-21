@@ -147,7 +147,7 @@ module.exports = (io) => {
       console.log('[app][socket] For course with code: ' + socket.CourseCode)
       console.log('[app][socket] as user with username: ' + socket.user.name)
       console.log('[app][socket] Joined room identifier: ' + socket.room)
-    */
+      */
       //console.log("Socket in sockets: ", socket)
 
       // Get feedback status for last x min

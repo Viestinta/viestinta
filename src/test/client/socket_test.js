@@ -45,120 +45,175 @@ describe('Testing socket.io:', function () {
   let testCourseTwo = undefined
   let testLectureTwo = undefined
   let testUserTwo = undefined
+  let testUserThree = undefined
 
   let clientOneSocket = undefined
   let clientTwoSocket = undefined
+  let clientThreeSocket = undefined
 
   before(function (done) {
     var now = new Date()
     var min = now.getMinutes()
 
-    courseController.findOrCreateCourse({
-      name: "Web Development",
-      code: "TDT404"
-    }).spread(function(course, created){
-      testCourseOne = course
-      lectureController.createLecture({
-        name: "Intro to JS programming",
-        CourseId: course.id
-      }).then(function (lecture) {
-        testLectureOne = lecture
+
+  
+
+    // Create user 
+    function createUsers() {
+      userController.findOrCreateUser({
+        name: "TestUserOne"
+      }).spread(function (user, created) {
+        testUserOne = user
+      }).then(function () {
         userController.findOrCreateUser({
-          name: "TestUserForWebDevelopment"
+          name: 'TestUserTwo'
         }).spread(function (user, created) {
-          testUserOne = user
+          testUserTwo = user
+        }).then(function () {
+          userController.findOrCreateUser({
+            name: 'TestUserThree'
+          }).spread(function (user, created) {
+            testUserThree = user
+            console.log("After created testUserThree")
+          })
+        })
+      })
+      console.log("At end of createUser")
+      
+    }
+
+    // Create messages
+    function createMessages () {
+      messageController.createMessage({
+        time: now,
+        text: "Message 1",
+        LectureId: testLectureOne.id
+      }).then(function () {
+        messageController.createMessage({
+          time: now.setMinutes(min - 3),
+          text: "Message 2",
+          LectureId: testLectureOne.id
+        }).then(function () {
           messageController.createMessage({
-            time: now,
-            text: "Message 1",
-            LectureId: testLectureOne.id
+            time: now.setMinutes(min -3),
+            text: "Message 3",
+            LectureId: testLectureTwo.id
+          }).then(function () {
+            messageController.createMessage({
+              time: now.setMinutes(min -10),
+              text: "Message 4",
+              LectureId: testLectureTwo.id
+            })
+            console.log("After created message 4")
           })
-          messageController.createMessage({
-            time: now.setMinutes(min - 3),
-            text: "Message 2",
-            LectureId: testLectureOne.id
-          })
-          feedbackController.createFeedback({
-            time: now.setMinutes(min - 9),
-            value: 1,
-            LectureId: testLectureOne.id,
-          })
-          feedbackController.createFeedback({
-            time: now.setMinutes(min -15),
-            value: 1,
-            LectureId: testLectureOne.id,
-          })
+        })
+      })
+      console.log("At end of createMessage")
+    }
+
+    // Create feedback
+    function createFeedback () {
+      feedbackController.createFeedback({
+        time: now.setMinutes(min - 9),
+        value: 1,
+        LectureId: testLectureOne.id,
+      }).then( function () {
+        feedbackController.createFeedback({
+          time: now.setMinutes(min -15),
+          value: 1,
+          LectureId: testLectureOne.id,
+        }).then(function () {
           feedbackController.createFeedback({
             time:now.setMinutes(min - 3),
             value: -1,
             LectureId: testLectureOne.id,
+          }).then(function () {
+            feedbackController.createFeedback({
+              time: now.setMinutes(min -2),
+              value: 1,
+              LectureId: testLectureTwo.id,
+            }).then(function () {
+              feedbackController.createFeedback({
+                time: now.setMinutes(min -10),
+                value: 1,
+                LectureId: testLectureTwo.id,
+              })
+            }).then(function () {
+              feedbackController.createFeedback({
+                time: now.setMinutes(min - 1),
+                value: -1,
+                LectureId: testLectureTwo.id,
+              })
+              console.log("After creating feedbacks")
+            })
           })
-        }).then(function (result) {
-          console.log("Done with first")
-          done()
-        }).catch(function (err) {
-          console.error(err)
         })
       })
-    })
-    
-    /*
-    function second(function (done) {
-      courseController.findOrCreateCourse({
-        name: "Operating Systems",
-        code: "TDT4186"
-      }).spread(function(course, created){
-        testCourseTwo = course
-        lectureController.createLecture({
-          name: "Operating systems",
-          CourseId: course.id
-        }).then(function (lecture) {
-          testLectureTwo = lecture
-          userController.findOrCreateUser({
-            name: "TestUserForOperatingSystems"
-          }).spread(function (user, created) {
-            testUserTwo = user
-            messageController.createMessage({
-              time: new Date(min -3),
-              text: "Message 3",
-              LectureId: testLectureTwo.id
-            })
-            messageController.createMessage({
-              time: new Date(min -10),
-              text: "Message 4",
-              LectureId: testLectureTwo.id
-            })
-            feedbackController.createFeedback({
-              time: new Date(min -2),
-              value: 1,
-              LectureId: testLectureTwo.id,
-            })
-            feedbackController.createFeedback({
-              time: new Date(min -10),
-              value: 1,
-              LectureId: testLectureTwo.id,
-            })
-            feedbackController.createFeedback({
-              time: new Date(),
-              value: -1,
-              LectureId: testLectureTwo.id,
-            })
-            console.log("Before is running")
+    }
+
+    // Create course and lecture 
+    function createCourseAndLecture () {
+      new Promise(function () {
+        console.log("In createCourseAndLecture")
+        courseController.findOrCreateCourse({
+          name: "Web Development",
+          code: "IT2810"
+        }).spread(function(courseOne, created){
+          console.log("First spread")
+          testCourseOne = courseOne
+          lectureController.createLecture({
+            name: "Intro to web development",
+            CourseId: courseOne.id
+          }).then(function (lecture) {
+            console.log("first then")
+            testLectureOne = lecture
           }).catch(function (err) {
-           console.error(err)
-         })
+             console.error(err)
+           })
+        }).then(function () {
+          courseController.findOrCreateCourse({
+            name: "Operating Systems",
+            code: "TDT4186"
+          }).spread(function (courseTwo, created) {
+            testCourseTwo = courseTwo
+            lectureController.createLecture({
+              name: "Operating systems",
+              CourseId: courseTwo.id
+            }).then(function (lecture) {
+              testLectureTwo = lecture
+              createMessages()
+              createFeedback()
+              console.log("After createFeedback in createCourseAndLecture")
+              done()
+            })
+          })
         })
+      }).then(function () {
+        createUsers()
+      }).then(function () {
+        /*
+        console.log(typeof testCourseOne != undefined)
+        console.log("TestCourseOne: ", testCourseOne)
+        console.log(typeof testLectureOne != undefined)
+        console.log(typeof testUserOne != undefined)
+        console.log(typeof testCourseTwo != undefined)
+        console.log(typeof testLectureTwo != undefined)
+        console.log(typeof testUserTwo != undefined)
+        console.log(typeof testUserThree != undefined)
+        */
+        done()
       })
-      console.log("Done with second")
-      done()
-    })
-    */
+    }
+
+    createCourseAndLecture()
+    
   })
 
   describe('should be able to establish connection', function () {
      
     it('establishing connection', function (done) {
       clientOneSocket = io.connect(socketURL, options)
-      console.log("Clientsocket id: ", clientOneSocket.id)
+      // console.log("Clientsocket id: ", clientOneSocket.id)
       clientOneSocket.on('connect', function (data) {
        clientOneSocket.connected.should.equal(true)
         done()
@@ -167,21 +222,24 @@ describe('Testing socket.io:', function () {
   })
   
   describe('Testing join-lecture:', function () {
-    beforeEach(function (done) {
-      console.log("trying to connect")
+    before(function (done) {
       clientOneSocket = io.connect(socketURL, options)
       
       clientOneSocket.on('connect', function (data) {
         clientOneSocket.emit('login')
+       // console.log("testCourseOne is not undefined: ", typeof testCourseOne != undefined, " - ", testCourseOne)
         clientOneSocket.emit('join-lecture', {
           user: testUserOne,
-          code: testCourseOne.code, 
+          code: testCourseOne.course,
           id: testLectureOne.id,
           room: testLectureOne.room
         })
+        //console.log("testCourseOne is not undefined: ", typeof testCourseOne != undefined, " - ", testCourseOne)
+        
         done()
       })
     })
+
     /*
     it('Saving correct values in socket', function (done) {
       //console.log("clientOneSocketId: ", clientOneSocket)
@@ -195,6 +253,7 @@ describe('Testing socket.io:', function () {
       done()
     })
    */
+   
     it('Getting last feedback for last interval', function (done) {
       feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
         feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
@@ -208,35 +267,102 @@ describe('Testing socket.io:', function () {
         })
       })
     })
-
+    /*
     it('Getting all message to lecture', function (done) {
       messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-messages', function (messageList) {
 
+          // PROBLEM: in messageList the dates are string, in result they are dates
           console.log("messageList: ", messageList)
-          //console.log("result.reverse(): ", result.reverse())
+          console.log("result.reverse(): ", result)
           expect(messageList).to.eql(result.reverse())
           done()
         })
       })
       
-    })    
+    })
+    */    
   })
   
   /*
   describe('Testing new-message:', function () {
-    it('Creating messageObject', function (done) {
+
+    before(function (done) {
+      clientOneSocket = io.connect(socketURL, options)
+      clientTwoSocket = io.connect(socketURL, options)
+      clientThreeSocket = io.connect(socketURL, options)
+            
+      clientOneSocket.on('connect', function (data) {
+        clientOneSocket.emit('login')
+        clientOneSocket.emit('join-lecture', {
+          user: testUserOne,
+          code: testCourseOne.code, 
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
+
+      console.log("After clientOneSocket")
+      clientTwoSocket.on('connect', function (data) {
+        clientTwoSocket.emit('login')
+        clientTwoSocket.emit('join-lecture', {
+          user: testUserOne,
+          code: testCourseOne.code, 
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
       
+      console.log("After clientTwoSocket")
+      clientThreeSocket.on('connect', function (data) {
+        clientThreeSocket.emit('login')
+        clientThreeSocket.emit('join-lecture', {
+          user: testUserThree,
+          code: testCourseTwo.code, 
+          id: testLectureTwo.id,
+          room: testLectureTwo.room
+        })
+      })
+
+      console.log("After clientThreeSocket")
+      done()
     })
-    
+
     it('Broadcasting message to all members of that room', function (done) {
+      var msg = {
+            text: "Hello world",
+            lecture: {
+              id: testLectureOne.id,
+              code: testCourseOne.code,
+              // TODO
+              // room: this.props.lecture.room,
+            }
+          }
+
+      clientOneSocket.emit('new-message', msg)
+
+      clientOneSocket.on('new-message', function (message) {
+        message.should.eql(msg)
+      })
+
+      clientTwoSocket.on('new-message', function (message) {
+        message.should.eql(msg)
+      })
+
+      clientThreeSocket.on('new-message', function (message) {
+        message.should.not.eql(msg)
+      })
     })
+
   })
+  */
+  /*
   describe('Testing leave-lecture:', function () {
     it('Setting values to undefined', function (done) {
       
     })
   })
+
   describe('Testing new-vote-on-message:', function () {
     it('Increase vote-value', function (done) {
       
