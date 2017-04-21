@@ -4,11 +4,8 @@ import { render } from 'enzyme'
 import { assert } from 'chai'
 import { it, describe } from 'mocha'
 
-//import socket from '../../client/socket'
-//import clientOneSocket from '../../client/socket'
-
-
 import Message from '../../client/components/Message'
+
 const should = require('should')
 const express = require('express')
 
@@ -29,13 +26,8 @@ server.listen(8000)
 const sockets = require('../../server/sockets')
 sockets(ioServer)
 
-
-//var io = require('socket.io-client')(server)
-//server.listen(8000)
-
+// Client connection
 var io = require('socket.io-client')
-
-
 
 // Testing socket.io
 describe('Testing socket.io:', function () {
@@ -54,8 +46,12 @@ describe('Testing socket.io:', function () {
   let testLectureTwo = undefined
   let testUserTwo = undefined
 
+  let clientOneSocket = undefined
+  let clientTwoSocket = undefined
+
   before(function (done) {
     var now = new Date()
+    var min = now.getMinutes()
 
     courseController.findOrCreateCourse({
       name: "Web Development",
@@ -72,27 +68,27 @@ describe('Testing socket.io:', function () {
         }).spread(function (user, created) {
           testUserOne = user
           messageController.createMessage({
-            time: new Date(),
+            time: now,
             text: "Message 1",
             LectureId: testLectureOne.id
           })
           messageController.createMessage({
-            time: new Date(now.getMinutes()-3),
+            time: now.setMinutes(min - 3),
             text: "Message 2",
             LectureId: testLectureOne.id
           })
           feedbackController.createFeedback({
-            time: new Date(now.getMinutes() -12),
+            time: now.setMinutes(min - 9),
             value: 1,
             LectureId: testLectureOne.id,
           })
           feedbackController.createFeedback({
-            time: new Date(now.getMinutes() -2),
+            time: now.setMinutes(min -15),
             value: 1,
             LectureId: testLectureOne.id,
           })
           feedbackController.createFeedback({
-            time: new Date(now.getMinutes() -14),
+            time:now.setMinutes(min - 3),
             value: -1,
             LectureId: testLectureOne.id,
           })
@@ -122,22 +118,22 @@ describe('Testing socket.io:', function () {
           }).spread(function (user, created) {
             testUserTwo = user
             messageController.createMessage({
-              time: new Date(now.getMinutes() -3),
+              time: new Date(min -3),
               text: "Message 3",
               LectureId: testLectureTwo.id
             })
             messageController.createMessage({
-              time: new Date(now.getMinutes() -10),
+              time: new Date(min -10),
               text: "Message 4",
               LectureId: testLectureTwo.id
             })
             feedbackController.createFeedback({
-              time: new Date(now.getMinutes() -2),
+              time: new Date(min -2),
               value: 1,
               LectureId: testLectureTwo.id,
             })
             feedbackController.createFeedback({
-              time: new Date(now.getMinutes() -10),
+              time: new Date(min -10),
               value: 1,
               LectureId: testLectureTwo.id,
             })
@@ -161,32 +157,22 @@ describe('Testing socket.io:', function () {
   describe('should be able to establish connection', function () {
      
     it('establishing connection', function (done) {
-
-      //var clientOneSocket = socket.connect(socketURL, options)
-      //const clientOneSocket = require('../../client/socket')
-      var clientOneSocket = io.connect(socketURL, options)
-      console.log("Is clientOnSocket connected: ", clientOneSocket.connected)
-
+      clientOneSocket = io.connect(socketURL, options)
+      console.log("Clientsocket id: ", clientOneSocket.id)
       clientOneSocket.on('connect', function (data) {
-        console.log("trying to login")
-        console.log(clientOneSocket.connected)
-        clientOneSocket.connected.should.equal(true)
+       clientOneSocket.connected.should.equal(true)
         done()
       })
     })
-
   })
-  /*
+  
   describe('Testing join-lecture:', function () {
-    var clientOneSocket = socket
-    console.log(clientOneSocket.connected)
     beforeEach(function (done) {
       console.log("trying to connect")
+      clientOneSocket = io.connect(socketURL, options)
+      
       clientOneSocket.on('connect', function (data) {
-        console.log("trying to login")
-        console.log(clientOneSocket.connected)
-        clientOnesocket.emit('login')
-        console.log("trying to join lecture")
+        clientOneSocket.emit('login')
         clientOneSocket.emit('join-lecture', {
           user: testUserOne,
           code: testCourseOne.code, 
@@ -196,18 +182,22 @@ describe('Testing socket.io:', function () {
         done()
       })
     })
-    
+    /*
     it('Saving correct values in socket', function (done) {
+      //console.log("clientOneSocketId: ", clientOneSocket)
+
+      //console.log("serverSocket: ", ioServer)
       clientOneSocket.user.should.equal(testUserOne)
+      clientOneSocket.userId = testUserOne.id
       clientOneSocket.LectureId.should.equal(testLectureOne.id)
       clientOneSocket.CourseCode.should.equal(testCourseOne.code)
-      clientOneSocket.room.should.equal(testLectureOne.room)
+      //clientOneSocket.room.should.equal(testLectureOne.room)
       done()
     })
-    
+   */
     it('Getting last feedback for last interval', function (done) {
-      feedbackController.getLastIntervalNeg({id: clientOneSocket.LectureId}).then(function (resultNeg) {
-        feedbackController.getLastIntervalPos({id: clientOneSocket.LectureId}).then(function (resultPos) {
+      feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
+        feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
           console.log("Waiting for clientOneSocket.on")
           clientOneSocket.on('update-feedback-interval', function(results) {
             console.log("Feedback results: ", results)
@@ -218,30 +208,30 @@ describe('Testing socket.io:', function () {
         })
       })
     })
+
     it('Getting all message to lecture', function (done) {
-      messageController.getAllToLecture({id: clientOneSocket.LectureId}).then(function (result) {
+      messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-messages', function (messageList) {
-          expect(messageList).to.equal(result)
+
+          console.log("messageList: ", messageList)
+          //console.log("result.reverse(): ", result.reverse())
+          expect(messageList).to.eql(result.reverse())
           done()
         })
       })
       
-    })
+    })    
   })
   
+  /*
   describe('Testing new-message:', function () {
     it('Creating messageObject', function (done) {
-      console.log("testCourseOne", typeof testCourseOne != undefined)
-      console.log("testLectureOne", typeof testLectureOne != undefined)
-      console.log("testUserOne", typeof testUserOne != undefined)
-      console.log("testCourseTwo", typeof testCourseTwo != undefined)
-      console.log("testLectureTwo", typeof testLectureTwo != undefined)
-      console.log("testUserTwo", typeof testUserTwo != undefined)
+      
     })
+    
     it('Broadcasting message to all members of that room', function (done) {
     })
   })
-  /*
   describe('Testing leave-lecture:', function () {
     it('Setting values to undefined', function (done) {
       

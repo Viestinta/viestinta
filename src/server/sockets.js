@@ -131,6 +131,7 @@ module.exports = (io) => {
      */
     socket.on('join-lecture', function (socketLecture) {
       console.log('[app][socket] join-lecture ' + socketLecture.room)
+      console.log('[sockets] socketId:', socket.id )
 
       socket.user = socketLecture.user
       usersController.getByEmail(socket.user.email).then(function (user) {
@@ -141,11 +142,13 @@ module.exports = (io) => {
       socket.room = socketLecture.room
       socket.join(socketLecture.room)
 
+      /*
       console.log('[app][socket] Connected to lecture with ID: ' + socket.LectureId)
       console.log('[app][socket] For course with code: ' + socket.CourseCode)
       console.log('[app][socket] as user with username: ' + socket.user.name)
       console.log('[app][socket] Joined room identifier: ' + socket.room)
-
+    */
+      //console.log("Socket in sockets: ", socket)
 
       // Get feedback status for last x min
       feedbacksController.getLastIntervalNeg({id: socket.LectureId}).then(function (resultNeg) {
