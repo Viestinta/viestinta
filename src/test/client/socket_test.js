@@ -60,7 +60,7 @@ describe('Testing socket.io:', function () {
 
     // Create user 
     function createUsers() {
-      new Promise(function () {
+      return new Promise(function () {
         userController.findOrCreateUser({
           name: "TestUserOne",
           email: 'one@test.com'
@@ -81,17 +81,22 @@ describe('Testing socket.io:', function () {
               console.log("After created testUserThree")
             })
           })
+        }).then(function () {
+          console.log(typeof testUserOne != undefined)
+          console.log(typeof testUserTwo != undefined)
+          console.log(typeof testUserThree != undefined)
+            
+          console.log("createMessages")
+          return createMessages()
+        }).then(function () {
+          console.log("CreateUsers should be done")
         })
-      }).then(function () {
-          createFeedback()
       })
-      console.log("At end of createUser")
-      
     }
 
     // Create messages
     function createMessages () {
-      new Promise(function () {
+      return new Promise(function () {
         messageController.createMessage({
           time: now,
           text: "Message 1",
@@ -115,14 +120,16 @@ describe('Testing socket.io:', function () {
               console.log("After created message 4")
             })
           })
+        }).then(function () {
+          console.log("createFeedback")
+          return createFeedback()
         })
       })
-      console.log("At end of createMessage")
     }
 
     // Create feedback
     function createFeedback () {
-      new Promise(function () {
+      return new Promise(function () {
         feedbackController.createFeedback({
           time: now.setMinutes(min - 9),
           value: 1,
@@ -158,8 +165,6 @@ describe('Testing socket.io:', function () {
               })
             })
           })
-        }).then(function () {
-          createMessages()
         })
       })
     }
@@ -173,13 +178,11 @@ describe('Testing socket.io:', function () {
           name: "Web Development",
           code: "IT2810"
         }).spread(function(courseOne, created){
-          console.log("First spread")
           testCourseOne = courseOne
           lectureController.createLecture({
             name: "Intro to web development",
             CourseId: courseOne.id
           }).then(function (lecture) {
-            console.log("first then")
             testLectureOne = lecture
           }).then(function () {
             courseController.findOrCreateCourse({
@@ -195,20 +198,28 @@ describe('Testing socket.io:', function () {
               })
             })
           })
-        }).then(function () {
-          createUsers()
-        }).then(function () {
-          
+          console.log("Done with making courses")
           console.log(typeof testCourseOne != undefined)
-          console.log(typeof testLectureOne != undefined)
-          console.log(typeof testUserOne != undefined)
           console.log(typeof testCourseTwo != undefined)
-          console.log(typeof testLectureTwo != undefined)
-          console.log(typeof testUserTwo != undefined)
-          console.log(typeof testUserThree != undefined)
-          
-          console.log("Calling done")
-          return done()
+            
+
+        }).then(function () {
+          console.log("Create users")
+          createUsers().then(function () {
+            console.log("After created all the users")
+              /*
+            console.log(typeof testCourseOne != undefined)
+            console.log(typeof testLectureOne != undefined)
+            console.log(typeof testUserOne != undefined)
+            console.log(typeof testCourseTwo != undefined)
+            console.log(typeof testLectureTwo != undefined)
+            console.log(typeof testUserTwo != undefined)
+            console.log(typeof testUserThree != undefined)
+            
+            */
+            console.log("Calling done")
+            return done()
+          })
         })
       })
     }
@@ -292,7 +303,7 @@ describe('Testing socket.io:', function () {
     */    
   })
   
-  /*
+  
   describe('Testing new-message:', function () {
 
     before(function (done) {
@@ -363,7 +374,7 @@ describe('Testing socket.io:', function () {
     })
 
   })
-  */
+  
   /*
   describe('Testing leave-lecture:', function () {
     it('Setting values to undefined', function (done) {
