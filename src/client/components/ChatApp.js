@@ -4,7 +4,7 @@ import axios from 'axios'
 
 // Theme
 import {orange800} from 'material-ui/styles/colors'
-import {blue500} from 'material-ui/styles/colors'
+import {blue800} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -29,7 +29,7 @@ const styles = {
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: orange800,
-    accent1Color:  blue500
+    accent1Color:  blue800
   }
 })
 
