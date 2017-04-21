@@ -11,6 +11,7 @@ const adminRoleController = require('./database/controllers/adminRoles')
 
 //io server is defined in the Redis/Express section in app.js
 module.exports = (io) => {
+  console.log("[sockets.js]")
   let initCourse = undefined
 
   setTimeout(function () {
@@ -23,6 +24,7 @@ module.exports = (io) => {
 
 // When a new user connects
   io.sockets.on('connection', function (socket) {
+    console.log("[sockets.js] user connected")
 
     /* istanbul ignore next */
 

@@ -43,4 +43,3 @@ describe('SendMessage', function () {
 })
 
 // Receive message
-
