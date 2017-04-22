@@ -55,81 +55,136 @@ describe('Testing socket.io:', function () {
     var now = new Date()
     var min = now.getMinutes()
 
-
-  
-
     // Create user 
     function createUsers() {
-      return new Promise(function () {
-        userController.findOrCreateUser({
-          name: "TestUserOne",
-          email: 'one@test.com'
-        }).spread(function (user, created) {
-          testUserOne = user
-        }).then(function () {
+
+      function userOne () {
+        return new Promise(function (resolve) {
+          userController.findOrCreateUser({
+            name: "TestUserOne",
+            email: 'one@test.com'
+          }).spread(function (user, created) {
+            testUserOne = user
+            console.log("After created testUserOne")
+            resolve()
+          })
+        })
+      }
+
+      function userTwo () {
+        return new Promise(function (resolve) {
           userController.findOrCreateUser({
             name: 'TestUserTwo',
             email: 'two@test.com'
           }).spread(function (user, created) {
             testUserTwo = user
-          }).then(function () {
-            userController.findOrCreateUser({
-              name: 'TestUserThree',
-              email: 'three@test.com'
-            }).spread(function (user, created) {
-              testUserThree = user
-              console.log("After created testUserThree")
-            })
+            console.log("After created testUserTwo")
+            resolve()
           })
-        }).then(function () {
+        })
+      }
+
+      function userThree () {
+        return new Promise(function (resolve) {
+          userController.findOrCreateUser({
+            name: 'TestUserThree',
+            email: 'three@test.com'
+          }).spread(function (user, created) {
+            testUserThree = user
+            console.log("After created testUserThree")
+            resolve()
+          })
+        })
+      }
+
+      // Done is not called       
+      return Promise.all([userOne(), userTwo(), userThree()])
+      //new Promise(function () { userOne().then(userTwo()).then(userThree())
+        
+        .then(function () {
+          console.log("Done with making users")
           console.log(typeof testUserOne != undefined)
           console.log(typeof testUserTwo != undefined)
           console.log(typeof testUserThree != undefined)
-            
-          //console.log("createMessages")
-          //return createMessages()
-        }).then(function () {
-          console.log("CreateUsers should be done")
+        }).catch(function(err) {
+          console.log("Failed:", err);
         })
-      })
+        
     }
 
     // Create messages
     function createMessages () {
-      return new Promise(function () {
-        messageController.createMessage({
-          time: now,
-          text: "Message 1",
-          LectureId: testLectureOne.id
+
+      function messageOne() {
+        return new Promise(function (resolve) {
+          messageController.createMessage({
+            time: now,
+            text: "Message 1",
+            LectureId: testLectureOne.id
+          })
         }).then(function () {
+          console.log("Created message one")
+          resolve()
+        })
+      }
+
+      function messageFour() {
+        return new Promise(function (resolve) {
           messageController.createMessage({
             time: now.setMinutes(min - 3),
             text: "Message 2",
             LectureId: testLectureOne.id
-          }).then(function () {
-            messageController.createMessage({
-              time: now.setMinutes(min -3),
-              text: "Message 3",
-              LectureId: testLectureTwo.id
-            }).then(function () {
-              messageController.createMessage({
-                time: now.setMinutes(min -10),
-                text: "Message 4",
-                LectureId: testLectureTwo.id
-              })
-              console.log("After created message 4")
-            })
           })
         }).then(function () {
-         // console.log("createFeedback")
-          //return createFeedback()
+          console.log("Created message two")
+          resolve()
         })
-      })
+      }
+      
+      function messageFour() {
+        return new Promise(function (resolve) {
+          messageController.createMessage({
+            time: now.setMinutes(min -3),
+            text: "Message 3",
+            LectureId: testLectureTwo.id
+          }).catch( function(error){
+          console.log(error)
+        })
+        }).then(function () {
+          console.log("Created message three")
+          resolve()
+        })
+      }
+      
+      function messageFour() {
+        return new Promise(function (resolve) {
+          messageController.createMessage({
+            time: now.setMinutes(min -10),
+            text: "Message 4",
+            LectureId: testLectureTwo.id
+          })
+        }).then(function () {
+          console.log("Created message four")
+          resolve()
+        })
+      }
+      
+      return Promise.all([messageOne(), messageTwo(), messageThree(), messageFour()])
+       .then(function() {
+          console.log("Done with making messages")
+          console.log(typeof messageOne !== undefined)
+          console.log(typeof messageTwo !== undefined)
+          console.log(typeof messageThree !== undefined)
+          console.log(typeof messageFour !== undefined)
+        }).catch( function(error){
+          console.log(error)
+        })
+      
     }
 
     // Create feedback
     function createFeedback () {
-      return new Promise(function () {
+      return new Promise(function (resolve) {
         feedbackController.createFeedback({
           time: now.setMinutes(min - 9),
           value: 1,
@@ -162,6 +217,7 @@ describe('Testing socket.io:', function () {
                   LectureId: testLectureTwo.id,
                 })
                 console.log("After creating feedbacks")
+                resolve()
               })
             })
           })
@@ -171,10 +227,11 @@ describe('Testing socket.io:', function () {
 
 
     // Create course and lecture 
-    function createCourseAndLecture (done) {
+    function createCourseAndLecture() {
+      console.log("In createCourseAndLecture")
 
-      function courseAndLectureOne () {
-        return new Promise(function () {
+      function courseAndLectureOne() {
+        return new Promise(function (resolve) {
           console.log("Creating first course")
           courseController.findOrCreateCourse({
             name: "Web Development",
@@ -187,13 +244,22 @@ describe('Testing socket.io:', function () {
               CourseId: courseOne.id
             }).then(function (lecture) {
               testLectureOne = lecture
+              console.log("testLectureOne is done") 
+              resolve()
             })
-          })
+          })/*.then(function () {
+            console.log("Then in couseAndLectureOne")
+            resolve()
+          })*/
+          console.log("Before then in courseAndLectureTwo")
+        }).then(function () {
+          console.log("Last then in courseAndLectureOne")
         })
       }
 
-      function courseAndLectureTwo () {
-        return new Promise(function () {
+      function courseAndLectureTwo() {
+        // Need return to make sure they finish correctly
+        return new Promise(function (resolve) {
           console.log("Creating second course")
           courseController.findOrCreateCourse({
             name: "Operating Systems",
@@ -206,46 +272,39 @@ describe('Testing socket.io:', function () {
               CourseId: courseTwo.id
             }).then(function (lecture) {
               testLectureTwo = lecture
+              console.log("testLectureTwo is done")
+              resolve()
             })
           })
+          console.log("Before then in courseAndLectureTwo")
+        }).then(function () {
+          console.log("Then in couseAndLectureTwo")
         })
       }
 
-      Promise.all([courseAndLectureOne(), courseAndLectureTwo()])
+      // With return, they are finishing in right order, but not calling done
+      // If they aren't functions, they aren't called
+      return Promise.all([courseAndLectureOne(), courseAndLectureTwo()])
+      //courseAndLectureOne().then(courseAndLectureTwo() 
         .then(function() {
           console.log("Done with making courses")
-          console.log(typeof testCourseOne != undefined, " - ", testCourseOne)
-          console.log(typeof testCourseTwo != undefined, " - ", testCourseTwo)            
+          console.log(typeof testCourseOne !== undefined)
+          console.log(typeof testCourseTwo !== undefined)            
         }).catch( function(error){
-            console.log(error)
-          });
+          console.log(error)
+        })
 
-        //}).then(function () {
-          //console.log("Create users")
-          //createUsers().then(function () {
-            //console.log("After created all the users")
-              /*
-            console.log(typeof testCourseOne != undefined)
-            console.log(typeof testLectureOne != undefined)
-            console.log(typeof testUserOne != undefined)
-            console.log(typeof testCourseTwo != undefined)
-            console.log(typeof testLectureTwo != undefined)
-            console.log(typeof testUserTwo != undefined)
-            console.log(typeof testUserThree != undefined)
-            
-            */
-            //console.log("Calling done")
-            //return done()
-          //})
-        //})
     }
+    
 
-    Promise.all([createCourseAndLecture()])
+    Promise.all([createCourseAndLecture(), createUsers()])
+    //return new Promise(createCourseAndLecture().then(createUsers())
       .then(function () {
         console.log("Calling done in promise.all")
         done()
-      }, done)
-    
+      }).catch(function(err) {
+          console.log("Failed:", err);
+        })
   })
 
   describe('should be able to establish connection', function () {
