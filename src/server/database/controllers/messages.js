@@ -119,6 +119,10 @@ module.exports = {
     })
   },
 
+  getById (req) {
+    return Message.findById(req.id)
+  },
+
 
 
 /**

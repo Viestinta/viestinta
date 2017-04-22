@@ -51,9 +51,15 @@ describe('Testing socket.io:', function () {
   let clientTwoSocket = undefined
   let clientThreeSocket = undefined
 
+  let testMessageOne = undefined
+  let testMessageTwo = undefined
+  let testMessageThree = undefined
+  let testMessageFour = undefined
 
   let roomOne = undefined  
   let roomTwo = undefined
+
+
   before(function (done) {
     var now = new Date()
     var min = now.getMinutes()
@@ -114,42 +120,46 @@ describe('Testing socket.io:', function () {
 
     // Create messages
     function createMessages () {
+      console.log("In createMessages()")
 
       function messageOne() {
         return new Promise(function (resolve) {
+          console.log("Message one")
           messageController.createMessage({
             time: now,
             text: "Message 1",
             LectureId: testLectureOne.id
+          }).then(function (msg) {
+            testMessageOne = msg
+            resolve()
           })
-        }).then(function () {
-          resolve()
         })
       }
 
-      function messageFour() {
+      function messageTwo() {
         return new Promise(function (resolve) {
           messageController.createMessage({
             time: now.setMinutes(min - 3),
             text: "Message 2",
             LectureId: testLectureOne.id
+          }).then(function (msg) {
+            testMessageTwo = msg
+
+            resolve()
           })
-        }).then(function () {
-          resolve()
         })
       }
       
-      function messageFour() {
+      function messageThree() {
         return new Promise(function (resolve) {
           messageController.createMessage({
             time: now.setMinutes(min -3),
             text: "Message 3",
             LectureId: testLectureTwo.id
-          }).catch( function(error){
-          console.log(error)
-        })
-        }).then(function () {
-          resolve()
+          }).then(function (msg) {
+            testMessageThree = msg
+            resolve()
+          })
         })
       }
       
@@ -159,12 +169,16 @@ describe('Testing socket.io:', function () {
             time: now.setMinutes(min -10),
             text: "Message 4",
             LectureId: testLectureTwo.id
+          }).then(function (msg) {
+            testMessageFour = msg
+
+            resolve()
           })
-        }).then(function () {
-          resolve()
         })
       }
       
+      console.log("Before returning Promise.all in createMessages()")
+      console.log(messageOne())
       return Promise.all([messageOne(), messageTwo(), messageThree(), messageFour()])
        .then(function() {
         /*
@@ -182,45 +196,85 @@ describe('Testing socket.io:', function () {
 
     // Create feedback
     function createFeedback () {
-      return new Promise(function (resolve) {
-        feedbackController.createFeedback({
-          time: now.setMinutes(min - 9),
-          value: 1,
-          LectureId: testLectureOne.id,
-        }).then( function () {
+
+      function feedbackOne() {
+        return new Promise(function (resolve) {
+          feedbackController.createFeedback({
+            time: now.setMinutes(min - 9),
+            value: 1,
+            LectureId: testLectureOne.id,
+          }).then(function (feedback) {
+            resolve()
+          })
+        })
+      }
+
+
+      function feedbackTwo() {
+        return new Promise(function (resolve) {
           feedbackController.createFeedback({
             time: now.setMinutes(min -15),
             value: 1,
             LectureId: testLectureOne.id,
-          }).then(function () {
-            feedbackController.createFeedback({
-              time:now.setMinutes(min - 3),
-              value: -1,
-              LectureId: testLectureOne.id,
-            }).then(function () {
-              feedbackController.createFeedback({
-                time: now.setMinutes(min -2),
-                value: 1,
-                LectureId: testLectureTwo.id,
-              }).then(function () {
-                feedbackController.createFeedback({
-                  time: now.setMinutes(min -10),
-                  value: 1,
-                  LectureId: testLectureTwo.id,
-                })
-              }).then(function () {
-                feedbackController.createFeedback({
-                  time: now.setMinutes(min - 1),
-                  value: -1,
-                  LectureId: testLectureTwo.id,
-                })
-                console.log("After creating feedbacks")
-                resolve()
-              })
-            })
+          }).then(function (feedback) {
+            resolve()
           })
         })
-      })
+      }
+
+      function feedbackThree() {
+        return new Promise(function (resolve) {
+          feedbackController.createFeedback({
+            time:now.setMinutes(min - 3),
+            value: -1,
+            LectureId: testLectureOne.id,
+          }).then(function (feedback) {
+              resolve()
+            })
+        })
+      }
+
+      function feedbackFour() {
+        return new Promise(function (resolve) {
+          feedbackController.createFeedback({
+            time: now.setMinutes(min -2),
+            value: 1,
+            LectureId: testLectureTwo.id,
+          }).then(function (feedback) {
+              resolve()
+            })
+        })
+      }
+
+      function feedbackFive() {
+        return new Promise(function (resolve) {
+          feedbackController.createFeedback({
+            time: now.setMinutes(min -10),
+            value: 1,
+            LectureId: testLectureTwo.id,
+          }).then(function (feedback) {
+              resolve()
+            })
+        })
+      }
+
+      function feedbackSix() {
+        return new Promise(function (resolve) {
+          feedbackController.createFeedback({
+            time: now.setMinutes(min - 1),
+            value: -1,
+            LectureId: testLectureTwo.id,
+          }).then(function (feedback) {
+              resolve()
+            })
+        })
+      }
+
+      return Promise.all([feedbackOne(), feedbackTwo(), feedbackThree(), feedbackFour(), feedbackFive(), feedbackSix()])
+        .then( function () {
+          console.log("Done with creating feedback")
+        
+        })
     }
 
 
@@ -276,7 +330,8 @@ describe('Testing socket.io:', function () {
           console.log("Done with making courses")
           console.log(typeof testCourseOne !== undefined)
           console.log(typeof testCourseTwo !== undefined)    
-          */        
+          */
+
         }).catch( function(error){
           console.log(error)
         })
@@ -286,8 +341,13 @@ describe('Testing socket.io:', function () {
 
     Promise.all([createCourseAndLecture(), createUsers()])
       .then(function () {
-        console.log("Calling done in promise.all")
-        done()
+        console.log("Calling EARLY done in promise.all")
+      
+        Promise.all([createMessages()])
+          .then(function () {
+            console.log("Calling done in promise.all")
+            done()
+        })   
       }).catch(function(err) {
           console.log("Failed:", err);
         })
@@ -434,6 +494,7 @@ describe('Testing socket.io:', function () {
         message.should.eql(msg)
       })
 
+      // TODO: more correct - should not be called
       clientThreeSocket.on('new-message', function (message) {
         message.should.not.eql(msg)
       })
@@ -449,18 +510,62 @@ describe('Testing socket.io:', function () {
       
     })
   })
+  */
 
   describe('Testing new-vote-on-message:', function () {
+
+    beforeEach(function (done) {
+      clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
+      done()
+
+    })
+
+    // Must test with receivein update-message-order since the database otherwise isn't updated yet
     it('Increase vote-value', function (done) {
-      
+      clientOneSocket.on('update-message-order', function (list) {
+        console.log("List: ", list)
+        for (var i = 0; i <= list.length; i++) {
+          console.log("I: ", i)
+          var message = list[i]
+          console.log("i's messageId", message)
+          console.log("messageOnes' id: ", testMessageOne.id)
+          if (message.id == testMessageOne.id) {
+            message.votesUp.should.eql(1)
+            done() 
+          } 
+        }
+      })
     })
-    it('Decrease vote-value', function (done) {
-      
-    })
+    
+
+    //it('Decrease vote-value', function (done) {    
+    //})
+
     it('Update message order', function (done) {
+
+      messageController.getAllToLecture({
+        id: testLectureOne.id
+      }).then(function (msgList) {
+        
+        clientOneSocket.on('update-message-order', function (list) {
+          list.should.eql(msgList.reverse())
+        })
+
+        clientTwoSocket.on('update-message-order', function (list) {
+          list.should.eql(msgList.reverse())
+        })
+
+        clientThreeSocket.on('update-message-order', function (list) {
+          list.should.not.eql(msgList.reverse())
+        })
+
+        done()
+      })
       
     })
   })
+
+  /*
   describe('Testing new-feedback:', function () {
     it('Creating feedbackObject', function (done) {
       
