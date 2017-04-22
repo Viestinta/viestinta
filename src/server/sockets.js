@@ -135,6 +135,7 @@ module.exports = (io) => {
       socket.user = socketLecture.user
       usersController.getByEmail(socket.user.email).then(function (user) {
         socket.UserId = user.id
+        console.log("socket.UserId: ", socket.UserId)
       })
       socket.LectureId = socketLecture.id
       socket.CourseCode = socketLecture.code
@@ -185,7 +186,10 @@ module.exports = (io) => {
         UserId: socket.UserId
       }
 
+      console.log("databaseMsg: ", databaseMsg)
+
       messagesController.createMessage(databaseMsg).then(function (result) {
+
         io.sockets.in(socket.room).emit('receive-message', {
           id: result.id,
           text: result.text,
@@ -195,6 +199,9 @@ module.exports = (io) => {
           UserId: result.UserId,
           LectureId: result.LectureId
         })
+        
+      }).catch(function(error) {
+        console.log("Error: ", error)
       })
     })
 
@@ -206,9 +213,12 @@ module.exports = (io) => {
         id: msgId,
         value: value
       }, function () {
+        console.log("callback after vote")
         messagesController.getAllToLecture({
           id: socket.LectureId
         }).then(function (msgList) {
+          console.log("in then")
+          console.log('LectureId: ', socket.LectureId)
           io.sockets.in(socket.room).emit('update-message-order', msgList.reverse())
         })
       })
