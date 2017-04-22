@@ -523,12 +523,8 @@ describe('Testing socket.io:', function () {
     // Must test with receivein update-message-order since the database otherwise isn't updated yet
     it('Increase vote-value', function (done) {
       clientOneSocket.on('update-message-order', function (list) {
-        console.log("List: ", list)
         for (var i = 0; i <= list.length; i++) {
-          console.log("I: ", i)
           var message = list[i]
-          console.log("i's messageId", message)
-          console.log("messageOnes' id: ", testMessageOne.id)
           if (message.id == testMessageOne.id) {
             message.votesUp.should.eql(1)
             done() 
@@ -565,15 +561,42 @@ describe('Testing socket.io:', function () {
     })
   })
 
-  /*
   describe('Testing new-feedback:', function () {
-    it('Creating feedbackObject', function (done) {
-      
-    })
+    
+    //it('Creating feedbackObject', function (done) {  
+    //})
+
     it('Sending feedback', function (done) {
+      let feedback =  {
+        value: -1,
+        lecture: {
+          id:  testLectureOne.id,
+          code: testCourseOne.id,
+          room: roomOne,
+        }
+      }
+      clientOneSocket.emit('new-feedback', feedback)
+
+      clientOneSocket.on('receive-feedback', function (value) {
+          feedback.value.should.eql(value)
+        })
+
+        clientTwoSocket.on('receive-feedback', function (value) {
+          feedback.value.should.eql(value)
+        })
+
+        clientThreeSocket.on('receive-feedback', function (value) {
+          feedback.value.should.not.eql(value)
+        })
+
+        done()
+
+
       
     })
   })
+  
+  /*
   describe('Testing update-feedback-interval:', function () {
     it('Being called every x min', function (done) {
       
