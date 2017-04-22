@@ -86,8 +86,8 @@ describe('Testing socket.io:', function () {
           console.log(typeof testUserTwo != undefined)
           console.log(typeof testUserThree != undefined)
             
-          console.log("createMessages")
-          return createMessages()
+          //console.log("createMessages")
+          //return createMessages()
         }).then(function () {
           console.log("CreateUsers should be done")
         })
@@ -121,8 +121,8 @@ describe('Testing socket.io:', function () {
             })
           })
         }).then(function () {
-          console.log("createFeedback")
-          return createFeedback()
+         // console.log("createFeedback")
+          //return createFeedback()
         })
       })
     }
@@ -172,41 +172,58 @@ describe('Testing socket.io:', function () {
 
     // Create course and lecture 
     function createCourseAndLecture (done) {
-      new Promise(function () {
-        console.log("In createCourseAndLecture")
-        courseController.findOrCreateCourse({
-          name: "Web Development",
-          code: "IT2810"
-        }).spread(function(courseOne, created){
-          testCourseOne = courseOne
-          lectureController.createLecture({
-            name: "Intro to web development",
-            CourseId: courseOne.id
-          }).then(function (lecture) {
-            testLectureOne = lecture
-          }).then(function () {
-            courseController.findOrCreateCourse({
-              name: "Operating Systems",
-              code: "TDT4186"
-            }).spread(function (courseTwo, created) {
-              testCourseTwo = courseTwo
-              lectureController.createLecture({
-                name: "Operating systems",
-                CourseId: courseTwo.id
-              }).then(function (lecture) {
-                testLectureTwo = lecture
-              })
+
+      function courseAndLectureOne () {
+        return new Promise(function () {
+          console.log("Creating first course")
+          courseController.findOrCreateCourse({
+            name: "Web Development",
+            code: "IT2810"
+          }).spread(function(courseOne, created){
+            testCourseOne = courseOne
+            console.log("Creating first lecture")
+            lectureController.createLecture({
+              name: "Intro to web development",
+              CourseId: courseOne.id
+            }).then(function (lecture) {
+              testLectureOne = lecture
             })
           })
-          console.log("Done with making courses")
-          console.log(typeof testCourseOne != undefined)
-          console.log(typeof testCourseTwo != undefined)
-            
+        })
+      }
 
-        }).then(function () {
-          console.log("Create users")
-          createUsers().then(function () {
-            console.log("After created all the users")
+      function courseAndLectureTwo () {
+        return new Promise(function () {
+          console.log("Creating second course")
+          courseController.findOrCreateCourse({
+            name: "Operating Systems",
+            code: "TDT4186"
+          }).spread(function (courseTwo, created) {
+            testCourseTwo = courseTwo
+            console.log("Creating second Lecture")
+            lectureController.createLecture({
+              name: "Operating systems",
+              CourseId: courseTwo.id
+            }).then(function (lecture) {
+              testLectureTwo = lecture
+            })
+          })
+        })
+      }
+
+      Promise.all([courseAndLectureOne(), courseAndLectureTwo()])
+        .then(function() {
+          console.log("Done with making courses")
+          console.log(typeof testCourseOne != undefined, " - ", testCourseOne)
+          console.log(typeof testCourseTwo != undefined, " - ", testCourseTwo)            
+        }).catch( function(error){
+            console.log(error)
+          });
+
+        //}).then(function () {
+          //console.log("Create users")
+          //createUsers().then(function () {
+            //console.log("After created all the users")
               /*
             console.log(typeof testCourseOne != undefined)
             console.log(typeof testLectureOne != undefined)
@@ -217,14 +234,17 @@ describe('Testing socket.io:', function () {
             console.log(typeof testUserThree != undefined)
             
             */
-            console.log("Calling done")
-            return done()
-          })
-        })
-      })
+            //console.log("Calling done")
+            //return done()
+          //})
+        //})
     }
 
-    createCourseAndLecture(done)
+    Promise.all([createCourseAndLecture()])
+      .then(function () {
+        console.log("Calling done in promise.all")
+        done()
+      }, done)
     
   })
 
