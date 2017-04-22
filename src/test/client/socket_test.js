@@ -412,7 +412,7 @@ describe('Testing socket.io:', function () {
         })
       })
     })
-    /*
+    
     it('Getting all message to lecture', function (done) {
       messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-messages', function (messageList) {
@@ -426,7 +426,7 @@ describe('Testing socket.io:', function () {
       })
       
     })
-    */    
+        
   })
   
   
@@ -447,7 +447,6 @@ describe('Testing socket.io:', function () {
         })
       })
 
-      //console.log("After clientOneSocket")
       clientTwoSocket.on('connect', function (data) {
         clientTwoSocket.emit('login')
         clientTwoSocket.emit('join-lecture', {
@@ -458,7 +457,6 @@ describe('Testing socket.io:', function () {
         })
       })
       
-      //console.log("After clientTwoSocket")
       clientThreeSocket.on('connect', function (data) {
         clientThreeSocket.emit('login')
         clientThreeSocket.emit('join-lecture', {
@@ -469,7 +467,6 @@ describe('Testing socket.io:', function () {
         })
       })
 
-      //console.log("After clientThreeSocket")
       done()
     })
 
@@ -514,14 +511,10 @@ describe('Testing socket.io:', function () {
 
   describe('Testing new-vote-on-message:', function () {
 
-    beforeEach(function (done) {
-      clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
-      done()
-
-    })
-
     // Must test with receivein update-message-order since the database otherwise isn't updated yet
     it('Increase vote-value', function (done) {
+      clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
+
       clientOneSocket.on('update-message-order', function (list) {
         for (var i = 0; i <= list.length; i++) {
           var message = list[i]
@@ -534,10 +527,22 @@ describe('Testing socket.io:', function () {
     })
     
 
-    //it('Decrease vote-value', function (done) {    
-    //})
+    it('Decrease vote-value', function (done) {
+      clientOneSocket.emit('new-vote-on-message', testMessageOne.id, -1)
+
+      clientOneSocket.on('update-message-order', function (list) {
+        for (var i = 0; i <= list.length; i++) {
+          var message = list[i]
+          if (message.id == testMessageOne.id) {
+            message.votesUp.should.eql(1)
+            done() 
+          } 
+        }
+      })
+    })
 
     it('Update message order', function (done) {
+      clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
 
       messageController.getAllToLecture({
         id: testLectureOne.id
@@ -557,14 +562,10 @@ describe('Testing socket.io:', function () {
 
         done()
       })
-      
     })
   })
 
   describe('Testing new-feedback:', function () {
-    
-    //it('Creating feedbackObject', function (done) {  
-    //})
 
     it('Sending feedback', function (done) {
       let feedback =  {
@@ -590,71 +591,42 @@ describe('Testing socket.io:', function () {
         })
 
         done()
-
-
-      
     })
   })
   
-  /*
+  
   describe('Testing update-feedback-interval:', function () {
-    it('Being called every x min', function (done) {
-      
-    })
+
     it('Sending new feedbackvalues', function (done) {
-      
-    })
-  })
-  it('Should be able to broadcast messages', function (done) {
-    var user1, user2, user3, user4
-    // const message = render(<Message text='Hello world' />)
-    var message = 'Hello world'
-    var messages = 0
-    var checkMessages = function (client) {
-      console.log('In checkMessages')
-      // Working with message and not new-message since message emit back to message
-      // Send new message
-      client.emit('new-message', message)
-      console.log('Emit message')
-      client.on('receive-message', function (msg) {
-        console.log('Msg in client.on receive-message')
-        // assert.equal(msg.text(), 'Hello world')
-        message.should.equal(msg)
-        messages++
-        // Received 1 time + 2 + 3 + 4 = 10
-        if (messages === 10) {
-          console.log('Done')
-          done()
-        }
-      })
-    }
-    user1 = io.connect(socketURL, options)
-    checkMessages(user1)
-    user1.on('connect', function (data) {
-      user2 = io.connect(socketURL, options)
-      checkMessages(user2)
-      user2.on('connect', function (data) {
-        user3 = io.connect(socketURL, options)
-        checkMessages(user3)
-        user3.on('connect', function (data) {
-          user4 = io.connect(socketURL, options)
-          checkMessages(user4)
-          user4.on('connect', function (data) {
-            user2.send(message)
+      clientOneSocket.emit('update-feedback-interval')
+
+      feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
+        feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
+          clientOneSocket.on('update-feedback-interval', function(results) {
+            expect(results[0]).to.equal(resultNeg)
+            expect(results[1]).to.equal(resultPos)
+            
+          })
+
+          clientTwoSocket.on('update-feedback-interval', function(results) {
+            expect(results[0]).to.equal(resultNeg)
+            expect(results[1]).to.equal(resultPos)
+
           })
         })
       })
+    
+      feedbackController.getLastIntervalNeg({id: testLectureTwo.id}).then(function (resultNeg) {
+          feedbackController.getLastIntervalPos({id: testLectureTwo.id}).then(function (resultPos) {
+            clientThreeSocket.on('update-feedback-interval', function(results) {
+              console.log("Feedback results: ", results)
+              expect(results[0]).to.equal(resultNeg)
+              expect(results[1]).to.equal(resultPos)
+            })
+          })
+        })
+      done()
     })
   })
-  
-  it('Messages sent in a lecture should be shown only in that lecture', function (done) {
-    
-  })
-  it('Messages sent in a lecture should be shown only in that lecture', function (done) {
-    
-  })
-  it('Messages sent in a lecture should be shown only in that lecture', function (done) {
-    
-  })
-  */
+
 })
