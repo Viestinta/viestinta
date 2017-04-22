@@ -131,8 +131,7 @@ module.exports = (io) => {
      */
     socket.on('join-lecture', function (socketLecture) {
       console.log('[app][socket] join-lecture ' + socketLecture.room)
-      console.log('[sockets] socketId:', socket.id )
-
+      
       socket.user = socketLecture.user
       usersController.getByEmail(socket.user.email).then(function (user) {
         socket.UserId = user.id

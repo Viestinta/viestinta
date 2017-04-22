@@ -51,6 +51,9 @@ describe('Testing socket.io:', function () {
   let clientTwoSocket = undefined
   let clientThreeSocket = undefined
 
+
+  let roomOne = undefined  
+  let roomTwo = undefined
   before(function (done) {
     var now = new Date()
     var min = now.getMinutes()
@@ -65,7 +68,6 @@ describe('Testing socket.io:', function () {
             email: 'one@test.com'
           }).spread(function (user, created) {
             testUserOne = user
-            console.log("After created testUserOne")
             resolve()
           })
         })
@@ -78,7 +80,6 @@ describe('Testing socket.io:', function () {
             email: 'two@test.com'
           }).spread(function (user, created) {
             testUserTwo = user
-            console.log("After created testUserTwo")
             resolve()
           })
         })
@@ -91,7 +92,6 @@ describe('Testing socket.io:', function () {
             email: 'three@test.com'
           }).spread(function (user, created) {
             testUserThree = user
-            console.log("After created testUserThree")
             resolve()
           })
         })
@@ -99,13 +99,13 @@ describe('Testing socket.io:', function () {
 
       // Done is not called       
       return Promise.all([userOne(), userTwo(), userThree()])
-      //new Promise(function () { userOne().then(userTwo()).then(userThree())
-        
         .then(function () {
+          /*
           console.log("Done with making users")
           console.log(typeof testUserOne != undefined)
           console.log(typeof testUserTwo != undefined)
           console.log(typeof testUserThree != undefined)
+          */
         }).catch(function(err) {
           console.log("Failed:", err);
         })
@@ -123,7 +123,6 @@ describe('Testing socket.io:', function () {
             LectureId: testLectureOne.id
           })
         }).then(function () {
-          console.log("Created message one")
           resolve()
         })
       }
@@ -136,7 +135,6 @@ describe('Testing socket.io:', function () {
             LectureId: testLectureOne.id
           })
         }).then(function () {
-          console.log("Created message two")
           resolve()
         })
       }
@@ -151,7 +149,6 @@ describe('Testing socket.io:', function () {
           console.log(error)
         })
         }).then(function () {
-          console.log("Created message three")
           resolve()
         })
       }
@@ -164,18 +161,19 @@ describe('Testing socket.io:', function () {
             LectureId: testLectureTwo.id
           })
         }).then(function () {
-          console.log("Created message four")
           resolve()
         })
       }
       
       return Promise.all([messageOne(), messageTwo(), messageThree(), messageFour()])
        .then(function() {
+        /*
           console.log("Done with making messages")
           console.log(typeof messageOne !== undefined)
           console.log(typeof messageTwo !== undefined)
           console.log(typeof messageThree !== undefined)
           console.log(typeof messageFour !== undefined)
+          */
         }).catch( function(error){
           console.log(error)
         })
@@ -232,64 +230,53 @@ describe('Testing socket.io:', function () {
 
       function courseAndLectureOne() {
         return new Promise(function (resolve) {
-          console.log("Creating first course")
           courseController.findOrCreateCourse({
             name: "Web Development",
             code: "IT2810"
           }).spread(function(courseOne, created){
             testCourseOne = courseOne
-            console.log("Creating first lecture")
             lectureController.createLecture({
               name: "Intro to web development",
               CourseId: courseOne.id
             }).then(function (lecture) {
               testLectureOne = lecture
-              console.log("testLectureOne is done") 
+              roomOne = testCourseOne.code+'-'+ testLectureOne.id
               resolve()
             })
-          })/*.then(function () {
-            console.log("Then in couseAndLectureOne")
-            resolve()
-          })*/
-          console.log("Before then in courseAndLectureTwo")
+          })
         }).then(function () {
-          console.log("Last then in courseAndLectureOne")
         })
       }
 
       function courseAndLectureTwo() {
         // Need return to make sure they finish correctly
         return new Promise(function (resolve) {
-          console.log("Creating second course")
           courseController.findOrCreateCourse({
             name: "Operating Systems",
             code: "TDT4186"
           }).spread(function (courseTwo, created) {
             testCourseTwo = courseTwo
-            console.log("Creating second Lecture")
             lectureController.createLecture({
               name: "Operating systems",
               CourseId: courseTwo.id
             }).then(function (lecture) {
               testLectureTwo = lecture
-              console.log("testLectureTwo is done")
+              roomTwo = testCourseTwo.code+'-'+testLectureTwo.id
               resolve()
             })
           })
-          console.log("Before then in courseAndLectureTwo")
-        }).then(function () {
-          console.log("Then in couseAndLectureTwo")
         })
       }
 
       // With return, they are finishing in right order, but not calling done
       // If they aren't functions, they aren't called
       return Promise.all([courseAndLectureOne(), courseAndLectureTwo()])
-      //courseAndLectureOne().then(courseAndLectureTwo() 
         .then(function() {
+          /*
           console.log("Done with making courses")
           console.log(typeof testCourseOne !== undefined)
-          console.log(typeof testCourseTwo !== undefined)            
+          console.log(typeof testCourseTwo !== undefined)    
+          */        
         }).catch( function(error){
           console.log(error)
         })
@@ -298,7 +285,6 @@ describe('Testing socket.io:', function () {
     
 
     Promise.all([createCourseAndLecture(), createUsers()])
-    //return new Promise(createCourseAndLecture().then(createUsers())
       .then(function () {
         console.log("Calling done in promise.all")
         done()
@@ -320,12 +306,12 @@ describe('Testing socket.io:', function () {
   })
   
   describe('Testing join-lecture:', function () {
-    before(function (done) {
+    beforeEach(function (done) {
       clientOneSocket = io.connect(socketURL, options)
       
       clientOneSocket.on('connect', function (data) {
         clientOneSocket.emit('login')
-       // console.log("testCourseOne is not undefined: ", typeof testCourseOne != undefined, " - ", testCourseOne)
+        //onsole.log("testLectureOne is not undefined: ", typeof testLectureOne != undefined, " - ", testLectureOne)
         clientOneSocket.emit('join-lecture', {
           user: testUserOne,
           code: testCourseOne.course,
@@ -353,6 +339,7 @@ describe('Testing socket.io:', function () {
    */
    
     it('Getting last feedback for last interval', function (done) {
+      //console.log("testLectureOne: ", testLectureOne)
       feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
         feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
           console.log("Waiting for clientOneSocket.on")
@@ -385,7 +372,7 @@ describe('Testing socket.io:', function () {
   
   describe('Testing new-message:', function () {
 
-    before(function (done) {
+    beforeEach(function (done) {
       clientOneSocket = io.connect(socketURL, options)
       clientTwoSocket = io.connect(socketURL, options)
       clientThreeSocket = io.connect(socketURL, options)
@@ -400,29 +387,29 @@ describe('Testing socket.io:', function () {
         })
       })
 
-      console.log("After clientOneSocket")
+      //console.log("After clientOneSocket")
       clientTwoSocket.on('connect', function (data) {
         clientTwoSocket.emit('login')
         clientTwoSocket.emit('join-lecture', {
           user: testUserOne,
           code: testCourseOne.code, 
           id: testLectureOne.id,
-          room: testLectureOne.room
+          room: roomOne
         })
       })
       
-      console.log("After clientTwoSocket")
+      //console.log("After clientTwoSocket")
       clientThreeSocket.on('connect', function (data) {
         clientThreeSocket.emit('login')
         clientThreeSocket.emit('join-lecture', {
           user: testUserThree,
           code: testCourseTwo.code, 
           id: testLectureTwo.id,
-          room: testLectureTwo.room
+          room: roomTwo
         })
       })
 
-      console.log("After clientThreeSocket")
+      //console.log("After clientThreeSocket")
       done()
     })
 
@@ -433,7 +420,7 @@ describe('Testing socket.io:', function () {
               id: testLectureOne.id,
               code: testCourseOne.code,
               // TODO
-              // room: this.props.lecture.room,
+              room: roomOne,
             }
           }
 
@@ -450,6 +437,8 @@ describe('Testing socket.io:', function () {
       clientThreeSocket.on('new-message', function (message) {
         message.should.not.eql(msg)
       })
+
+      done()
     })
 
   })
