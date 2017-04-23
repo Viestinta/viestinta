@@ -88,7 +88,15 @@ export default class SessionWindow extends Component {
         this.handleClose = this.handleClose.bind(this)
         this.handleNext = this.handleNext.bind(this)
         this.handlePrev = this.handlePrev.bind(this)
+        this.handleCodeChange = this.handleCodeChange.bind(this)
+        this.handleNameChange = this.handleNameChange.bind(this)
         this.getStepContent = this.getStepContent.bind(this)
+        this.handleDateChangeStart = this.handleDateChangeStart.bind(this)
+        this.handleTimeChangeStart = this.handleTimeChangeStart.bind(this)
+        this.handleDateChangeEnd = this.handleDateChangeEnd.bind(this)
+        this.handleTimeChangeEnd = this.handleTimeChangeEnd.bind(this)
+        this.formatDate = this.formatDate.bind(this)
+        this.formatTime = this.formatTime.bind(this)
     }
 
     setSelectedLecture (lecture) {
@@ -118,16 +126,15 @@ export default class SessionWindow extends Component {
             name: this.state.name, 
             /*optional*/
             description: this.state.description,
-            startTime: this.state.startTime,
-            endTime: this.state.endTime,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate,
             isActive: true
         }
         console.log('[SessionWindow] createNewLecture(), lectureInfo:')
         console.log('- courseCode:  ' + lectureInfo.courseCode)
         console.log('- name:        ' + lectureInfo.name)
-        console.log('- description: ' + lectureInfo.description)
-        console.log('- startTime:   ' + lectureInfo.startTime)
-        console.log('- endTime:     ' + lectureInfo.endTime)
+        console.log('- startDate:   ' + lectureInfo.startDate)
+        console.log('- endDate:     ' + lectureInfo.endDate)
         
         socket.emit('create-lecture', lectureInfo)
         this.handleClose()
@@ -145,8 +152,8 @@ export default class SessionWindow extends Component {
             courseCode: undefined,
             name: undefined,
             description: undefined,
-            startTime: undefined,
-            endTime: undefined
+            startDate: undefined,
+            endDate: undefined
         })
     }
 
@@ -162,6 +169,95 @@ export default class SessionWindow extends Component {
         if (stepIndex > 0) {
             this.setState({stepIndex: stepIndex - 1});
         }
+    }
+
+    handleCodeChange (e) {
+        var text = e.target.value
+        if (text.length > 7) {
+            text = e.target.value.substring(0, 7)
+        }
+        this.setState({
+            courseCode: text
+        })
+    }
+
+    handleNameChange (e) {
+        var text = e.target.value
+        if (text.length < 0){
+            text = undefined
+        }
+        this.setState({
+            name: text
+        })
+    }
+
+    handleDateChangeStart (event, date) {
+        var startDate = this.state.startDate
+        if (startDate != undefined){
+            startDate.setDate(date.getDate())
+            startDate.setMonth(date.getMonth())
+            this.setState({
+                startDate: startDate
+            })
+        } else {
+            // Undefined -> new Date()
+            this.setState({
+                startDate: date
+            })
+        }
+    }
+
+    handleTimeChangeStart (event, date) {
+        var startDate = this.state.startDate
+        startDate.setHours(date.getHours())
+        startDate.setMinutes(date.getMinutes())
+        startDate.setSeconds(0)
+        this.setState({
+            startDate: startDate
+        })
+    }
+
+    handleDateChangeEnd (event, date) {
+        var endDate = this.state.endDate
+        if (endDate != undefined){
+            endDate.setDate(date.getDate())
+            endDate.setMonth(date.getMonth())
+            this.setState({
+                endDate: endDate
+            })
+        } else {
+            // Undefined -> new Date()
+            this.setState({
+                endDate: date
+            })
+        }
+    }
+
+    handleTimeChangeEnd (event, date) {
+        var endDate = this.state.endDate
+        endDate.setHours(date.getHours())
+        endDate.setMinutes(date.getMinutes())
+        endDate.setSeconds(0)
+        this.setState({
+            endDate: endDate
+        })
+    }
+
+    formatDate (date) {
+        var day = date.getDate()
+        var month = date.getMonth() + 1
+        if (day < 10){day = '0' + day}
+        if (month < 10){month = '0' + month}
+
+        return (date.getFullYear() + '-' + month + '-' + day)
+    }
+
+    formatTime (date) {
+        var hours = date.getHours()
+        var minutes = date.getMinutes()
+        if (hours < 10){hours = '0' + hours}
+        if (minutes < 10){minutes = '0' + minutes}
+        return (hours + ':' + minutes + ':00')
     }
 
     getStepContent () {
@@ -260,6 +356,7 @@ export default class SessionWindow extends Component {
                     />
                     <RaisedButton
                         label={this.state.stepIndex === 2 ? 'Fullfør' : 'Neste'}
+                        disabled={this.state.name === undefined}
                         primary={true}
                         onTouchTap={this.state.stepIndex === 2 ? this.createNewLecture : this.handleNext}
                     />
