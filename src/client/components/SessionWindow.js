@@ -15,6 +15,8 @@ import FlatButton from 'material-ui/FlatButton'
 import {Step, Stepper, StepLabel} from 'material-ui/Stepper'
 import DatePicker from 'material-ui/DatePicker'
 import TimePicker from 'material-ui/TimePicker'  
+import TextField from 'material-ui/TextField'
+import {orange800} from 'material-ui/styles/colors'
 
 const styles = {
 
@@ -41,8 +43,15 @@ const styles = {
         padding: '10px'
     },
     stepContent: {
-        minHeight: '200px',
-        height: '100%'
+        display: 'flex',
+        minHeight: '100%',
+        maxWidth: '240px',
+        width: '100%',
+        padding: '10px',
+
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        borderColor: orange800
     },
     dialogFooter: {
         display: 'flex',
@@ -66,8 +75,8 @@ export default class SessionWindow extends Component {
             courseCode: undefined,
             name: undefined,
             description: undefined,
-            startTime: undefined,
-            endTime: undefined
+            startDate: undefined,
+            endDate: undefined
         }
 
         this.setSelectedLecture = this.setSelectedLecture.bind(this)
