@@ -167,11 +167,82 @@ export default class SessionWindow extends Component {
     getStepContent () {
         switch (this.state.stepIndex) {
         case 0:
-            return (<DatePicker hintText="Portrait Dialog" />)
+            /* TextField for 'courseCode' og 'tema' */
+            return (
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <TextField
+                        style={{width: '150px'}}
+                        floatingLabelText={'Emnekode:'}
+                        floatingLabelFixed={true}
+                        hintText="Eks. 'TDT4140'"
+                        rows={1}
+                        rowsMax={1}
+                        onChange={this.handleCodeChange}
+                        value={this.state.courseCode}
+                    />
+                    <TextField
+                        style={{width: '150px'}}
+                        disabled={(this.state.courseCode === undefined)}
+                        floatingLabelText={'Tema:'}
+                        floatingLabelFixed={true}
+                        hintText="Eks. 'Introduksjon'"
+                        rows={1}
+                        rowsMax={1}
+                        onChange={this.handleNameChange}
+                        value={this.state.name}
+                    />
+                </div>
+            )
         case 1:
-            return (<TimePicker format="24hr" hintText="24hr Format"/>)
+            /* DatePicker og TimePicker for 'start' og 'slutt' */
+            return (
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <DatePicker 
+                            textFieldStyle={{width: '100px'}}
+                            hintText={'Dato start'}
+                            cancelLabel='Avbryt'
+                            onChange={this.handleDateChangeStart}
+                        />
+                        <TimePicker 
+                            textFieldStyle={{width: '100px'}}
+                            format='24hr'
+                            hintText={'Klokkeslett'} 
+                            onChange={this.handleTimeChangeStart}
+                            disabled={this.state.startDate == undefined}
+                        />  
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <DatePicker 
+                            textFieldStyle={{width: '100px'}}
+                            hintText={'Dato slutt'}
+                            cancelLabel='Avbryt'
+                            onChange={this.handleDateChangeEnd}
+                        />
+                        <TimePicker 
+                            textFieldStyle={{width: '100px'}}
+                            format='24hr'
+                            hintText={'Klokkeslett'} 
+                            onChange={this.handleTimeChangeEnd}
+                            disabled={this.state.endDate == undefined}
+                        />  
+                    </div>
+                </div>
+            )
         case 2:
-            return 'Dette er det du har valgt.'
+            /* Vis hva som er i lectureInfo før det skal sendes */
+            var start = this.state.startDate
+            var end = this.state.endDate
+            return (
+                <div>
+                    <p>{'Emnekode: ' + this.state.courseCode}</p>
+                    <p>{'Tema: ' + this.state.name}</p>
+                    <p>Start:</p>
+                    <p>&emsp;{start ? (this.formatDate(start) + ', kl. ' + this.formatTime(start)) : 'Ikke valgt'}</p>
+                    <p>Slutt:</p>
+                    <p>&emsp;{end ? (this.formatDate(end) + ', kl. ' + this.formatTime(end)) : 'Ikke valgt'}</p>
+                </div>
+            )
         default:
             return ''
         }
@@ -221,27 +292,27 @@ export default class SessionWindow extends Component {
                 </Paper>
                 {/* Dialog on 'create lecture' */}
                 <Dialog
+                    contentStyle={{width: '95%', maxWidth: '500px'}}
                     title="Lag ny forelesning"
                     actions={dialogActions}
                     modal={false}
                     open={this.state.openDialog}
                     onRequestClose={this.handleClose}
                 >
-                    <Stepper activeStep={this.state.stepIndex}>
-                        <Step>
-                            <StepLabel>Påkrevd info</StepLabel>
-                        </Step>
-                        <Step>
-                            <StepLabel>Valgfri info</StepLabel>
-                        </Step>
-                        <Step>
-                            <StepLabel>Fullfør</StepLabel>
-                        </Step>
-                    </Stepper>
-                    <div style={{margin: '0 16px'}}>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'stretch', justifyContent: 'space-between'}}>
+                        <Stepper activeStep={this.state.stepIndex} orientation='vertical'>
+                            <Step>
+                                <StepLabel>Påkrevd info</StepLabel>
+                            </Step>
+                            <Step>
+                                <StepLabel>Valgfri info</StepLabel>
+                            </Step>
+                            <Step>
+                                <StepLabel>Fullfør</StepLabel>
+                            </Step>
+                        </Stepper>
                         <div style={styles.stepContent}>
                             {this.getStepContent()}
-                            
                         </div>
                     </div>
                 </Dialog>
