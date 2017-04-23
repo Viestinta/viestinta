@@ -28,22 +28,6 @@ const muiTheme = getMuiTheme({
   }
 })
 
-// TODO: not working
-// renderLogin must be made to a component
-describe('ChatApp', () => {
-  it('should render Header, Login, MessageList, ChatBox and FeedbackBox', () => {
-    const wrapper = shallow(<ChatApp />)
-    
-    expect(wrapper.containsAllMatchingElements([
-      <Header />,
-      <Login />,
-      <MessageList />,
-      <ChatBox />,
-      <FeedbackBox />
-    ])).to.equal(true)
-  })
-})
-
 
 describe('MessageList', () => {
   it('should start with an empty list', () => {
@@ -51,15 +35,6 @@ describe('MessageList', () => {
     expect(wrapper.state('messages')).to.eql([])
   })
 
-  // TODO: not working, need to create a message object?
-  /*
-  it('adds items to the list', () => {
-    const wrapper = shallow(<MessageList />)
-    const messageWrapper = shallow(<Message text='Hello world' />)
-    wrapper.instance().receiveMessage(messageWrapper)
-    expect(wrapper.state('messages')).to.equal([messageWrapper])
-  })
-  */
 })
 
 describe('ChatBox', () => {
@@ -89,36 +64,6 @@ describe('ChatBox', () => {
     expect(textField.prop('onChange')).to.eql(changeHandler)
   })
 
-  /*
-  it('should accept input', () => {
-    const wrapper = mount(<ChatBox />, {
-      context: {muiTheme},
-      childContextTypes: {muiTheme: React.PropTypes.object}
-      }
-    )
-    const textField = wrapper.find(TextField)
-    
-    assert.isDefined(textField, 'textField is defined')
-    assert.isNotNull(textField, 'textField is not null')
-    textField.simulate('change', {target: { value: 'Changes in text' }})
-    console.log("Wrapper:", wrapper.node)
-    console.log("TextField:", textField.node)
-    expect(wrapper.state('text')).to.equal('Changes in text')
-    expect(textField.prop('value')).to.equal('Changes in text')
-  })
-  */
-
-  it('should call sendMessage when Send is clicked', () => {
-    const addItemSpy = spy()
-    const wrapper = shallow(<ChatBox onTouchTap={addItemSpy} />, {muiTheme: getMuiTheme()})
-    wrapper.setState({text: 'Octoberfest'})
-    const sendButton = wrapper.find('RaisedButton')
-
-    sendButton.simulate('click')
-
-    expect(addItemSpy.calledOnce).to.equal(true)
-    expect(addItemSpy.calledWith('Octoberfest')).to.equal(true)
-  })
 })
 
 describe('FeedbackBox', () => {
@@ -149,28 +94,5 @@ describe('FeedbackBox', () => {
     const updateFeedbackInterval = wrapper.instance().updateFeedbackInterval
     expect(feedbackWindow.prop('updateFeedbackInterval')).to.equal(updateFeedbackInterval)
   })
+
 })
-/*
-describe('FeedbackMenu', () => {
-  it('should contain two buttons', () => {
-    const wrapper = shallow(<FeedbackMenu />, {muiTheme: getMuiTheme()})
-    console.log("Wrapper: ", wrapper)
-    expect(wrapper.containsAllMatchingElements([
-        shallow(<RaisedButton />, {muiTheme: getMuiTheme()}),
-        shallow(<RaisedButton />, {muiTheme: getMuiTheme()})
-    ])).to.equal(true)
-  })
-})
-*/
-/*
-describe('FeedbackWindow', () => {
-  it('should contain to p-tags to show feedback', () => {
-    const wrapper = shallow(<FeedbackWindow />)
-    const feedbackBox = shallow(<FeedbackBox />)
-    expect(wrapper.containsAllMatchingElements([
-      <p>0</p>,
-      <p>0</p>
-    ])).to.equal(true)
-  })
-})
-*/

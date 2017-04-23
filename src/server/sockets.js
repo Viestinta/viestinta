@@ -243,11 +243,11 @@ module.exports = (io) => {
     })
 
     // Called every x minuts
-    socket.on('update-feedback-interval', function () {
+    socket.on('update-feedback-interval', function (lecture) {
       // Get feedback from database for past x minuts
 
-      feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
-        feedbacksController.getLastIntervalPos().then(function (resultPos) {
+      feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+        feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
           io.sockets.in(socket.room).emit('update-feedback-interval', [resultNeg, resultPos])
         })
       })

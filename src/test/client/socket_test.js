@@ -113,11 +113,9 @@ describe('Testing socket.io:', function () {
 
     // Create messages
     function createMessages () {
-      console.log("In createMessages()")
 
       function messageOne() {
         return new Promise(function (resolve) {
-          console.log("Message one")
           messageController.createMessage({
             time: now,
             text: "Message 1",
@@ -251,7 +249,6 @@ describe('Testing socket.io:', function () {
             })
         })
       }
-
       return Promise.all([
         feedbackOne(),
         feedbackTwo(),
@@ -264,7 +261,6 @@ describe('Testing socket.io:', function () {
 
     // Create course and lecture 
     function createCourseAndLecture() {
-      console.log("In createCourseAndLecture")
 
       function courseAndLectureOne() {
         return new Promise(function (resolve) {
@@ -316,13 +312,11 @@ describe('Testing socket.io:', function () {
 
     Promise.all([createCourseAndLecture(), createUsers()])
       .then(function () {
-        Promise.all([createMessages()])
+        Promise.all([createMessages(), createFeedback()])
           .then(function () {
-            //console.log("Calling done in promise.all")
             done()
         })   
       }).catch(function(err) {
-          console.log("Failed:", err);
         })
   })
 
@@ -338,8 +332,7 @@ describe('Testing socket.io:', function () {
   })
   
   describe('Testing join-lecture:', function () {
-    /*
-    // WORKING
+
     beforeEach(function (done) {
       clientOneSocket = io.connect(socketURL, options)
       
@@ -354,23 +347,19 @@ describe('Testing socket.io:', function () {
         done()
       })
     })
-    */
 
     /*
     it('Saving correct values in socket', function (done) {
-      //console.log("clientOneSocketId: ", clientOneSocket)
-
-      //console.log("serverSocket: ", ioServer)
       clientOneSocket.user.should.equal(testUserOne)
       clientOneSocket.userId = testUserOne.id
       clientOneSocket.LectureId.should.equal(testLectureOne.id)
       clientOneSocket.CourseCode.should.equal(testCourseOne.code)
-      //clientOneSocket.room.should.equal(testLectureOne.room)
+      clientOneSocket.room.should.equal(roomOne)
       done()
     })
-   */
-    /*
-    // WORKING
+
+  */
+
     it('Getting last feedback for last interval', function (done) {
       feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
         feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
@@ -382,23 +371,23 @@ describe('Testing socket.io:', function () {
         })
       })
     })
-    */
-    /*
+
     it('Getting all message to lecture', function (done) {
       messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-messages', function (messageList) {
-          // PROBLEM: in messageList the dates are string, in result they are dates
-          console.log("messageList: ", messageList)
-          console.log("result.reverse(): ", result)
-          messageList.should.eql(result.reverse())
+
+          result = result.reverse()
+          for (var i = 0; i < result.length; i++) {
+            messageList[i].text.should.eql(result[i].text)
+            messageList[i].id.should.eql(result[i].id)
+          }
+
           done()
         })
       })
     })
-    */
   })
   
-  /*
   describe('Testing new-message:', function () {
 
     beforeEach(function (done) {
@@ -450,16 +439,10 @@ describe('Testing socket.io:', function () {
           }
 
       clientOneSocket.emit('new-message', msg)
-      console.log("client emitted new message")
-
         function recClientOne() {
-          console.log("recClientOne")
           return new Promise(function (resolve) {
 
-
-            console.log("ClientOneSocket.id: ", clientOneSocket)
             clientOneSocket.on('receive-message', function (message, done) {
-              console.log("new message clientOneSocket")
               message.text.should.eql(msg.text)
               resolve()
             })
@@ -468,9 +451,7 @@ describe('Testing socket.io:', function () {
 
         function recClientTwo() {
           return new Promise(function (resolve) {
-            console.log("ClientTwoSocket.id: ", clientTwoSocket)
             clientTwoSocket.on('receive-message', function (message, done) {
-              console.log("new message clientTwoSocket")
               message.text.should.eql(msg.text)
               resolve()
             })
@@ -479,15 +460,12 @@ describe('Testing socket.io:', function () {
 
         Promise.all([recClientOne(), recClientTwo()])
           .then(function(){
-            console.log("Done in promise.all")
              done()
           })
 
       })
   })
-  */
 
-  // WORKING
   
   describe('Testing new-vote-on-message:', function () {
 
@@ -529,7 +507,6 @@ describe('Testing socket.io:', function () {
       done()
     })
 
-    /*
     it('Increase vote-value', function (done) {
       clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
 
@@ -543,18 +520,13 @@ describe('Testing socket.io:', function () {
         }
       })
     })
-    */
-    
-    // TODO: done is never called
-    /*
+
     it('Decrease vote-value', function (done) {
       clientOneSocket.emit('new-vote-on-message', testMessageTwo.id, -1)
 
       clientOneSocket.on('update-message-order', function (list) {
-        console.log("In 'update-message-order'")
         for (var i = 0; i <= list.length; i++) {
           var message = list[i]
-          console.log("message: ", message)
           if (message.id == testMessageTwo.id) {
             message.votesDown.should.eql(1)
             done() 
@@ -562,10 +534,8 @@ describe('Testing socket.io:', function () {
         }
       })
     })
-      */
 
-    // WORKING
-    /*
+
     it('Update message order', function (done) {
       clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
 
@@ -604,7 +574,6 @@ describe('Testing socket.io:', function () {
           })
       })
     })
-    */
     
   })
 
@@ -662,9 +631,7 @@ describe('Testing socket.io:', function () {
 
       function clientOne() {
         return new Promise(function(resolve) {
-          console.log("in client one")
           clientOneSocket.on('receive-feedback', function (value) {
-            console.log("clientOne received feedback")
             feedback.value.should.eql(value)
           })
           resolve()
@@ -689,42 +656,84 @@ describe('Testing socket.io:', function () {
   })
   
   
-  //describe('Testing update-feedback-interval:', function () {
-    /*
+  
+  describe('Testing update-feedback-interval:', function () {
+
+    beforeEach(function (done) {
+      clientOneSocket = io.connect(socketURL, options)
+      clientTwoSocket = io.connect(socketURL, options)
+      clientThreeSocket = io.connect(socketURL, options)
+
+      clientOneSocket.on('connect', function (data) {
+        clientOneSocket.emit('login')
+        clientOneSocket.emit('join-lecture', {
+          user: testUserOne,
+          code: testCourseOne.course,
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
+
+      clientTwoSocket.on('connect', function (data) {
+        clientTwoSocket.emit('login')
+        clientTwoSocket.emit('join-lecture', {
+          user: testUserTwo,
+          code: testCourseOne.course,
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
+
+      clientThreeSocket.on('connect', function (data) {
+        clientThreeSocket.emit('login')
+        clientThreeSocket.emit('join-lecture', {
+          user: testUserThree,
+          code: testCourseTwo.course,
+          id: testLectureTwo.id,
+          room: testLectureTwo.room
+        })
+      })
+
+      done()
+    })
+  
     it('Sending new feedbackvalues', function (done) {
-      clientOneSocket.emit('update-feedback-interval')
+
+      clientOneSocket.emit('update-feedback-interval', testLectureOne)
 
       feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
         feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
-          clientOneSocket.emit('update-feedback-interval')
-          clientOneSocket.on('update-feedback-interval', function(results) {
-            console.log("clientOneSocket")
-            expect(results[0]).to.equal(resultNeg)
-            expect(results[1]).to.equal(resultPos)
-            
-          })
 
-          clientTwoSocket.on('update-feedback-interval', function(results) {
-            expect(results[0]).to.equal(resultNeg)
-            expect(results[1]).to.equal(resultPos)
+          function clientOne() {
+            return new Promise(function(resolve) {
+              clientOneSocket.on('update-feedback-interval', function(results) {
+                expect(results[0]).to.equal(resultNeg)
+                expect(results[1]).to.equal(resultPos)
+                
+                resolve()
+              })
+            })
+          }
 
-          })
+          function clientTwo() {
+            return new Promise(function(resolve) {
+              clientTwoSocket.on('update-feedback-interval', function(results) {
+                expect(results[0]).to.equal(resultNeg)
+                expect(results[1]).to.equal(resultPos)
+                resolve()
+              })
+            })
+          }
+  
+          Promise.all([clientOne(), clientTwo()])
+            .then(function() {
+              done()
+            })
+     
         })
       })
-    
-      feedbackController.getLastIntervalNeg({id: testLectureTwo.id}).then(function (resultNeg) {
-          feedbackController.getLastIntervalPos({id: testLectureTwo.id}).then(function (resultPos) {
-            clientThreeSocket.on('update-feedback-interval', function(results) {
-              console.log("Feedback results: ", results)
-              expect(results[0]).to.equal(resultNeg)
-              expect(results[1]).to.equal(resultPos)
-            })
-          })
-        })
-      // TODO: is called anyway
-      done()
     })
-    */
-  //})
+    
+  })
 
 })
