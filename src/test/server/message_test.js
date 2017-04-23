@@ -155,6 +155,33 @@ describe('Testing messages:', function () {
     })
   })
 
+  it('Vote up successfully', function (done) {
+    messageController.createMessage({
+      text: 'Voting Message'
+    }).then(function (message) {
+      let testMessage = message
+      messageController.vote({id: testMessage.id, value: 1}, function () {
+        messageController.getAllByText('Voting Message').then(function (messages) {
+          assert.equal(messages[0].votesUp, 1)
+          assert.equal(messages[0].votesDown, 0)
+          messageController.vote({id: testMessage.id, value: -1}, function () {
+            messageController.getAllByText('Voting Message').then(function (messages2) {
+              assert.equal(messages2[0].votesUp, 1)
+              assert.equal(messages2[0].votesDown, 1)
+              messageController.deleteMessage(testMessage).then(function () {
+                messageController.deleteMessage(messages[0]).then(function () {
+                  messageController.deleteMessage(messages2[0]).then(function () {
+                    done()
+                  })
+                })
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+
   it('The message is deleted successfully', function (done) {
     messageController.createMessage({
       text: "Hello computer"
