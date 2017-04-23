@@ -398,7 +398,7 @@ describe('Testing socket.io:', function () {
     */
   })
   
-  
+  /*
   describe('Testing new-message:', function () {
 
     beforeEach(function (done) {
@@ -412,7 +412,7 @@ describe('Testing socket.io:', function () {
           user: testUserOne,
           code: testCourseOne.code, 
           id: testLectureOne.id,
-          room: testLectureOne.room
+          room: roomOne
         })
       })
 
@@ -449,16 +449,17 @@ describe('Testing socket.io:', function () {
             }
           }
 
-      //clientOneSocket.emit('new-message', msg)
+      clientOneSocket.emit('new-message', msg)
       console.log("client emitted new message")
 
         function recClientOne() {
           console.log("recClientOne")
           return new Promise(function (resolve) {
+
+
+            console.log("ClientOneSocket.id: ", clientOneSocket)
             clientOneSocket.on('receive-message', function (message, done) {
               console.log("new message clientOneSocket")
-              console.log("Message: ", message)
-              console.log("msg: ", msg)
               message.text.should.eql(msg.text)
               resolve()
             })
@@ -467,50 +468,68 @@ describe('Testing socket.io:', function () {
 
         function recClientTwo() {
           return new Promise(function (resolve) {
+            console.log("ClientTwoSocket.id: ", clientTwoSocket)
             clientTwoSocket.on('receive-message', function (message, done) {
               console.log("new message clientTwoSocket")
-              console.log("Message: ", message)
               message.text.should.eql(msg.text)
               resolve()
             })
           })
         }
 
-        function recClientThree() {
-          return new Promise(function (resolve) {
-            clientThreeSocket.on('receive-message', function (message, done) {
-              console.log("new message clientThreeSocket")
-              message.text.should.eql(msg.text)
-              resolve ()
-            })
-          })
-        }
-
-
-        Promise.all([recClientOne(), recClientTwo(), recClientThree()])
+        Promise.all([recClientOne(), recClientTwo()])
           .then(function(){
             console.log("Done in promise.all")
              done()
           })
 
       })
-
-      
-  
-  })
-  
-  /*
-  describe('Testing leave-lecture:', function () {
-    it('Setting values to undefined', function (done) {
-      
-    })
   })
   */
 
   // WORKING
-  /*
+  
   describe('Testing new-vote-on-message:', function () {
 
+    beforeEach(function (done) {
+      clientOneSocket = io.connect(socketURL, options)
+      clientTwoSocket = io.connect(socketURL, options)
+      clientThreeSocket = io.connect(socketURL, options)
+
+      clientOneSocket.on('connect', function (data) {
+        clientOneSocket.emit('login')
+        clientOneSocket.emit('join-lecture', {
+          user: testUserOne,
+          code: testCourseOne.course,
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
+
+      clientTwoSocket.on('connect', function (data) {
+        clientTwoSocket.emit('login')
+        clientTwoSocket.emit('join-lecture', {
+          user: testUserTwo,
+          code: testCourseOne.course,
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
+
+      clientThreeSocket.on('connect', function (data) {
+        clientThreeSocket.emit('login')
+        clientThreeSocket.emit('join-lecture', {
+          user: testUserThree,
+          code: testCourseTwo.course,
+          id: testLectureTwo.id,
+          room: testLectureTwo.room
+        })
+      })
+
+      done()
+    })
+
+    /*
     it('Increase vote-value', function (done) {
       clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
 
@@ -544,6 +563,8 @@ describe('Testing socket.io:', function () {
       })
     })
       */
+
+    // WORKING
     /*
     it('Update message order', function (done) {
       clientOneSocket.emit('new-vote-on-message', testMessageOne.id, 1)
@@ -551,28 +572,82 @@ describe('Testing socket.io:', function () {
       messageController.getAllToLecture({
         id: testLectureOne.id
       }).then(function (msgList) {
+        msgList = msgList.reverse()
         
-        clientOneSocket.on('update-message-order', function (list) {
-          list.should.eql(msgList.reverse())
-        })
+        function clientOne() {
+          return new Promise(function(resolve) {
+            clientOneSocket.on('update-message-order', function (list) {
+              for (var i = 0; i < list.length; i++) {
+                list[i].text.should.eql(msgList[i].text)
+                list[i].id.should.eql(msgList[i].id)
+              }
+              resolve()
+            })
+          })
+        }
 
-        clientTwoSocket.on('update-message-order', function (list) {
-          list.should.eql(msgList.reverse())
-        })
-
-        clientThreeSocket.on('update-message-order', function (list) {
-          list.should.not.eql(msgList.reverse())
-        })
-
-        //TODO: is called anyway
-        done()
+        function clientTwo() {
+          return new Promise(function (resolve) {
+            clientTwoSocket.on('update-message-order', function (list) {
+              for (var i = 0; i < list.length; i++) {
+                list[i].text.should.eql(msgList[i].text)
+                list[i].id.should.eql(msgList[i].id)
+              }
+              resolve()
+            })
+          })
+        }
+        
+        Promise.all([clientOne(), clientTwo()])
+          .then(function () {
+            done()
+          })
       })
     })
     */
-  //})
+    
+  })
 
-  //describe('Testing new-feedback:', function () {
-    /*
+  describe('Testing new-feedback:', function () {
+
+    beforeEach(function (done) {
+      clientOneSocket = io.connect(socketURL, options)
+      clientTwoSocket = io.connect(socketURL, options)
+      clientThreeSocket = io.connect(socketURL, options)
+
+      clientOneSocket.on('connect', function (data) {
+        clientOneSocket.emit('login')
+        clientOneSocket.emit('join-lecture', {
+          user: testUserOne,
+          code: testCourseOne.course,
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
+
+      clientTwoSocket.on('connect', function (data) {
+        clientTwoSocket.emit('login')
+        clientTwoSocket.emit('join-lecture', {
+          user: testUserTwo,
+          code: testCourseOne.course,
+          id: testLectureOne.id,
+          room: testLectureOne.room
+        })
+      })
+
+      clientThreeSocket.on('connect', function (data) {
+        clientThreeSocket.emit('login')
+        clientThreeSocket.emit('join-lecture', {
+          user: testUserThree,
+          code: testCourseTwo.course,
+          id: testLectureTwo.id,
+          room: testLectureTwo.room
+        })
+      })
+
+      done()
+    })
+    
     it('Sending feedback', function (done) {
       let feedback =  {
         value: -1,
@@ -582,25 +657,36 @@ describe('Testing socket.io:', function () {
           room: roomOne,
         }
       }
+
       clientOneSocket.emit('new-feedback', feedback)
 
-      clientOneSocket.on('receive-feedback', function (value) {
-          feedback.value.should.eql(value)
+      function clientOne() {
+        return new Promise(function(resolve) {
+          console.log("in client one")
+          clientOneSocket.on('receive-feedback', function (value) {
+            console.log("clientOne received feedback")
+            feedback.value.should.eql(value)
+          })
+          resolve()
         })
+      }
 
-        clientTwoSocket.on('receive-feedback', function (value) {
-          feedback.value.should.eql(value)
+      function clientTwo() {
+        return new Promise(function(resolve) {
+          clientTwoSocket.on('receive-feedback', function (value) {
+            feedback.value.should.eql(value)
+          })
+          resolve()
         })
+      }
 
-        clientThreeSocket.on('receive-feedback', function (value) {
-          feedback.value.should.not.eql(value)
+      Promise.all([clientOne(), clientTwo()])
+        .then(function() {
+          done()
         })
-
-        // TODO: is called anyway
-        done()
     })
-    */
-  //})
+    
+  })
   
   
   //describe('Testing update-feedback-interval:', function () {
