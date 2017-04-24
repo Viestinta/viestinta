@@ -5,7 +5,7 @@
   "main": "src/server/app.js",
   "scripts": {
     "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node src/server/app.js",
-    "test": "node src/server/app.js && nyc --check-coverage --lines 60 mocha src/test/server/**.js && nyc report --reporter=text-lcov > ./coverage/lcov.info",
+    "test": "node src/server/app.js && nyc --check-coverage --lines 60 mocha src/test/**/**.js && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "test-client": "mocha --compilers js:babel-core/register --require src/test/helpers/helpers.js src/test/**/**.js",
     "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",
