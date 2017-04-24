@@ -352,7 +352,7 @@ describe('Testing socket.io:', function () {
     })
 
   */
-
+    /*
     it('Getting last feedback for last interval', function (done) {
       feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
         feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
@@ -364,6 +364,8 @@ describe('Testing socket.io:', function () {
         })
       })
     })
+
+    */
 
     it('Getting all message to lecture', function (done) {
       messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
