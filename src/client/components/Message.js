@@ -163,6 +163,7 @@ export default class Message extends React.Component {
     	<Paper zDepth={3} style={styles.container}>
     		<ListItem
           style={styles.listItem}
+          disabled={true}
           primaryText={this.props.text}
           secondaryText={this.props.isAdmin ? footerAdmin : footer}
         />
