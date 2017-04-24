@@ -97,6 +97,8 @@ export default class SessionWindow extends Component {
         this.handleTimeChangeEnd = this.handleTimeChangeEnd.bind(this)
         this.formatDate = this.formatDate.bind(this)
         this.formatTime = this.formatTime.bind(this)
+        this.disableDateStart = this.disableDateStart.bind(this)
+        this.disableDateEnd = this.disableDateEnd.bind(this)
     }
 
     setSelectedLecture (lecture) {
@@ -260,6 +262,29 @@ export default class SessionWindow extends Component {
         return (hours + ':' + minutes + ':00')
     }
 
+    disableDateStart (date) {
+        const now = new Date()
+        if ( (date.getDate() == now.getDate()) && (date.getMonth() == now.getMonth()) ){
+            // Don't disable current date (now)
+            return false
+        } else {
+            return ( date < new Date() )
+        }
+    }
+
+    disableDateEnd (date) {
+        var limit = this.state.startDate
+        if (limit === undefined){
+            limit = new Date()
+        }
+        if ( (date.getDate() == limit.getDate()) && (date.getMonth() == limit.getMonth()) ){
+            // Don't disable current date (limit)
+            return false
+        } else {
+            return ( date < limit )
+        }
+    }
+
     getStepContent () {
         switch (this.state.stepIndex) {
         case 0:
@@ -299,6 +324,7 @@ export default class SessionWindow extends Component {
                             hintText={'Dato start'}
                             cancelLabel='Avbryt'
                             onChange={this.handleDateChangeStart}
+                            shouldDisableDate={this.disableDateStart}
                         />
                         <TimePicker 
                             textFieldStyle={{width: '100px'}}
@@ -314,6 +340,7 @@ export default class SessionWindow extends Component {
                             hintText={'Dato slutt'}
                             cancelLabel='Avbryt'
                             onChange={this.handleDateChangeEnd}
+                            shouldDisableDate={this.disableDateEnd}
                         />
                         <TimePicker 
                             textFieldStyle={{width: '100px'}}
