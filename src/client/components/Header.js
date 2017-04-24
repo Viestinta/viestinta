@@ -1,8 +1,8 @@
 import React from 'react'
 
 import Paper from 'material-ui/Paper'
-import Popover from 'material-ui/Popover'
-import Menu from 'material-ui/Menu'
+import IconMenu from 'material-ui/IconMenu'
+import IconButton from 'material-ui/IconButton'
 import MenuItem from 'material-ui/MenuItem'
 import SocialPerson from 'material-ui/svg-icons/social/person'
 import Toggle from 'material-ui/Toggle'
@@ -16,7 +16,7 @@ const styles = {
 
 		height: '48px',
 		width: '100%',
-		padding: '0px 10px',
+		padding: '0px 0px 0px 10px',
 		marginBottom: '10px',
 
 		backgroundColor: '#1565C0'
@@ -25,11 +25,21 @@ const styles = {
 		maxHeight: '30px',
 		marginBottom: '12px'
 	},
+	user: {
+		display: 'flex',
+    	flexDirection: 'row',
+   		alignItems: 'flex-end',
+		maxWidth: '35%'
+	},
 	text: {
+		cursor: 'default',
 		color: '#ffffff',
+		fontSize: '16px',
 		overflow: 'hidden',
 		whiteSpace: 'nowrap',
 		textOverflow: 'ellipsis',
+
+		margin: '0px 0px 12px'
 	}
 };
 
@@ -38,70 +48,30 @@ const logo = (
 )
 
 export default class Header extends React.Component {
-	constructor (props) {
-		super(props)
-		this.state = {
-			open: false
-		}
-
-		this.handleTouchTap = this.handleTouchTap.bind(this)
-		this.handleRequestClose = this.handleRequestClose.bind(this)
-	}
-
-	handleTouchTap (event) {
-		event.preventDefault()
-		this.setState({
-			open: true,
-			anchorEl: event.currentTarget
-		})
-	}
-
-	handleRequestClose () {
-		this.setState({
-			open: false
-		})
-	}
-
 	render () {
-		const user = (
-			<MenuItem 
-				style={{margin: '0 -10px', maxWidth: '200px'}}
-				primaryText={<div style={styles.text}>{this.props.userName}</div>} 
-				rightIcon={<SocialPerson color={'#ffffff'} />} 
-				onTouchTap={this.handleTouchTap}
-			/>
-		)
-		const rightMenu = (
-			<Popover
-				open={this.state.open}
-				anchorEl={this.state.anchorEl}
-				anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-				targetOrigin={{horizontal: 'left', vertical: 'top'}}
-				onRequestClose={this.handleRequestClose}
-				style={{width: 'inherit'}}
+		const rightMenu = (	
+			<IconMenu
+				iconButtonElement={<IconButton><SocialPerson color={'#ffffff'} /></IconButton>}
+				anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+				targetOrigin={{horizontal: 'right', vertical: 'top'}}
 			>	
-				<Menu>
-					<MenuItem>
-						<Toggle label="Foreleser" defaultToggled={this.props.isAdmin} onToggle={this.props.toggleAdmin}/>
-					</MenuItem>
-					<MenuItem
-						primaryText="Logg ut"
-						href="/logout"
-						rightIcon={<img src="images/feide_32px.png" style={{width: '24px', height: 'auto'}}/>}
-					/>
-				</Menu>
-			</Popover>
+				<MenuItem>
+					<Toggle label="Foreleser" defaultToggled={this.props.isAdmin} onToggle={this.props.toggleAdmin}/>
+				</MenuItem>
+				<MenuItem
+					primaryText="Logg ut"
+					href="/logout"
+					rightIcon={<img src="images/feide_32px.png" style={{width: '24px', height: 'auto'}}/>}
+				/>
+			</IconMenu>
 		)
 	    return (
 			<Paper zDepth={0} rounded={false} style={styles.header}>
 				<img src="images/logo_white_shadow.png" alt="Viestintä Logo" style={styles.img}/>
-				<MenuItem 
-					style={{margin: '0 -10px', maxWidth: '200px'}}
-					primaryText={<div style={styles.text}>{this.props.userName}</div>} 
-					rightIcon={<SocialPerson color={'#ffffff'} />} 
-					onTouchTap={this.handleTouchTap}
-				/>
-				{rightMenu}
+				<div style={styles.user}>
+					<p style={styles.text}>{this.props.userName}</p>
+					{rightMenu}
+				</div>
 			</Paper>
 	    )
 	}
