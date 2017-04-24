@@ -3,32 +3,40 @@ import axios from 'axios'
 
 import Paper from 'material-ui/Paper'
 import DataTables from 'material-ui-datatables'   
+import {orange800} from 'material-ui/styles/colors'
 
 const styles = {
-  container: {
-    width: '100%',
-    height: '100%',
+    container: {
+        width: '100%',
+        height: '100%',
 
-    maxWidth: '960px',
+        maxWidth: '960px',
 
-    marginTop: '10px'
-  }
+        marginTop: '10px'
+    },
+    tableText: {
+        cursor: 'pointer',
+
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis'
+    }
 };
 
 const TABLE_COLUMNS = [
   {
     key: 'course',
-    label: 'Emnekode',
+    label: <span style={{color: orange800}}>Emnekode</span>,
     sortable: true,
   },
   {
     key: 'courseName',
-    label: 'Navn',
+    label: <span style={{color: orange800}}>Navn</span>,
     sortable: true,
   }, 
   {
     key: 'lectureName',
-    label: 'Tema',
+    label: <span style={{color: orange800}}>Tema</span>,
     sortable: true,
   }
 ]
@@ -131,9 +139,9 @@ export default class LectureTable extends Component {
                     columns = {TABLE_COLUMNS}
                     data = { this.state.filteredLectureList.map(lecture => {
                         return {
-                            course:lecture.course.code,
-                            courseName:lecture.course.name,
-                            lectureName:lecture.name
+                            course:<div style={styles.tableText}>{lecture.course.code}</div>,
+                            courseName:<div style={styles.tableText}>{lecture.course.name}</div>,
+                            lectureName:<div style={styles.tableText}>{lecture.name}</div>
                         }
                     })}
                     showCheckboxes = { false }
