@@ -1,31 +1,23 @@
-
-import React from 'react'
-import { render } from 'enzyme'
-import { assert } from 'chai'
-import { it, describe } from 'mocha'
-
-import Message from '../../client/components/Message'
-
 const should = require('should')
 const expect = require('chai').expect
 const express = require('express')
 
-const courseController = require('../../server/database/controllers/index').courses
-const userController = require('../../server/database/controllers/index').users
-const lectureController = require('../../server/database/controllers/index').lectures
-const messageController = require('../../server/database/controllers/index').messages
-const adminRoleController = require('../../server/database/controllers/index').adminRoles
-const feedbackController = require('../../server/database/controllers/index').feedback
+const courseController = require('../../server/database/controllers/courses')
+const userController = require('../../server/database/controllers/users')
+const lectureController = require('../../server/database/controllers/lectures')
+const messageController = require('../../server/database/controllers/messages')
+const adminRoleController = require('../../server/database/controllers/adminRoles')
+const feedbackController = require('../../server/database/controllers/feedback')
 
 
 // Simulate the servercode in app.js
-/**
+
 const server = require('http').createServer(express())
 var ioServer = require('socket.io')(server)
 server.listen(8000)
 const sockets = require('../../server/sockets')
 sockets(ioServer)
-**/
+
 
 // Client connection
 var io = require('socket.io-client')
