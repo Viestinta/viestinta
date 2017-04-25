@@ -307,14 +307,17 @@ io.sockets.on('connection', function (socket) {
     console.log('[app][socket] Joined room identifier: ' + socket.room)
 
 
-    // Get feedback status for last x min
-    feedbacksController.getLastIntervalNeg({id: socket.LectureId}).then(function (resultNeg) {
-      feedbacksController.getLastIntervalPos({id: socket.LectureId}).then(function (resultPos) {
-        socket.emit('update-feedback-interval', [resultNeg, resultPos])
-      })
+    // Get all feedback
+    feedbacksController.getAllToLecture({
+        id: socket.LectureId
+      }).then(function (feedback) {
+        socket.emit('all-feedback', feedback)
     })
-    messagesController.getAllToLecture({id: socket.LectureId}).then(function (result) {
-      socket.emit('all-messages', result.reverse())
+    // Get all messages
+    messagesController.getAllToLecture({
+        id: socket.LectureId
+      }).then(function (result) {
+        socket.emit('all-messages', result.reverse())
     })
   })
 
@@ -416,14 +419,6 @@ io.sockets.on('connection', function (socket) {
       feedbacksController.getLastIntervalPos().then(function (resultPos) {
         io.sockets.in(socket.room).emit('update-feedback-interval', [resultNeg, resultPos])
       })
-    })
-  })
-  
-  socket.on('get-all-feedback', function () {
-    feedbacksController.getAllToLecture({
-        id: socket.LectureId
-      }).then(function (feedback) {
-        socket.emit('return-all-feedback', feedback)
     })
   })
 
