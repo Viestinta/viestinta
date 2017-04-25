@@ -11,6 +11,8 @@ const styles = {
   }
 }
 
+const UPDATE_INTERVAL = 5000*60 // 5 min
+
 export default class FeedbackWindow extends Component {
 
   constructor (props) {
@@ -28,15 +30,13 @@ export default class FeedbackWindow extends Component {
   }
 
   componentDidMount () {
-    // Increase every min
-    var interval = setInterval(this.updateLineChartData, 5000)
+    var interval = setInterval(this.updateLineChartData, UPDATE_INTERVAL)
     this.setState({intervalId: interval})
+
     socket.on('receive-feedback', this.receiveFeedback)
     socket.on('all-feedback', this.getAllFeedback)
 
     console.log("[FeedbackWindow] Component did mount.")
-    
-    
   }
 
   componentWillUnmount () {
@@ -69,12 +69,21 @@ export default class FeedbackWindow extends Component {
     })
   }
 
-  updateFeedbackInterval (feedbacks) {
-    console.log('[FeedbackWindow] updateFeedbackInterval: ', feedbacks)
+  updateLineChartData () {
+    console.log('[FeedbackWindow] updateLineChartData()')
+    var time = (new Date()).getTime()
+    var value = (this.state.feedback[1] - this.state.feedback[0])
+    var point = {
+      x: (new Date()).getTime(),
+      y: value
+    }
 
     this.setState({
-      feedback: feedbacks
+      feedback: [0, 0] 
+    }, function(){
     })
+
+    this.refs.lineChart.addPoint(point)
   }
 
   getAllVotesData () {
@@ -140,9 +149,9 @@ export default class FeedbackWindow extends Component {
   render () {
     return (
       <div style={styles.container}>
-        <LineChart container={'chart'} data={this.state.lineChartData}/>
         <p>Antall som synes det går for tregt: {this.state.feedback[0]}</p>
         <p>Antall som synes det går for fort: {this.state.feedback[1]}</p>
+        <LineChart ref='lineChart' container={'chart'} />
       </div>
     )
   }
