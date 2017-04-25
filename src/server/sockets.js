@@ -141,12 +141,12 @@ module.exports = (io) => {
       socket.room = socketLecture.room
       socket.join(socketLecture.room)
 
-      /*
+      
       console.log('[sockets][socket] Connected to lecture with ID: ' + socket.LectureId)
       console.log('[sockets][socket] For course with code: ' + socket.CourseCode)
       console.log('[sockets][socket] as user with username: ' + socket.user.name)
       console.log('[sockets][socket] Joined room identifier: ' + socket.room)
-      */
+      
       //console.log("Socket in sockets: ", socket)
 
       // Get feedback status for last x min

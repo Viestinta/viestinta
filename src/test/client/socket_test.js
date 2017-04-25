@@ -323,31 +323,20 @@ describe('Testing socket.io:', function () {
 
     beforeEach(function (done) {
       clientOneSocket = io.connect(socketURL, options)
+      console.log("testCourseOne.id:", testCourseOne.code)
       
       clientOneSocket.on('connect', function (data) {
         clientOneSocket.emit('login')
         clientOneSocket.emit('join-lecture', {
           user: testUserOne,
-          code: testCourseOne.course,
+          code: testCourseOne.code,
           id: testLectureOne.id,
-          room: testLectureOne.room
+          room: roomOne
         })
         done()
       })
-    })
-
-    /*
-    it('Saving correct values in socket', function (done) {
-      clientOneSocket.user.should.equal(testUserOne)
-      clientOneSocket.userId = testUserOne.id
-      clientOneSocket.LectureId.should.equal(testLectureOne.id)
-      clientOneSocket.CourseCode.should.equal(testCourseOne.code)
-      clientOneSocket.room.should.equal(roomOne)
-      done()
-    })
-
-  */
-    /*
+    })  
+    
     it('Getting last feedback for last interval', function (done) {
       feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
         feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
@@ -360,12 +349,13 @@ describe('Testing socket.io:', function () {
       })
     })
 
-    */
+    
 
     it('Getting all message to lecture', function (done) {
       messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-messages', function (messageList) {
 
+          console.log("message list for clientOneSocket: ", messageList)
           result = result.reverse()
           for (var i = 0; i < result.length; i++) {
             messageList[i].text.should.eql(result[i].text)
@@ -468,7 +458,7 @@ describe('Testing socket.io:', function () {
         clientOneSocket.emit('login')
         clientOneSocket.emit('join-lecture', {
           user: testUserOne,
-          code: testCourseOne.course,
+          code: testCourseOne.code,
           id: testLectureOne.id,
           room: testLectureOne.room
         })
@@ -478,7 +468,7 @@ describe('Testing socket.io:', function () {
         clientTwoSocket.emit('login')
         clientTwoSocket.emit('join-lecture', {
           user: testUserTwo,
-          code: testCourseOne.course,
+          code: testCourseOne.code,
           id: testLectureOne.id,
           room: testLectureOne.room
         })
@@ -488,7 +478,7 @@ describe('Testing socket.io:', function () {
         clientThreeSocket.emit('login')
         clientThreeSocket.emit('join-lecture', {
           user: testUserThree,
-          code: testCourseTwo.course,
+          code: testCourseTwo.code,
           id: testLectureTwo.id,
           room: testLectureTwo.room
         })
@@ -578,7 +568,7 @@ describe('Testing socket.io:', function () {
         clientOneSocket.emit('login')
         clientOneSocket.emit('join-lecture', {
           user: testUserOne,
-          code: testCourseOne.course,
+          code: testCourseOne.code,
           id: testLectureOne.id,
           room: testLectureOne.room
         })
@@ -588,7 +578,7 @@ describe('Testing socket.io:', function () {
         clientTwoSocket.emit('login')
         clientTwoSocket.emit('join-lecture', {
           user: testUserTwo,
-          code: testCourseOne.course,
+          code: testCourseOne.code,
           id: testLectureOne.id,
           room: testLectureOne.room
         })
@@ -598,7 +588,7 @@ describe('Testing socket.io:', function () {
         clientThreeSocket.emit('login')
         clientThreeSocket.emit('join-lecture', {
           user: testUserThree,
-          code: testCourseTwo.course,
+          code: testCourseTwo.code,
           id: testLectureTwo.id,
           room: testLectureTwo.room
         })
@@ -658,7 +648,7 @@ describe('Testing socket.io:', function () {
         clientOneSocket.emit('login')
         clientOneSocket.emit('join-lecture', {
           user: testUserOne,
-          code: testCourseOne.course,
+          code: testCourseOne.code,
           id: testLectureOne.id,
           room: testLectureOne.room
         })
@@ -668,7 +658,7 @@ describe('Testing socket.io:', function () {
         clientTwoSocket.emit('login')
         clientTwoSocket.emit('join-lecture', {
           user: testUserTwo,
-          code: testCourseOne.course,
+          code: testCourseOne.code,
           id: testLectureOne.id,
           room: testLectureOne.room
         })
@@ -678,7 +668,7 @@ describe('Testing socket.io:', function () {
         clientThreeSocket.emit('login')
         clientThreeSocket.emit('join-lecture', {
           user: testUserThree,
-          code: testCourseTwo.course,
+          code: testCourseTwo.code,
           id: testLectureTwo.id,
           room: testLectureTwo.room
         })
