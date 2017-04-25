@@ -87,8 +87,6 @@ export default class FeedbackMenu extends Component {
     return (
       <div style={styles.container}>
         <h3>Tilbakemelding til foreleser</h3> 
-        <p>Vennligst gi tilbakemelding på hvordan du opplever 
-        forelesningen akkurat nå.</p> 
         <Subheader>Tempo:</Subheader>
         <div style={{alignSelf: 'center'}}>
           <RaisedButton style={styles.button} primary={true} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
