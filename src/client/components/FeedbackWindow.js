@@ -24,6 +24,7 @@ export default class FeedbackWindow extends Component {
     this.getAllFeedback = this.getAllFeedback.bind(this)
     this.receiveFeedback = this.receiveFeedback.bind(this)
     this.updateLineChartData = this.updateLineChartData.bind(this)
+    this.makeFeedbackIntervals = this.makeFeedbackIntervals.bind(this)
   }
 
   componentDidMount () {
@@ -91,14 +92,49 @@ export default class FeedbackWindow extends Component {
     return data
   }
 
-  updateLineChartData () {
-    var data = this.state.lineChartData
-    var time = (new Date()).getTime()
-    data.push({
-      x: (new Date()).getTime(),
-      y: Math.random() * 20 - 10
-    })
-    this.setState({lineChartData: data})
+  /* 
+    Group feedback elements in intervals
+    of size = UPDATE_INTERVAL
+  */
+  makeFeedbackIntervals (feedbackList) {
+    console.log('[FeedbackWindow] In makeF..Intervals()')
+    var timeStep = UPDATE_INTERVAL,
+        index = 0,
+        timeIndex = (new Date(feedbackList[index].createdAt)).getTime(),
+        timeLimit = (timeIndex + timeStep),
+        dataset = [{x: timeIndex, y: 0}],
+        feedbackTime
+
+    for (var i = 0; i < feedbackList.length; i++){
+      feedbackTime = (new Date(feedbackList[i].createdAt)).getTime()
+      
+      if ( feedbackTime < timeLimit){
+        dataset[index].y += feedbackList[i].value
+      } else {      
+        do {
+          timeIndex += timeStep
+          timeLimit += timeStep
+          index++
+          dataset.push({x: timeIndex, y: 0})
+        } while ( feedbackTime > timeLimit )
+        
+        dataset[index].y += feedbackList[i].value
+      }
+    }
+    // Fill rest, until current time, with zero
+    var now = (new Date()).getTime()
+    timeLimit += timeStep
+    while (timeLimit < now){
+      dataset.push({x: timeLimit, y: 0})
+      timeLimit += timeStep
+    }
+
+    console.log('[FeedbackWindow] dataset:')
+    for (var i = 0; i < dataset.length; i++){
+      console.log('[time, value]:', new Date(dataset[i].x), dataset[i].y)
+    }
+
+    return dataset
   }
 
   render () {
