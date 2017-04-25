@@ -25,30 +25,20 @@ export default class FeedbackWindow extends Component {
       lineChartData: this.getAllVotesData()
     }
 
-    this.tick = this.tick.bind(this)
     this.receiveFeedback = this.receiveFeedback.bind(this)
     this.updateFeedbackInterval = this.updateFeedbackInterval.bind(this)
-  }
-
-  tick () {
-    console.log('[FeedbackWindow] In tick')
-
-    var minsElapsed = this.state.minsElapsed + 1
-    this.setState({
-      minsElapsed: minsElapsed
-    })
-    if (this.state.minsElapsed === 5) {
-      this.updateFeedbackInterval()
-    }
+    this.updateLineChartData = this.updateLineChartData.bind(this)
   }
 
   componentDidMount () {
     // Increase every min
-    var interval = setInterval(this.tick, 60000)
+    var interval = setInterval(this.updateLineChartData, 5000)
     this.setState({intervalId: interval})
     socket.on('receive-feedback', this.receiveFeedback)
     socket.on('update-feedback-interval', this.updateFeedbackInterval)
     console.log("[FeedbackWindow] Component did mount.")
+    
+    
   }
 
   componentWillUnmount () {
