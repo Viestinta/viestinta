@@ -15,18 +15,14 @@ export default class FeedbackWindow extends Component {
 
   constructor (props) {
     super(props)
-    
-    this.getAllVotesData = this.getAllVotesData.bind(this)
 
     this.state = {
-      // minsElapsed: 0,
-      feedback: [0, 0],
-      intervalId: undefined,
-      lineChartData: this.getAllVotesData()
+      feedback: [0, 0], // [numSlow, numFast]
+      intervalId: undefined
     }
 
+    this.getAllFeedback = this.getAllFeedback.bind(this)
     this.receiveFeedback = this.receiveFeedback.bind(this)
-    this.updateFeedbackInterval = this.updateFeedbackInterval.bind(this)
     this.updateLineChartData = this.updateLineChartData.bind(this)
   }
 
@@ -35,7 +31,8 @@ export default class FeedbackWindow extends Component {
     var interval = setInterval(this.updateLineChartData, 5000)
     this.setState({intervalId: interval})
     socket.on('receive-feedback', this.receiveFeedback)
-    socket.on('update-feedback-interval', this.updateFeedbackInterval)
+    socket.on('all-feedback', this.getAllFeedback)
+
     console.log("[FeedbackWindow] Component did mount.")
     
     
@@ -45,6 +42,17 @@ export default class FeedbackWindow extends Component {
     clearInterval(this.state.intervalId)
     console.log("[FeedbackWindow] Component will unmount.")
 
+  }
+
+  getAllFeedback (list) {
+    console.log('[FeedbackWindow] getAllFeedback(), list:', list)
+    var chartData = [{x: (new Date()).getTime(), y: 0}]
+
+    if (list.length > 0){
+      chartData = this.makeFeedbackIntervals(list)
+    }
+
+    this.refs.lineChart.setData(chartData)
   }
 
   receiveFeedback (feedback) {
