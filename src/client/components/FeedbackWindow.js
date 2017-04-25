@@ -15,11 +15,14 @@ export default class FeedbackWindow extends Component {
 
   constructor (props) {
     super(props)
+    
+    this.getAllVotesData = this.getAllVotesData.bind(this)
 
     this.state = {
       // minsElapsed: 0,
       feedback: [0, 0],
-      intervalId: undefined
+      intervalId: undefined,
+      lineChartData: this.getAllVotesData()
     }
 
     this.tick = this.tick.bind(this)
@@ -75,10 +78,35 @@ export default class FeedbackWindow extends Component {
     })
   }
 
+  getAllVotesData () {
+    var data = []
+    var time = (new Date()).getTime()
+    var i
+
+    for (i = -5; i <= 0; i += 1) {
+      data.push({
+        x: time + i * 5000,
+        y: Math.random() * 20 - 10
+      })
+    }
+    console.log('[FeedbackWindow] getLineChartData()')
+    return data
+  }
+
+  updateLineChartData () {
+    var data = this.state.lineChartData
+    var time = (new Date()).getTime()
+    data.push({
+      x: (new Date()).getTime(),
+      y: Math.random() * 20 - 10
+    })
+    this.setState({lineChartData: data})
+  }
+
   render () {
     return (
       <div style={styles.container}>
-        <LineChart />
+        <LineChart container={'chart'} data={this.state.lineChartData}/>
         <p>Antall som synes det går for tregt: {this.state.feedback[0]}</p>
         <p>Antall som synes det går for fort: {this.state.feedback[1]}</p>
       </div>
