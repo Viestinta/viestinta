@@ -38,7 +38,7 @@ const chartOptions = {
         enabled: false
     },
     series: [{
-        name: 'Total votes',
+        name: 'Sum stemmer',
         id: 'votes',
         data: []
     }]
@@ -58,45 +58,36 @@ export default class LineChart extends React.Component {
 
         this.state = {
             chart: undefined,
-            data: [],
-            intervalId: undefined
+            serie: undefined
         }
 
-        this.updateData = this.updateData.bind(this)
+        this.setData = this.setData.bind(this)
+        this.addPoint = this.addPoint.bind(this)
     }
     
     componentDidMount() {
-        this.chart = new Highcharts[this.props.type || "Chart"](
+        var chart = new Highcharts[this.props.type || "Chart"](
             this.refs.chart,
             chartOptions
         )
-        // Set data 'history' when mount
-        var serie = this.chart.get('votes')
-        serie.setData(this.props.data)
+        this.setState({
+            chart: chart,
+            serie: chart.get('votes')
+        })
     }
-
-    componentWillUpdate() {
-        // Get serie from chart by 'id'
-        var serie = this.chart.get('votes')
-        // Get last element of props
-        var point = this.props.data[(this.props.data.length - 1)]
-        // Update serie (redraw:true, shift:true)
-        serie.addPoint([point.x, point.y], true, true)
-    } 
 
     componentWillUnmount() {
-        this.chart.destroy()
-        clearInterval(this.state.intervalId)
+        this.state.chart.destroy()
     }
 
-    updateData () {
-        // Get serie from chart by 'id'
-        var serie = this.chart.get('votes')
-        // Generate random datapoint
-        var x = (new Date()).getTime(), // current time
-            y = ( Math.random() * 20 - 10 )
-        // Update serie
-        serie.addPoint([x, y], true, true)
+    /* data = [point, point, ...] */
+    setData (data) {
+        this.state.serie.setData(data)
+    }
+
+    /* point = {x: (new Data()).getTime(), y: value} */
+    addPoint (point) {
+        this.state.serie.addPoint(point)
     }
 
     render() {
