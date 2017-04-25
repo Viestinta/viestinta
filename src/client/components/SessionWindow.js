@@ -259,7 +259,7 @@ export default class SessionWindow extends Component {
         var minutes = date.getMinutes()
         if (hours < 10){hours = '0' + hours}
         if (minutes < 10){minutes = '0' + minutes}
-        return (hours + ':' + minutes + ':00')
+        return (hours + ':' + minutes)
     }
 
     disableDateStart (date) {
