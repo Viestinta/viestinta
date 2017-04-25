@@ -19,7 +19,10 @@ const styles = {
 };
 
 export default class LectureWrapper extends Component {
-
+    /**
+      * @summary Save state
+      * @param {props} event - isAdmin and lecture from SessionWindow.
+      */
     constructor (props) {
         super (props)
 

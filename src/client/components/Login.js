@@ -47,17 +47,24 @@ const styles = {
 }
 
 export default class Login extends Component {
-  
+  /**
+   * @summary Save state and bind functions.
+   */
   constructor (props) {
     super(props)
 
     this.login = this.login.bind(this)
   }
-
+  /**
+   * @summary Set Login to listen for server events.
+   */
   componentDidMount() {
     socket.on('login', this.login)
   }
 
+  /**
+   * @summary Emit 'login' to server
+   */
   login () {
     socket.emit('login')
   }
@@ -79,7 +86,7 @@ export default class Login extends Component {
           <p style={styles.text}>
             Viestintä - Making communication and feedback easy.
           </p>
-          <IconButton 
+          <IconButton
             //iconClassName="muidocs-icon-custom-github"
             //iconStyle={{color: 'rgba(255, 255, 255, 0.87)'}}
             href="https://github.com/Viestinta/viestinta" 

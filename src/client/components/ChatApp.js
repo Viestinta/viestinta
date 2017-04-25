@@ -35,6 +35,9 @@ const muiTheme = getMuiTheme({
 
 export default class ChatApp extends Component {
 
+  /**
+   * @summary Saving state and binding functions.
+   */
   constructor (props) {
     super(props)
 
@@ -47,10 +50,16 @@ export default class ChatApp extends Component {
     this.toggleAdmin = this.toggleAdmin.bind(this)
   }
 
+  /**
+   * @summary Get info about user when ChatApp mounts.
+   */
   componentDidMount() {
     this.getUserInfo()
   }
 
+  /**
+   * @summary Get information about user.
+   */
   getUserInfo () {
     axios
       .get("/user")
@@ -64,7 +73,9 @@ export default class ChatApp extends Component {
         console.log(err)
       })
   }
-
+  /**
+   * @summary Set isAdmin state.
+   */
   toggleAdmin () {
     this.setState({
       isAdmin: !this.state.isAdmin

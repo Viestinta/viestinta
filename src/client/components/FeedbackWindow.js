@@ -3,6 +3,10 @@ import socket from '../socket'
 
 export default class FeedbackWindow extends Component {
 
+  /**
+   * @summary Save state and bind functions
+   * @param {props} event - slow, fast, updateFeedbackInterval and lecture from FeedbackBox.
+   */
   constructor (props) {
     super(props)
 
@@ -17,9 +21,11 @@ export default class FeedbackWindow extends Component {
     this.updateFeedbackInterval = this.updateFeedbackInterval.bind(this)
   }
 
+  /**
+   * @summary Counting for when to update feedbackInterval, and if right time, calls the funciton.
+   * @param {props} event - slow, fast, updateFeedbackInterval and lecture from FeedbackBox.
+   */
   tick () {
-    console.log('[FeedbackWindow] In tick')
-
     var minsElapsed = this.state.minsElapsed + 1
     this.setState({
       minsElapsed: minsElapsed
@@ -29,6 +35,9 @@ export default class FeedbackWindow extends Component {
     }
   }
 
+  /**
+   * @summary Set interval, set state intervalId and set FeedbackWindow to listen to server events.
+   */
   componentDidMount () {
     // Increase every min
     var interval = setInterval(this.tick, 60000)
@@ -38,14 +47,20 @@ export default class FeedbackWindow extends Component {
     console.log("[FeedbackWindow] Component did mount.")
   }
 
+  /**
+   * @summary Clear interval when  FeedbackWindow unmounts.
+   */
   componentWillUnmount () {
     clearInterval(this.state.intervalId)
     console.log("[FeedbackWindow] Component will unmount.")
 
   }
 
+  /**
+   * @summary Receive feedback and updates state feedback.
+   * @param {feedback} feedback - feedback with value 1 or -1.
+   */
   receiveFeedback (feedback) {
-    console.log('[FeedbackWindow] Setting feedback:', feedback.value)
     var feedbackList = this.state.feedback
     if (feedback.value === -1) {
       feedbackList[0] = feedbackList[0] + 1
@@ -57,9 +72,11 @@ export default class FeedbackWindow extends Component {
     })
   }
 
+  /**
+   * @summary Set state feedback
+   * @param {list} feedbacks - [slow, fast] where values are -1 or 1.
+   */
   updateFeedbackInterval (feedbacks) {
-    console.log('[FeedbackWindow] updateFeedbackInterval: ', feedbacks)
-
     this.setState({
       feedback: feedbacks
     })

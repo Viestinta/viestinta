@@ -24,7 +24,9 @@ const styles = {
 }
 
 export default class FeedbackBox extends Component {
-
+  /**
+   * @summary Save state and bind functions.
+   */
   constructor (props) {
     super(props)
     this.state = {
@@ -38,19 +40,25 @@ export default class FeedbackBox extends Component {
     this.openFeedbackMenu = this.openFeedbackMenu.bind(this)
   }
 
-	// Receiving updated feedback values
+	/**
+   * @summary Receive updated feedback and save in state.
+   * @param {array} event - The event that triggered the function.
+   */
+   // TODO: blir denne noen gang kalt?
   updateFeedback (feedback) {
-    console.log('[FeedbackBox] In updateFeedback:', feedback)
-
     this.state.feedback = feedback
   }
 
+  // TODO: blir denne noen gang kalt?
   updateFeedbackInterval () {
     console.log('[FeedbackBox] In updateFeedbackInterval')
   }
 
+  /**
+   * @summary Register what kind of feedback, save state and calls sendFeedback.
+   * @param {string} feedback - 'slow' or 'fast'.
+   */
   onClick (feedback) {
-    console.log('[FeedbackBox] In onClick')
     if (feedback.type === 'slow') {
       feedbackList[0] = feedbackList[0] + 1
     } else if (feedback.type === 'fast') {
@@ -62,6 +70,9 @@ export default class FeedbackBox extends Component {
     this.props.sendFeedback(feedback)
   }
 
+  /**
+   * @summary Setting state open to show or hide feedbackmenu for user.
+   */
   openFeedbackMenu () {
     this.setState({open: !this.state.open})
   }

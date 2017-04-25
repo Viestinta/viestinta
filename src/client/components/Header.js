@@ -21,7 +21,6 @@ const styles = {
 };
 
 
-
 export default class Header extends React.Component {
 	render () {
 		const logoAndUser = (

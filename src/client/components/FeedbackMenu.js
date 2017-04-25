@@ -8,10 +8,15 @@ const style = {
   minWidth: '105px'
 }
 
+// Final variable representing a minute
 var MIN = 1000*60
 
 export default class FeedbackMenu extends Component {
 
+  /**
+   * @summary Sat state and bind functions
+   * @param {props} props - onClick() and lecture given from FeedbackBox
+   */
   constructor (props) {
     super(props)
     this.state = {
@@ -24,23 +29,34 @@ export default class FeedbackMenu extends Component {
     this.activateButtons = this.activateButtons.bind(this)
   }
 
+  /**
+   * @summary Set interval for activating feedbackbuttons and set state intervalId.
+   */
   componentDidMount () {
     // Activate button every x min
     var interval = setInterval(this.activateButtons, 5*MIN)
     this.setState({intervalId: interval})
   }
 
+  /**
+   * @summary Clear interval when component unmounts.
+   */
   componentWillUnmount () {
     clearInterval(this.state.intervalId)
   }
 
+  /**
+   * @summary Activate buttons when interval has passed.
+   */
   activateButtons () {
-    console.log('[FeedbackMenu] activateButtons')
     this.setState({
       disabled: false
     })
   }
 
+  /**
+   * @summary Called when feedbackbutton clicked is 'slow', and then disable buttons.
+   */
   slowClick () {
     let feedback =  {
       value: -1,
@@ -56,6 +72,9 @@ export default class FeedbackMenu extends Component {
     })
   }
 
+  /**
+   * @summary Called when feedbackbutton clicked is 'fast', and then disable buttons.
+   */
   fastClick () {
     let feedback =  {
       value: 1,
