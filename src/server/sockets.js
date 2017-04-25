@@ -93,15 +93,15 @@ module.exports = (io) => {
       initCourse = false
     }
     // Reports when it finds a connection
-    console.log('[app] connection')
+    console.log('[sockets] connection')
 
     socket.on('login', function (data) {
-      console.log('[app] login')
+      console.log('[sockets] login')
     })
 
 
     socket.on('create-lecture', function (socketLecture) {
-      console.log('[app] create-lecture')
+      console.log('[sockets] create-lecture')
 
       // TODO: us20 missing
     })
@@ -114,7 +114,7 @@ module.exports = (io) => {
     }
      */
     socket.on('leave-lecture', function (socketLecture) {
-      console.log('[app][socket] leave-lecture ' + socketLecture.room)
+      console.log('[sockets][socket] leave-lecture ' + socketLecture.room)
       socket.user = undefined
       socket.LectureId = undefined
       socket.CourseCode = undefined
@@ -130,7 +130,7 @@ module.exports = (io) => {
     }
      */
     socket.on('join-lecture', function (socketLecture) {
-      console.log('[app][socket] join-lecture ' + socketLecture.room)
+      console.log('[sockets][socket] join-lecture ' + socketLecture.room)
       
       socket.user = socketLecture.user
       usersController.getByEmail(socket.user.email).then(function (user) {
@@ -142,10 +142,10 @@ module.exports = (io) => {
       socket.join(socketLecture.room)
 
       /*
-      console.log('[app][socket] Connected to lecture with ID: ' + socket.LectureId)
-      console.log('[app][socket] For course with code: ' + socket.CourseCode)
-      console.log('[app][socket] as user with username: ' + socket.user.name)
-      console.log('[app][socket] Joined room identifier: ' + socket.room)
+      console.log('[sockets][socket] Connected to lecture with ID: ' + socket.LectureId)
+      console.log('[sockets][socket] For course with code: ' + socket.CourseCode)
+      console.log('[sockets][socket] as user with username: ' + socket.user.name)
+      console.log('[sockets][socket] Joined room identifier: ' + socket.room)
       */
       //console.log("Socket in sockets: ", socket)
 
@@ -173,8 +173,8 @@ module.exports = (io) => {
     }
      */
     socket.on('new-message', function (msg) {
-      console.log('[app] new-message: ' + msg.text)
-      console.log('[app][socket] Message destined for Room: ' + socket.room)
+      console.log('[sockets] new-message: ' + msg.text)
+      console.log('[sockets][socket] Message destined for Room: ' + socket.room)
 
       var timeNow = new Date()
       timeNow.setHours(timeNow.getHours() + 2)
@@ -204,7 +204,7 @@ module.exports = (io) => {
 
     // When somebody votes on a message
     socket.on('new-vote-on-message', function (msgId, value) {
-      console.log('[app] new-voting-message: ' + msgId + " with " + value)
+      console.log('[sockets] new-voting-message: ' + msgId + " with " + value)
       
       messagesController.vote({
         id: msgId,
@@ -232,7 +232,7 @@ module.exports = (io) => {
     }
      */
     socket.on('new-feedback', function (feedback) {
-      console.log('[app] new-feedback: ' + feedback.value + ' to room: ' + socket.room)
+      console.log('[sockets] new-feedback: ' + feedback.value + ' to room: ' + socket.room)
       feedbacksController.createFeedback({
         value: feedback.value,
         LectureId: socket.LectureId,

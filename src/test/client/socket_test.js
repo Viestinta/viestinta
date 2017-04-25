@@ -11,13 +11,8 @@ const feedbackController = require('../../server/database/controllers/feedback')
 
 
 // Simulate the servercode in app.js
-
-const server = require('http').createServer(express())
-var ioServer = require('socket.io')(server)
+const server = require('../../server/app').server
 server.listen(8000)
-const sockets = require('../../server/sockets')
-sockets(ioServer)
-
 
 // Client connection
 var io = require('socket.io-client')

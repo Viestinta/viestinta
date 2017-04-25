@@ -24,7 +24,6 @@ describe('GET /', function() {
 
 
 describe('GET /lectures', function() {
-
   it('Unauthorized', function(done) {
     process.env.NODE_ENV = 'test_dev'
     request(app)
@@ -39,6 +38,7 @@ describe('GET /lectures', function() {
       })
   })
 
+  /*
   it('Authorized, 404', function(done) {
     process.env.NODE_ENV = 'test'
     request(app)
@@ -50,37 +50,17 @@ describe('GET /lectures', function() {
         done()
       })
   })
+  */
 
-  let testCourse = undefined
-  let testLecture = undefined
   it('Authorized, 200', function(done) {
-    courseController.findOrCreateCourse({
-      name: "API TEST",
-      code: "API01"
-    }).spread(function(course, created) {
-      testCourse = course
-      lectureController.createLecture({
-        name: "Test Lecture API",
-        CourseId: testCourse.id
-      }).then(function (lecture) {
-        testLecture = lecture
-        request(app)
-          .get('/lectures')
-          .set('Accept', 'application/json')
-          .expect(200)
-          .end(function(err, res) {
-            if (err) return done(err)
-            done()
-          })
-      })
-    })
-  })
-  
-  after(function (done) {
-    testLecture.destroy().then(function () {
-      testCourse.destroy().then(function () {
+    process.env.NODE_ENV = 'test'
+    request(app)
+      .get('/lectures')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end(function(err, res) {
+        if (err) return done(err)
         done()
       })
-    })
   })
 })
