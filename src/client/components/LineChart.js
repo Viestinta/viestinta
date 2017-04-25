@@ -1,91 +1,107 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 
-export default class LineChart extends React.Component{
-    constructor (props){
+const chartOptions = {
+    chart: {
+        type: 'spline',
+        animation: Highcharts.svg, // don't animate in old IE
+        marginRight: 10,
+    },
+    title: {
+        text: 'Totale stemmer'
+    },
+    xAxis: {
+        type: 'datetime',
+        tickPixelInterval: 150
+    },
+    yAxis: {
+        title: {
+            text: 'Antall'
+        },
+        plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+        }]
+    },
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.series.name + '</b><br/>' +
+                Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                Highcharts.numberFormat(this.y, 2)
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    exporting: {
+        enabled: false
+    },
+    series: [{
+        name: 'Total votes',
+        id: 'votes',
+        data: []
+    }]
+}
+
+const styles = {
+    chart: {
+        minWidth: '300px', 
+        height: '300px', 
+        margin: '0px'
+    }
+}
+
+export default class LineChart extends React.Component {
+    constructor (props) {
         super(props)
+
         this.state = {
             chart: undefined,
-            data: []
+            data: [],
+            intervalId: undefined
         }
+
+        this.updateData = this.updateData.bind(this)
+    }
+    
+    componentDidMount() {
+        this.chart = new Highcharts[this.props.type || "Chart"](
+            this.refs.chart,
+            chartOptions
+        )
+        // Set data 'history' when mount
+        var serie = this.chart.get('votes')
+        serie.setData(this.props.data)
     }
 
-    componentDidMount(){
-        this.chart = 
-            Highcharts.chart('container', {
-                chart: {
-                    type: 'spline',
-                    animation: Highcharts.svg, // don't animate in old IE
-                    marginRight: 10,
-                    events: {
-                        load: function () {
+    componentWillUpdate() {
+        // Get serie from chart by 'id'
+        var serie = this.chart.get('votes')
+        // Get last element of props
+        var point = this.props.data[(this.props.data.length - 1)]
+        // Update serie (redraw:true, shift:true)
+        serie.addPoint([point.x, point.y], true, true)
+    } 
 
-                            // set up the updating of the chart each second
-                            var series = this.series[0]
-                            setInterval(function () {
-                                var x = (new Date()).getTime(), // current time
-                                    y = ( Math.random() * 20 - 10 )
-                                series.addPoint([x, y], true, true)
-                            }, 5000)
-                        }
-                    }
-                },
-                title: {
-                    text: 'Live random data'
-                },
-                xAxis: {
-                    type: 'datetime',
-                    tickPixelInterval: 150
-                },
-                yAxis: {
-                    title: {
-                        text: 'Value'
-                    },
-                    plotLines: [{
-                        value: 0,
-                        width: 1,
-                        color: '#808080'
-                    }]
-                },
-                tooltip: {
-                    formatter: function () {
-                        return '<b>' + this.series.name + '</b><br/>' +
-                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                            Highcharts.numberFormat(this.y, 2)
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                exporting: {
-                    enabled: false
-                },
-                series: [{
-                    name: 'Random data',
-                    data: (function () {
-                        // generate an array of random data
-                        var data = [],
-                            time = (new Date()).getTime(),
-                            i
-
-                        for (i = -5; i <= 0; i += 1) {
-                            data.push({
-                                x: time + i * 5000,
-                                y: Math.random() * 20 - 10
-                            })
-                        }
-                        return data
-                    }())
-                }]
-            })
-    }
-
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.chart.destroy()
+        clearInterval(this.state.intervalId)
     }
-    render(){
-        return(
-            <div id="container" style={{minWidth: '300px', height: '300px', margin: '0px'}}></div>
+
+    updateData () {
+        // Get serie from chart by 'id'
+        var serie = this.chart.get('votes')
+        // Generate random datapoint
+        var x = (new Date()).getTime(), // current time
+            y = ( Math.random() * 20 - 10 )
+        // Update serie
+        serie.addPoint([x, y], true, true)
+    }
+
+    render() {
+        return (
+            <div ref="chart" style={styles.chart}></div>
         )
     }
 }
