@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import socket from '../socket'
 
 import LineChart from './LineChart'
+import SemiCircleDonutChart from './SemiCircleDonutChart'
 
 const styles = {
   container: {
@@ -26,6 +27,7 @@ export default class FeedbackWindow extends Component {
     this.getAllFeedback = this.getAllFeedback.bind(this)
     this.receiveFeedback = this.receiveFeedback.bind(this)
     this.updateLineChartData = this.updateLineChartData.bind(this)
+    this.updateDonutChartData = this.updateDonutChartData.bind(this)
     this.makeFeedbackIntervals = this.makeFeedbackIntervals.bind(this)
   }
 
@@ -57,15 +59,17 @@ export default class FeedbackWindow extends Component {
   }
 
   receiveFeedback (feedback) {
-    console.log('[FeedbackWindow] Setting feedback:', feedback.value)
-    var feedbackList = this.state.feedback
+    console.log('[FeedbackWindow] Setting feedback:', feedback.value, feedback.createdAt)
+    var currentFeedback = this.state.feedback
     if (feedback.value === -1) {
-      feedbackList[0] = feedbackList[0] + 1
+      currentFeedback[0] += 1
     } else {
-      feedbackList[1] = feedbackList[1] + 1
+      currentFeedback[1] += 1
     }
     this.setState({
-      feedback: feedbackList
+      feedback: currentFeedback
+    }, function(){
+      this.updateDonutChartData()
     })
   }
 
@@ -81,24 +85,25 @@ export default class FeedbackWindow extends Component {
     this.setState({
       feedback: [0, 0] 
     }, function(){
+      this.updateDonutChartData()
     })
 
     this.refs.lineChart.addPoint(point)
   }
 
-  getAllVotesData () {
-    var data = []
-    var time = (new Date()).getTime()
-    var i
+  updateDonutChartData () {
+    var numSlow = this.state.feedback[0]
+    var numFast = this.state.feedback[1]
+    
+    /* Weight of no votes */
+    var weight = 1
+    var percentSlow = ( (numSlow+weight) / (numSlow+numFast+2*weight) ) * 100.00
 
-    for (i = -5; i <= 0; i += 1) {
-      data.push({
-        x: time + i * 5000,
-        y: Math.random() * 20 - 10
-      })
-    }
-    console.log('[FeedbackWindow] getLineChartData()')
-    return data
+    this.refs.donutChart.setData([ 
+      ['Sakte: ' + numSlow, percentSlow] , 
+      ['Fort: ' + numFast, 100.00 - percentSlow] 
+    ])
+
   }
 
   /* 
@@ -149,9 +154,8 @@ export default class FeedbackWindow extends Component {
   render () {
     return (
       <div style={styles.container}>
-        <p>Antall som synes det går for tregt: {this.state.feedback[0]}</p>
-        <p>Antall som synes det går for fort: {this.state.feedback[1]}</p>
         <LineChart ref='lineChart' container={'chart'} />
+        <SemiCircleDonutChart ref='donutChart' container={'chart'} />
       </div>
     )
   }
