@@ -401,7 +401,10 @@ io.sockets.on('connection', function (socket) {
       LectureId: socket.LectureId,
       UserId: socket.UserId
     }).then(function (result) {
-      io.sockets.in(socket.room).emit('receive-feedback', {value: result.value})
+      io.sockets.in(socket.room).emit('receive-feedback', {
+        value: result.value,
+        createdAt: result.createdAt
+      })
     })
   })
 
@@ -413,6 +416,14 @@ io.sockets.on('connection', function (socket) {
       feedbacksController.getLastIntervalPos().then(function (resultPos) {
         io.sockets.in(socket.room).emit('update-feedback-interval', [resultNeg, resultPos])
       })
+    })
+  })
+  
+  socket.on('get-all-feedback', function () {
+    feedbacksController.getAllToLecture({
+        id: socket.LectureId
+      }).then(function (feedback) {
+        socket.emit('return-all-feedback', feedback)
     })
   })
 
