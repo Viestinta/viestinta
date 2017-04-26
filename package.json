@@ -115,7 +115,9 @@
   "nyc": {
     "exclude": [
       "src/test/**",
-      "src/server/app.js"
+      "src/server/app.js",
+      "src/server/database/controllers/index.js",
+      "src/server/database/models/index.js"
     ]
   },
   "babel": {
