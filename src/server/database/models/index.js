@@ -65,6 +65,9 @@ sequelize
     .sync()
     .then(function(err) {
       console.log('Database sync complete')
+      if (process.env.VIESTINTA_INIT_DATABASE) {
+        require('../../init')
+      }
     }, function (err) {
       console.log('An error occurred while creating the table:', err);
     })

@@ -100,5 +100,6 @@ workspace.xml
 npm-debug.log
 src/server/database/migrations/
 src/server/database/seeders/
+*ime-database.json
 
 
