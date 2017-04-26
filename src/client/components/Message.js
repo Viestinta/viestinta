@@ -32,7 +32,8 @@ const styles = {
     paddingBottom: '10px',
 
     borderRadius: '2px',
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    whiteSpace: 'pre-wrap'
   },
   timestamp: {
     display: 'flex',
@@ -83,7 +84,6 @@ export default class Message extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      text: '',
       voteEnabled: true,
       voteUp: true,
       open: false,

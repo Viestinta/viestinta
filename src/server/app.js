@@ -148,10 +148,12 @@ router(app)
 
 // Prevent NodeJS container from locking into listen when running in test env
 
+const port = process.env.VIESTINTA_OVERWRITE_PORT || app.get('port')
+
 if (process.env.NODE_ENV !== 'test') {
-  server.listen(app.get('port'), (err) => {
+  server.listen(port, (err) => {
     if (err) throw err
-    console.log('Node app is running on port', app.get('port'))
+    console.log('Node app is running on port', port)
   })
 }
 
@@ -262,8 +264,12 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('create-lecture', function (socketLecture) {
     console.log('[app] create-lecture')
-    
-    // TODO: us20 missing
+    courseController.getByCode(socketLecture.courseCode).then(function (course) {
+      socketLecture.CourseId = course.id
+      lecturesController.createLecture(socketLecture).then(function (lecture) {
+        io.sockets.emit('new-lecture', lecture.get({plain: true}))
+      })
+    })
   })
 
   /**
@@ -372,16 +378,13 @@ io.sockets.on('connection', function (socket) {
     messagesController.vote({
       id: msgId,
       value: value
-    }).then(function () {
-
+    }, function () {
       messagesController.getAllToLecture({
         id: socket.LectureId
       }).then(function (msgList) {
-
         io.sockets.in(socket.room).emit('update-message-order', msgList.reverse())
       })
     })
-      
   })
 
   // When somebody gives feedback
