@@ -162,7 +162,7 @@ module.exports = (io) => {
         id: socket.LectureId
       })
         .then(function (messages) {
-          if (process.env.NODE_ENV !== 'test') {
+          //if (process.env.NODE_ENV !== 'test') {
             let counter = 0
             messages.map((message) => {
               usersController.getById(message.UserId).then(function (user) {
@@ -174,9 +174,9 @@ module.exports = (io) => {
                 }
               })
             })
-          } else {
-              socket.emit('all-messages', messages.reverse())
-          }
+          //} else {
+          //    socket.emit('all-messages', messages.reverse())
+          //}
         })
     })
 
@@ -205,7 +205,7 @@ module.exports = (io) => {
         UserId: socket.UserId
       }
 
-      if(process.env.NODE_ENV !== 'test') {
+     //if(process.env.NODE_ENV !== 'test') {
         usersController.getById(socket.UserId).then(function (user) {
           let userName = user.name
 
@@ -225,7 +225,7 @@ module.exports = (io) => {
         }).catch(function (error) {
           console.log("Error: ", error)
         })
-      }
+      //}
     })
 
     // When somebody votes on a message

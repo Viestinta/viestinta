@@ -107,7 +107,8 @@ describe('Testing socket.io:', function () {
           messageController.createMessage({
             time: now,
             text: "Message 1",
-            LectureId: testLectureOne.id
+            LectureId: testLectureOne.id,
+            UserId: testUserOne.id
           }).then(function (msg) {
             testMessageOne = msg
             resolve()
@@ -120,7 +121,8 @@ describe('Testing socket.io:', function () {
           messageController.createMessage({
             time: now.setMinutes(min - 3),
             text: "Message 2",
-            LectureId: testLectureOne.id
+            LectureId: testLectureOne.id,
+            UserId: testUserTwo.id,
           }).then(function (msg) {
             testMessageTwo = msg
             resolve()
@@ -133,7 +135,8 @@ describe('Testing socket.io:', function () {
           messageController.createMessage({
             time: now.setMinutes(min -3),
             text: "Message 3",
-            LectureId: testLectureTwo.id
+            LectureId: testLectureTwo.id,
+            UserId: testUserThree.id
           }).then(function (msg) {
             testMessageThree = msg
             resolve()
@@ -146,7 +149,8 @@ describe('Testing socket.io:', function () {
           messageController.createMessage({
             time: now.setMinutes(min -10),
             text: "Message 4",
-            LectureId: testLectureTwo.id
+            LectureId: testLectureTwo.id,
+            UserId: testUserThree.id
           }).then(function (msg) {
             testMessageFour = msg
             resolve()
@@ -168,9 +172,10 @@ describe('Testing socket.io:', function () {
       function feedbackOne() {
         return new Promise(function (resolve) {
           feedbackController.createFeedback({
-            time: now.setMinutes(min - 9),
+            createdAt: now.setMinutes(min - 9),
             value: 1,
             LectureId: testLectureOne.id,
+            UserId: testUserOne.id
           }).then(function (feedback) {
             resolve()
           })
@@ -181,9 +186,10 @@ describe('Testing socket.io:', function () {
       function feedbackTwo() {
         return new Promise(function (resolve) {
           feedbackController.createFeedback({
-            time: now.setMinutes(min -15),
+            createdAt: now.setMinutes(min -15),
             value: 1,
             LectureId: testLectureOne.id,
+            UserId: testUserTwo.id
           }).then(function (feedback) {
             resolve()
           })
@@ -193,9 +199,10 @@ describe('Testing socket.io:', function () {
       function feedbackThree() {
         return new Promise(function (resolve) {
           feedbackController.createFeedback({
-            time:now.setMinutes(min - 3),
+            createdAt:now.setMinutes(min - 3),
             value: -1,
             LectureId: testLectureOne.id,
+            UserId: testUserOne.id
           }).then(function (feedback) {
               resolve()
             })
@@ -205,9 +212,10 @@ describe('Testing socket.io:', function () {
       function feedbackFour() {
         return new Promise(function (resolve) {
           feedbackController.createFeedback({
-            time: now.setMinutes(min -2),
+            createdAt: now.setMinutes(min -2),
             value: 1,
             LectureId: testLectureTwo.id,
+            UserId: testUserThree.id
           }).then(function (feedback) {
               resolve()
             })
@@ -217,9 +225,10 @@ describe('Testing socket.io:', function () {
       function feedbackFive() {
         return new Promise(function (resolve) {
           feedbackController.createFeedback({
-            time: now.setMinutes(min -10),
+            createdAt: now.setMinutes(min -10),
             value: 1,
             LectureId: testLectureTwo.id,
+            UserId: testUserThree.id
           }).then(function (feedback) {
               resolve()
             })
@@ -229,9 +238,10 @@ describe('Testing socket.io:', function () {
       function feedbackSix() {
         return new Promise(function (resolve) {
           feedbackController.createFeedback({
-            time: now.setMinutes(min - 1),
+            createdAt: now.setMinutes(min - 1),
             value: -1,
             LectureId: testLectureTwo.id,
+            UserId: testUserThree.id
           }).then(function (feedback) {
               resolve()
             })
@@ -302,6 +312,8 @@ describe('Testing socket.io:', function () {
       .then(function () {
         Promise.all([createMessages(), createFeedback()])
           .then(function () {
+            console.log("RoomOne: ", roomOne)
+            console.log("RoomTwo: ", roomTwo)
             done()
         })   
       }).catch(function(err) {
@@ -319,6 +331,8 @@ describe('Testing socket.io:', function () {
     })
   })
   
+  // TODO: create-lecture
+
   describe('Testing join-lecture:', function () {
 
     beforeEach(function (done) {
@@ -336,20 +350,21 @@ describe('Testing socket.io:', function () {
         done()
       })
     })
-    /*** @deprecated ***/
-    /*
+
+    /*** @deprecated ***/    
     it('Getting last feedback for last interval', function (done) {
-      feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
-        feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
-          clientOneSocket.on('update-feedback-interval', function(results) {
-            expect(results[0]).to.equal(resultNeg)
-            expect(results[1]).to.equal(resultPos)
-            done()
-          })
+      feedbackController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
+        clientOneSocket.on('all-feedback', function(feedbackList) {
+          for (var i = 0; i < feedbackList.length; i++) {
+            feedbackList[i].value.should.eql(result[i].value)
+            feedbackList[i].LectureId.should.eql(result[i].LectureId)
+            feedbackList[i].UserId.should.eql(result[i].UserId)
+          }
+
+          done()
         })
       })
     })
-    */
     
 
     it('Getting all message to lecture', function (done) {
@@ -374,6 +389,9 @@ describe('Testing socket.io:', function () {
       clientOneSocket = io.connect(socketURL, options)
       clientTwoSocket = io.connect(socketURL, options)
       clientThreeSocket = io.connect(socketURL, options)
+
+      console.log("RoomOne: ", roomOne)
+      console.log("RoomTwo: ", roomTwo)
             
       clientOneSocket.on('connect', function (data) {
         clientOneSocket.emit('login')
@@ -408,24 +426,29 @@ describe('Testing socket.io:', function () {
       done()
     })
 
-    /*
+    
     it('Broadcasting message to all members of that room', function (done) {
       var msg = {
+            time: new Date(),
             text: "Hello world",
-            lecture: {
-              id: testLectureOne.id,
-              code: testCourseOne.code,
-              room: roomOne,
-            }
+            LectureId: testLectureOne.id,
+            UserId: testUserOne.id
           }
 
-      console.log(clientOneSocket.room)
       clientOneSocket.emit('new-message', msg)
         function recClientOne() {
           return new Promise(function (resolve) {
+            console.log("In recCLientOne")
 
             clientOneSocket.on('receive-message', function (message, done) {
+              console.log("clientOne has received message")
               message.text.should.eql(msg.text)
+              message.id.should.eql(msg.id)
+              message.votesUp.should.eql(msg.votesUp)
+              message.votesDown.should.eql(msg.votesDown)
+              message.userName.should.eql(msg.userName)
+              message.UserId.should.eql(msg.UserId)
+              message.LectureId.should.eql(msg.LectureId)
               resolve()
             })
           })
@@ -446,7 +469,7 @@ describe('Testing socket.io:', function () {
           })
 
       })
-      */
+      
   })
 
   
