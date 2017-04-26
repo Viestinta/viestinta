@@ -16,6 +16,7 @@ const styles = {
 }
 
 export default class FeedbackBox extends Component {
+
   render () {
     return (
       <Paper zDepth={3} style={styles.container}>
