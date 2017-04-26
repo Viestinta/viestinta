@@ -101,9 +101,13 @@ module.exports = (io) => {
 
 
     socket.on('create-lecture', function (socketLecture) {
-      console.log('[sockets] create-lecture')
-
-      // TODO: us20 missing
+      console.log('[app] create-lecture')
+      courseController.getByCode(socketLecture.courseCode).then(function (course) {
+        socketLecture.CourseId = course.id
+        lecturesController.createLecture(socketLecture).then(function (lecture) {
+          io.sockets.emit('new-lecture', lecture.get({plain: true}))
+        })
+      })
     })
 
     /**
@@ -141,23 +145,35 @@ module.exports = (io) => {
       socket.room = socketLecture.room
       socket.join(socketLecture.room)
 
-      
-      console.log('[sockets][socket] Connected to lecture with ID: ' + socket.LectureId)
-      console.log('[sockets][socket] For course with code: ' + socket.CourseCode)
-      console.log('[sockets][socket] as user with username: ' + socket.user.name)
-      console.log('[sockets][socket] Joined room identifier: ' + socket.room)
-      
-      //console.log("Socket in sockets: ", socket)
+      console.log('[app][socket] Connected to lecture with ID: ' + socket.LectureId)
+      console.log('[app][socket] For course with code: ' + socket.CourseCode)
+      console.log('[app][socket] as user with username: ' + socket.user.name)
+      console.log('[app][socket] Joined room identifier: ' + socket.room)
 
-      // Get feedback status for last x min
-      feedbacksController.getLastIntervalNeg({id: socket.LectureId}).then(function (resultNeg) {
-        feedbacksController.getLastIntervalPos({id: socket.LectureId}).then(function (resultPos) {
-          socket.emit('update-feedback-interval', [resultNeg, resultPos])
+      // Get all feedback
+      feedbacksController.getAllToLecture({
+        id: socket.LectureId
+      }).then(function (feedback) {
+        socket.emit('all-feedback', feedback)
+      })
+
+      // Get all messages
+      messagesController.getAllToLecture({
+        id: socket.LectureId
+      })
+        .then(function (messages) {
+          let counter = 0
+          messages.map((message) => {
+            usersController.getById(message.UserId).then(function (user) {
+              message.userName = user.name
+              counter++
+              if (counter === messages.length) {
+                console.log('[app][socket] Sent all messages')
+                socket.emit('all-messages', messages.reverse())
+              }
+            })
+          })
         })
-      })
-      messagesController.getAllToLecture({id: socket.LectureId}).then(function (result) {
-        socket.emit('all-messages', result.reverse())
-      })
     })
 
 
@@ -185,16 +201,20 @@ module.exports = (io) => {
         UserId: socket.UserId
       }
 
-      messagesController.createMessage(databaseMsg).then(function (result) {
+      usersController.getById(socket.UserId).then(function (user) {
+        let userName = user.name
 
-        io.sockets.in(socket.room).emit('receive-message', {
-          id: result.id,
-          text: result.text,
-          time: result.time,
-          votesUp: result.votesUp,
-          votesDown: result.votesDown,
-          UserId: result.UserId,
-          LectureId: result.LectureId
+        messagesController.createMessage(databaseMsg).then(function (result) {
+          io.sockets.in(socket.room).emit('receive-message', {
+            id: result.id,
+            text: result.text,
+            time: result.time,
+            votesUp: result.votesUp,
+            votesDown: result.votesDown,
+            userName: userName,
+            UserId: result.UserId,
+            LectureId: result.LectureId
+          })
         })
         
       }).catch(function(error) {
@@ -238,7 +258,10 @@ module.exports = (io) => {
         LectureId: socket.LectureId,
         UserId: socket.UserId
       }).then(function (result) {
-        io.sockets.in(socket.room).emit('receive-feedback', {value: result.value})
+        io.sockets.in(socket.room).emit('receive-feedback', {
+          value: result.value,
+          createdAt: result.createdAt
+        })
       })
     })
 

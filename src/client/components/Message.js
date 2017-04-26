@@ -1,7 +1,6 @@
 import React from 'react'
 import socket from '../socket'
 
-import {Card, CardText } from 'material-ui/Card'
 import Paper from 'material-ui/Paper'
 import FlatButton from 'material-ui/FlatButton'
 import ActionSchedule from 'material-ui/svg-icons/action/schedule'
@@ -150,7 +149,7 @@ export default class Message extends React.Component {
     const footerAdmin = (
       <div style={styles.footer}>
         {timestamp}
-        <p>Student</p>
+        <p>{this.props.userName}</p>
       </div>
     )
     /* This menu is not yet in use */
@@ -162,16 +161,12 @@ export default class Message extends React.Component {
     )
     return (
     	<Paper zDepth={3} style={styles.container}>
-    		<Card style={styles.listItem} expanded={true}>
-          <CardText>
-            {this.props.text.split('\\n').join('\n')}
-          </CardText>
-          <CardText expandable={false}>
-           {this.props.isAdmin ? footerAdmin : footer}
-          </CardText>
-          
-          
-        </Card>
+    		<ListItem
+          style={styles.listItem}
+          disabled={true}
+          primaryText={this.props.text}
+          secondaryText={this.props.isAdmin ? footerAdmin : footer}
+        />
         <Snackbar
           style={{textAlign: 'center'}}
           open={this.state.open}
