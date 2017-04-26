@@ -123,11 +123,11 @@ export default class MessageList extends Component {
    * @param {list} list - List of messages to sort.
    */
   sortListByTime (list) {
-    list.slice().sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
+    var sortedList = list.slice().sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
     
     this.setState({
       selectedIndex: 0,
-      messages: list
+      messages: sortedList
     })
   }
 
@@ -136,13 +136,13 @@ export default class MessageList extends Component {
    * @param {list} list - List of messages to sort.
    */
   sortListByVotes (list) {
-    list.slice().sort((a, b) => {
+    var sortedList = list.slice().sort((a, b) => {
       return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown))
     })
 
     this.setState({
       selectedIndex: 1,
-      messages: list
+      messages: sortedList
     })
   }
 
