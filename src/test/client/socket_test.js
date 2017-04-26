@@ -351,7 +351,6 @@ describe('Testing socket.io:', function () {
     })
     */
     
-
     it('Getting all message to lecture', function (done) {
       messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-messages', function (messageList) {
