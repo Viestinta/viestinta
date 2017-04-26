@@ -330,32 +330,6 @@ describe('Testing socket.io:', function () {
       })
     })
   })
-  
-  // TODO: create-lecture
-  /*
-  describe('Testing create-lecture:', function () {
-
-    clientOneSocket = io.connect(socketURL, options)
-
-
-    const lectureInfo = {
-      courseCode: testCourseOne.code,
-      name: "TestLecture"
-    }
-
-    clientOneSocket.emit('create-lecture', lectureInfo)
-
-    lectureController.getByName("TestLecture").then( function (result) {
-      const plain = result.get({plain: true})
-      console.log("Result lecture: ", plain)
-      clientOneSocket.on('new-lecture', function (lecture) {
-      console.log("Socket lecture: ", lecture)
-        lecture.should.eql(plain)
-        done()
-      })
-    })  
-  })
-  */
 
   describe('Testing join-lecture:', function () {
 
@@ -375,7 +349,6 @@ describe('Testing socket.io:', function () {
       })
     })
 
-    /*** @deprecated ***/    
     it('Getting last feedback for last interval', function (done) {
       feedbackController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-feedback', function(feedbackList) {
