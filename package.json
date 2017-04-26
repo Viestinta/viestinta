@@ -89,9 +89,9 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "http": "0.0.0",
-    "material-ui": "^0.17.0",
     "istanbul": "^0.4.5",
     "istanbul-coveralls": "^1.0.3",
+    "material-ui": "^0.17.0",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
@@ -99,7 +99,14 @@
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.3",
     "standard": "^8.6.0",
+    "supertest": "^3.0.0",
     "webpack": "^2.2.1"
+  },
+  "nyc": {
+    "exclude": [
+      "src/test/**",
+      "src/server/app.js"
+    ]
   },
   "babel": {
     "presets": [

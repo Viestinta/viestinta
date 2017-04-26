@@ -2,11 +2,11 @@
 const path = require('path')
 const assert = require('assert')
 const db = require('../../server/database/models/index')
-const courseController = require('../../server/database/controllers/index').courses
-const userController = require('../../server/database/controllers/index').users
-const lectureController = require('../../server/database/controllers/index').lectures
-const messageController = require('../../server/database/controllers/index').messages
-const adminRoleController = require('../../server/database/controllers/index').adminRoles
+const courseController = require('../../server/database/controllers/courses')
+const userController = require('../../server/database/controllers/users')
+const lectureController = require('../../server/database/controllers/lectures')
+const messageController = require('../../server/database/controllers/messages')
+const adminRoleController = require('../../server/database/controllers/adminRoles')
 
 
 describe('Test suite: Course and Lecture testing', function () {
@@ -604,9 +604,8 @@ describe('Test suite: Course and Lecture testing', function () {
 
     it('Getting all users from course', function (done) {
       courseController.getAllUsersForCourse(testCourse9).spread(function(user, created){
-        let exampleUser = user
-        assert.equal(testUser9.id, exampleUser.id)
-        assert.equal(testUser9.name, exampleUser.name)
+        assert.equal(testUser9.id, user.id)
+        assert.equal(testUser9.name, user.name)
         done()
       })
     })
