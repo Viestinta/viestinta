@@ -312,7 +312,7 @@ describe('Testing socket.io:', function () {
       .then(function () {
         Promise.all([createMessages(), createFeedback()])
           .then(function () {
-            console.log("RoomOne: ", roomOne)
+            console.log("testCourseOne: ", testCourseOne)
             console.log("RoomTwo: ", roomTwo)
             done()
         })   
@@ -332,6 +332,30 @@ describe('Testing socket.io:', function () {
   })
   
   // TODO: create-lecture
+  /*
+  describe('Testing create-lecture:', function () {
+
+    clientOneSocket = io.connect(socketURL, options)
+
+
+    const lectureInfo = {
+      courseCode: testCourseOne.code,
+      name: "TestLecture"
+    }
+
+    clientOneSocket.emit('create-lecture', lectureInfo)
+
+    lectureController.getByName("TestLecture").then( function (result) {
+      const plain = result.get({plain: true})
+      console.log("Result lecture: ", plain)
+      clientOneSocket.on('new-lecture', function (lecture) {
+      console.log("Socket lecture: ", lecture)
+        lecture.should.eql(plain)
+        done()
+      })
+    })  
+  })
+  */
 
   describe('Testing join-lecture:', function () {
 
@@ -401,6 +425,7 @@ describe('Testing socket.io:', function () {
           id: testLectureOne.id,
           room: roomOne
         })
+        console.log("Done with clientOneSocket")
       })
 
       clientTwoSocket.on('connect', function (data) {
@@ -435,19 +460,15 @@ describe('Testing socket.io:', function () {
             UserId: testUserOne.id
           }
 
+      console.log("testUserOne.id: ", testUserOne.id)
       clientOneSocket.emit('new-message', msg)
         function recClientOne() {
           return new Promise(function (resolve) {
             console.log("In recCLientOne")
 
             clientOneSocket.on('receive-message', function (message, done) {
-              console.log("clientOne has received message")
+              console.log("clientOne has received message: ", message)
               message.text.should.eql(msg.text)
-              message.id.should.eql(msg.id)
-              message.votesUp.should.eql(msg.votesUp)
-              message.votesDown.should.eql(msg.votesDown)
-              message.userName.should.eql(msg.userName)
-              message.UserId.should.eql(msg.UserId)
               message.LectureId.should.eql(msg.LectureId)
               resolve()
             })
@@ -741,5 +762,5 @@ describe('Testing socket.io:', function () {
     })
     
   })
-
+  
 })
