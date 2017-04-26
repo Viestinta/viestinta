@@ -139,11 +139,13 @@ module.exports = (io) => {
       socket.user = socketLecture.user
       usersController.getByEmail(socket.user.email).then(function (user) {
         socket.UserId = user.id
+        console.log("Socket after saving UserId ")
       })
       socket.LectureId = socketLecture.id
       socket.CourseCode = socketLecture.code
       socket.room = socketLecture.room
       socket.join(socketLecture.room)
+
 
       console.log('[app][socket] Connected to lecture with ID: ' + socket.LectureId)
       console.log('[app][socket] For course with code: ' + socket.CourseCode)
@@ -205,10 +207,13 @@ module.exports = (io) => {
         UserId: socket.UserId
       }
 
-      if(process.env.NODE_ENV !== 'test') {
-        usersController.getById(socket.UserId).then(function (user) {
+      console.log("socket.UserId: ", socket.UserId)
+        let userId = socket.UserId
+        if (process.env.NODE_ENV === 'test') {
+          userId = socket.user.id
+        }
+        usersController.getById(userId).then(function (user) {
           let userName = user.name
-
           messagesController.createMessage(databaseMsg).then(function (result) {
             io.sockets.in(socket.room).emit('receive-message', {
               id: result.id,
@@ -225,7 +230,6 @@ module.exports = (io) => {
         }).catch(function (error) {
           console.log("Error: ", error)
         })
-      }
     })
 
     // When somebody votes on a message

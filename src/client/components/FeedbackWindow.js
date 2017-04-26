@@ -16,6 +16,10 @@ const UPDATE_INTERVAL = 5000*60 // 5 min
 
 export default class FeedbackWindow extends Component {
 
+  /**
+   * @summary Save state and bind functions
+   * @param {props} event - slow, fast, updateFeedbackInterval and lecture from FeedbackBox.
+   */
   constructor (props) {
     super(props)
 
@@ -31,6 +35,9 @@ export default class FeedbackWindow extends Component {
     this.makeFeedbackIntervals = this.makeFeedbackIntervals.bind(this)
   }
 
+  /**
+   * @summary Set interval, set state intervalId and set FeedbackWindow to listen to server events.
+   */
   componentDidMount () {
     var interval = setInterval(this.updateLineChartData, UPDATE_INTERVAL)
     this.setState({intervalId: interval})
@@ -41,11 +48,15 @@ export default class FeedbackWindow extends Component {
     console.log("[FeedbackWindow] Component did mount.")
   }
 
+  /**
+   * @summary Clear interval when  FeedbackWindow unmounts.
+   */
   componentWillUnmount () {
     clearInterval(this.state.intervalId)
     console.log("[FeedbackWindow] Component will unmount.")
 
   }
+
 
   getAllFeedback (list) {
     console.log('[FeedbackWindow] getAllFeedback(), list:', list)

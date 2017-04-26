@@ -30,6 +30,10 @@ const styles = {
 // Text input field
 export default class ChatBox extends Component {
 
+  /**
+   * @summary Save state and binding functions.
+   * @param {props} props - lecture from LectureWrapper.
+   */
   constructor (props) {
     // Starting with empty inputfield
     super(props)
@@ -44,15 +48,18 @@ export default class ChatBox extends Component {
     this.keyDown = this.keyDown.bind(this)
   }
 
+  /**
+   * @summary Set ChatBox to listen for server events.
+   */
   componentDidMount () {
     socket.on('send-message', this.sendMessage)
   }
 
+  /**
+   * @summary Send message to the server.
+   */
   sendMessage () {
-    console.log('[ChatBox] sendMessage to room: ' + this.props.lecture.room)
-
-
-    // Setting msg.text to written input
+    // Setting msg.text to written input.
     var msg = {
       text: this.state.text.split('\n').join('\\n'),
       lecture: {
@@ -61,7 +68,8 @@ export default class ChatBox extends Component {
         room: this.props.lecture.room,
       }
     }
-      // Emtpy input field
+    
+    // Emtpy input field
     this.setState({
       text: '',
       textLength: 0,
@@ -69,20 +77,22 @@ export default class ChatBox extends Component {
     })
 
     socket.emit('new-message', msg)
-    console.log('[ChatBox] After sending message')
   }
-
+ 
+  /**
+   * @summary Save the written value every time it is changed.
+   * @param {event} event - The event that triggered the function
+   */
   // Listen and update field dynamically when something is written
-  changeHandler (e) {
-    console.log("CHangehandler: ", e.target.value)
-    var text = e.target.value
-    var length = e.target.value.length
+  changeHandler (event) {
+    var text = event.target.value
+    var length = event.target.value.length
     var disable = false
     
     if (length <= 3) {
       disable = true
     } else if (length > 250) {
-      text = e.target.value.substring(0, 250)
+      text = event.target.value.substring(0, 250)
       length = 250
     }
 
@@ -91,9 +101,12 @@ export default class ChatBox extends Component {
       textLength: length,
       sendDisabled: disable,
     })
-    console.log('[ChatBox] changeHandler')
   }
 
+  /**
+   * @summary Checks if enter or enter + shift is pressed, and do right action.
+   * @param {event} event - The event that triggered the function
+   */
   keyDown (event) {
     if (event.key === 'Enter' && !event.ctrlKey) {
       this.sendMessage()

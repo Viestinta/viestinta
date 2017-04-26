@@ -70,6 +70,7 @@ const iconVoteDown = (
 );
 
 /* This icon is not yet in use */
+// TODO: remove?
 const iconButtonMore = (
   <IconButton
     touch={true}
@@ -81,6 +82,10 @@ const iconButtonMore = (
 );
 
 export default class Message extends React.Component {
+  /**
+   * @summary Save state and bind functions
+   * @param {props} props - key, time, text, id, isAdmin and ref from MessageList.
+   */
   constructor (props) {
     super(props)
     this.state = {
@@ -96,6 +101,9 @@ export default class Message extends React.Component {
     this.sendVote = this.sendVote.bind(this)
   }
 
+  /**
+   * @summary Set state voteEnabled, voteUp, open and actionInfo and then calls sendVote.
+   */
   handleVoteUp () {
     this.setState({
       voteEnabled: false,
@@ -106,6 +114,9 @@ export default class Message extends React.Component {
     this.sendVote(1)
   }
 
+  /**
+   * @summary Set state voteEnabled, voteUp, open and actionInfo and then calls sendVote.
+   */
   handleVoteDown () {
     this.setState({
       voteEnabled: false,
@@ -116,11 +127,18 @@ export default class Message extends React.Component {
     this.sendVote(-1)
   }
 
+  /**
+   * @summary Emit id to message and value.
+   * @param {value} value - -1 or 1
+   */
   sendVote (value) {
     var msgId = this.props.id
     socket.emit('new-vote-on-message', msgId, value)
   }
 
+  /**
+   * @summary Set state open.
+   */
   handleRequestClose () {
     this.setState({
       open: false

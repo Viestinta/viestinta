@@ -43,6 +43,7 @@ const styles = {
 	}
 };
 
+
 const logo = (
 	<img src="images/logo_shadow_white.png" alt="Viestintä Logo" style={styles.img}/>
 )
