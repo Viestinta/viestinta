@@ -313,14 +313,29 @@ io.sockets.on('connection', function (socket) {
     console.log('[app][socket] Joined room identifier: ' + socket.room)
 
 
-    // Get feedback status for last x min
-    feedbacksController.getLastIntervalNeg({id: socket.LectureId}).then(function (resultNeg) {
-      feedbacksController.getLastIntervalPos({id: socket.LectureId}).then(function (resultPos) {
-        socket.emit('update-feedback-interval', [resultNeg, resultPos])
-      })
+    // Get all feedback
+    feedbacksController.getAllToLecture({
+        id: socket.LectureId
+      }).then(function (feedback) {
+        socket.emit('all-feedback', feedback)
     })
-    messagesController.getAllToLecture({id: socket.LectureId}).then(function (result) {
-      socket.emit('all-messages', result.reverse())
+
+    // Get all messages
+    messagesController.getAllToLecture({
+      id: socket.LectureId
+    })
+      .then(function (messages) {
+      let counter = 0
+      messages.map((message) => {
+        usersController.getById(message.UserId).then(function (user) {
+          message.userName = user.name
+          counter ++
+          if(counter === messages.length) {
+            console.log('[app][socket] Sent all messages')
+            socket.emit('all-messages', messages.reverse())
+          }
+        })
+      })
     })
   })
 
@@ -350,15 +365,20 @@ io.sockets.on('connection', function (socket) {
       UserId: socket.UserId
     }
 
-    messagesController.createMessage(databaseMsg).then(function (result) {
-      io.sockets.in(socket.room).emit('receive-message', {
-        id: result.id,
-        text: result.text,
-        time: result.time,
-        votesUp: result.votesUp,
-        votesDown: result.votesDown,
-        UserId: result.UserId,
-        LectureId: result.LectureId
+    usersController.getById(socket.UserId).then(function (user) {
+      let userName = user.name
+
+      messagesController.createMessage(databaseMsg).then(function (result) {
+        io.sockets.in(socket.room).emit('receive-message', {
+          id: result.id,
+          text: result.text,
+          time: result.time,
+          votesUp: result.votesUp,
+          votesDown: result.votesDown,
+          userName: userName,
+          UserId: result.UserId,
+          LectureId: result.LectureId
+        })
       })
     })
   })
@@ -399,7 +419,10 @@ io.sockets.on('connection', function (socket) {
       LectureId: socket.LectureId,
       UserId: socket.UserId
     }).then(function (result) {
-      io.sockets.in(socket.room).emit('receive-feedback', {value: result.value})
+      io.sockets.in(socket.room).emit('receive-feedback', {
+        value: result.value,
+        createdAt: result.createdAt
+      })
     })
   })
 

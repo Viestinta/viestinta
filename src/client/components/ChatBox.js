@@ -81,9 +81,9 @@ export default class ChatBox extends Component {
     
     if (length <= 3) {
       disable = true
-    } else if (length > 1000) {
-      text = e.target.value.substring(0, 1000)
-      length = 1000
+    } else if (length > 250) {
+      text = e.target.value.substring(0, 250)
+      length = 250
     }
 
     this.setState({ 
@@ -108,7 +108,7 @@ export default class ChatBox extends Component {
       <Paper zDepth={3} style={styles.parent}>
         <TextField
           style={styles.textField}
-          floatingLabelText={this.state.textLength + "/1000 tegn."}
+          floatingLabelText={this.state.textLength + "/250 tegn."}
           floatingLabelFixed={true}
           hintText='Skriv ny melding her.'
           multiLine={true}

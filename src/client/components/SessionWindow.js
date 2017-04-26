@@ -25,7 +25,6 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
 
-        maxWidth: '600px',
         width: '100%',
         height: '100%'
     },
@@ -36,7 +35,7 @@ const styles = {
         alignItems: 'baseline',
         justifyContent: 'space-between',
 
-        maxWidth: '600px',
+        maxWidth: '960px',
         width: '100%',
 
         marginTop: '10px',
