@@ -335,8 +335,9 @@ describe('Testing socket.io:', function () {
         })
         done()
       })
-    })  
-    
+    })
+    /*** @deprecated ***/
+    /*
     it('Getting last feedback for last interval', function (done) {
       feedbackController.getLastIntervalNeg({id: testLectureOne.id}).then(function (resultNeg) {
         feedbackController.getLastIntervalPos({id: testLectureOne.id}).then(function (resultPos) {
@@ -348,14 +349,13 @@ describe('Testing socket.io:', function () {
         })
       })
     })
-
+    */
     
 
     it('Getting all message to lecture', function (done) {
       messageController.getAllToLecture({id: testLectureOne.id}).then(function (result) {
         clientOneSocket.on('all-messages', function (messageList) {
-
-          console.log("message list for clientOneSocket: ", messageList)
+          
           result = result.reverse()
           for (var i = 0; i < result.length; i++) {
             messageList[i].text.should.eql(result[i].text)
@@ -408,6 +408,7 @@ describe('Testing socket.io:', function () {
       done()
     })
 
+    /*
     it('Broadcasting message to all members of that room', function (done) {
       var msg = {
             text: "Hello world",
@@ -418,6 +419,7 @@ describe('Testing socket.io:', function () {
             }
           }
 
+      console.log(clientOneSocket.room)
       clientOneSocket.emit('new-message', msg)
         function recClientOne() {
           return new Promise(function (resolve) {
@@ -444,6 +446,7 @@ describe('Testing socket.io:', function () {
           })
 
       })
+      */
   })
 
   

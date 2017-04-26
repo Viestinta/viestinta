@@ -158,11 +158,11 @@ module.exports = (io) => {
       })
 
       // Get all messages
-      if(process.env.NODE_ENV !== 'test') {
-        messagesController.getAllToLecture({
-          id: socket.LectureId
-        })
-          .then(function (messages) {
+      messagesController.getAllToLecture({
+        id: socket.LectureId
+      })
+        .then(function (messages) {
+          if (process.env.NODE_ENV !== 'test') {
             let counter = 0
             messages.map((message) => {
               usersController.getById(message.UserId).then(function (user) {
@@ -174,8 +174,10 @@ module.exports = (io) => {
                 }
               })
             })
-          })
-      }
+          } else {
+              socket.emit('all-messages', messages.reverse())
+          }
+        })
     })
 
 
