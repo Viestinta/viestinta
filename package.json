@@ -116,9 +116,7 @@
     "exclude": [
       "src/test/**",
       "src/server/app.js"
-    ], 
-    "sourceMap": false,
-    "instrument": false
+    ]
   },
   "babel": {
     "presets": [
