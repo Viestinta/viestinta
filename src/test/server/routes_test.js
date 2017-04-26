@@ -83,8 +83,6 @@ describe('GET /lectures', function() {
               .set('Accept', 'application/json')
               .expect(404)
               .end(function(err, res) {
-
-                console.log(res)
                 if (err) return done(err)
                 done()
               })
