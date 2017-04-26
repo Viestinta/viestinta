@@ -47,7 +47,7 @@ imeDataArray
                         console.log('Created user: ' + user.name)
 
                         // Use course data from IME and find corresponding course if exists or create if not
-                        courseData = imeData.course
+                        let courseData = imeData.course
                         courseController.findOrCreateCourse({
                             name: courseData.name,
                             code: courseData.code,
