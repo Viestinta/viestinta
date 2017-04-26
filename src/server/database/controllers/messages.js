@@ -119,6 +119,10 @@ module.exports = {
     })
   },
 
+  getById (req) {
+    return Message.findById(req.id)
+  },
+
 
 
 /**
@@ -128,6 +132,7 @@ module.exports = {
    * @callback Callbacks when voting attributes have been updated
    */
   vote (req, callback) {
+    console.log("In vote")
     Message.find({where: {id: req.id}})
       .then(function (msg) {
         if (req.value === 1) {

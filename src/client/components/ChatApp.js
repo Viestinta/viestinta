@@ -58,7 +58,8 @@ export default class ChatApp extends Component {
   }
 
   /**
-   * @summary Get information about user.
+   * Get info about user
+   * @return {Number} sum
    */
   getUserInfo () {
     axios
