@@ -319,11 +319,24 @@ io.sockets.on('connection', function (socket) {
       }).then(function (feedback) {
         socket.emit('all-feedback', feedback)
     })
+
     // Get all messages
     messagesController.getAllToLecture({
-        id: socket.LectureId
-      }).then(function (result) {
-        socket.emit('all-messages', result.reverse())
+      id: socket.LectureId
+    })
+      .then(function (messages) {
+      let counter = 0
+      messages.map((message) => {
+        usersController.getById(message.UserId).then(function (user) {
+          message = message.toJSON()
+          message.userName = user.name
+          counter ++
+          if(counter === messages.length) {
+            console.log('[app][socket] Sent all messages')
+            socket.emit('all-messages', messages.reverse())
+          }
+        })
+      })
     })
   })
 
