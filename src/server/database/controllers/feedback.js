@@ -96,7 +96,8 @@ module.exports = {
     return Feedback.findAll({
       where: {
         LectureId: lecture.id
-      }
+      },
+      raw: true
     })
   }
 }

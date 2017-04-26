@@ -1,32 +1,43 @@
 import React, { Component } from 'react'
+import socket from '../socket'
 import axios from 'axios'
 
 import Paper from 'material-ui/Paper'
 import DataTables from 'material-ui-datatables'   
+import {orange800} from 'material-ui/styles/colors'
 
 const styles = {
-  container: {
-    width: '100%',
-    height: '100%',
+    container: {
+        width: '100%',
+        height: '100%',
 
-    marginTop: '10px'
-  }
+        maxWidth: '960px',
+
+        marginTop: '10px'
+    },
+    tableText: {
+        cursor: 'pointer',
+
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis'
+    }
 };
 
 const TABLE_COLUMNS = [
   {
     key: 'course',
-    label: 'Emnekode',
+    label: <span style={{color: orange800}}>Emnekode</span>,
     sortable: true,
   },
   {
     key: 'courseName',
-    label: 'Navn',
+    label: <span style={{color: orange800}}>Navn</span>,
     sortable: true,
   }, 
   {
     key: 'lectureName',
-    label: 'Tema',
+    label: <span style={{color: orange800}}>Tema</span>,
     sortable: true,
   }
 ]
@@ -49,7 +60,6 @@ export default class LectureTable extends Component {
         this.getAvailableLectures = this.getAvailableLectures.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.handleFilterValueChange = this.handleFilterValueChange.bind(this)
-        this.getLectures = this.getLectures.bind(this)
     }
 
     /**
@@ -57,6 +67,7 @@ export default class LectureTable extends Component {
      */
     componentDidMount() {
         /* This method is called after first render */
+        socket.on('new-lecture', this.getAvailableLectures)
         this.getAvailableLectures()
     }
 
@@ -79,29 +90,7 @@ export default class LectureTable extends Component {
           console.log(err)
         })
     }
-    /**
-     * @summary Get lectures
-     * @return {course} The course that was searched on
-     */
-    getLectures () {
-        if (this.state.filteredLectureList) {
-            return this.state.filteredLectureList.map((a) => {
-              return {
-                course: a
-              }
-            })
-        } else {
-            return this.state.lectureList.map((a) => {
-              return {
-                course: a
-              }
-            })
-        } 
-    }
 
-    /**
-     * @summary Call setSelectedLecture from props when lecture is clicked on.
-     */
     handleCellClick (row, col, event) {
         let ll = this.state.filteredLectureList
         this.props.setSelectedLecture(ll[row])
@@ -132,30 +121,31 @@ export default class LectureTable extends Component {
     }
 
     render () {
-      return (
-        <Paper zDepth={3} style={styles.container}>
-          <DataTables
-            height = { 'auto' }
-            selectable = { false }
-            showRowHover = { true }
-            columns = {TABLE_COLUMNS}
-            data = { this.state.filteredLectureList.map(lecture => {
-                return {
-                    course:lecture.course.code,
-                    courseName:lecture.course.name,
-                    lectureName:lecture.name
-                }
-            })}
-            showCheckboxes = { false }
-            showHeaderToolbar = { true }
-            onCellClick = { this.handleCellClick }
-            onCellDoubleClick= { this.handleCellDoubleClick }
-            onFilterValueChange = { this.handleFilterValueChange }
-            onSortOrderChange = { this.handleSortOrderChange }
-            page = { 1 }
-            count = { this.state.filteredLectureList.length }
-          />
-        </Paper> 
+
+        return (
+            <Paper zDepth={3} style={styles.container}>
+                <DataTables
+                    height = { 'auto' }
+                    selectable = { false }
+                    showRowHover = { true }
+                    columns = {TABLE_COLUMNS}
+                    data = { this.state.filteredLectureList.map(lecture => {
+                        return {
+                            course:<div style={styles.tableText}>{lecture.course.code}</div>,
+                            courseName:<div style={styles.tableText}>{lecture.course.name}</div>,
+                            lectureName:<div style={styles.tableText}>{lecture.name}</div>
+                        }
+                    })}
+                    showCheckboxes = { false }
+                    showHeaderToolbar = { true }
+                    onCellClick = { this.handleCellClick }
+                    onCellDoubleClick= { this.handleCellDoubleClick }
+                    onFilterValueChange = { this.handleFilterValueChange }
+                    onSortOrderChange = { this.handleSortOrderChange }
+                    page = { 1 }
+                    count = { this.state.filteredLectureList.length }
+                />
+            </Paper> 
         )
     }
 }

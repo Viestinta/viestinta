@@ -1,11 +1,23 @@
 import React, { Component } from 'react'
 import socket from '../socket'
 
+import Subheader from 'material-ui/Subheader'
 import RaisedButton from 'material-ui/RaisedButton'
 
-const style = {
-  margin: '12px',
-  minWidth: '105px'
+const styles = {
+  container: {
+    display: 'flex', 
+    flexDirection: 'column', 
+    alignItems: 'flex-start', 
+    justifyContent: 'flex-start', 
+    
+    width: '100%',
+    height: '100%'
+  },
+  button: {
+    margin: '12px',
+    minWidth: '105px'
+  }
 }
 
 // Final variable representing a minute
@@ -92,14 +104,14 @@ export default class FeedbackMenu extends Component {
 
   render () {
     return (
-      <div id='feedbackMenuBar'>
-        <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
-        <RaisedButton style={style} primary={true} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
+      <div style={styles.container}>
+        <h3>Tilbakemelding til foreleser</h3> 
+        <Subheader>Tempo:</Subheader>
+        <div style={{alignSelf: 'center'}}>
+          <RaisedButton style={styles.button} primary={true} disabled={this.state.disabled} onTouchTap={this.slowClick} label='For tregt' />
+          <RaisedButton style={styles.button} primary={true} disabled={this.state.disabled} onTouchTap={this.fastClick} label='For fort' />
+        </div>
       </div>
     )
   }
-}
-
-FeedbackMenu.propTypes = {
-  onClick: React.PropTypes.func
 }

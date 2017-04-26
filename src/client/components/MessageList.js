@@ -23,7 +23,7 @@ const styles = {
     marginTop: 10,
     paddingRight: 20,
 
-    maxHeight: 400,
+    maxHeight: 563,
     width: '100%',
     height: '100%',
 
@@ -31,7 +31,7 @@ const styles = {
     minHeight: 0
   },
   child: {
-    height: 500,
+    minHeight: 400,
     width: '100%',
 
     padding: 0,
@@ -182,6 +182,7 @@ export default class MessageList extends Component {
           time={time}
           text={message.text}
           id={message.id}
+          userName={message.userName}
           isAdmin={this.props.isAdmin}
           ref={(ref) => this['_div' + i] = ref}
         />

@@ -10,11 +10,19 @@ const styles = {
 
   container: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    flexWrap: 'wrap',
 
+    maxWidth: '960px',
     width: '100%',
     height: '100%',
+  },
+  chat: {
+    maxWidth: '550px',
+    width: '100%',
+    height: '100%'
   }
 };
 
@@ -34,12 +42,13 @@ export default class LectureWrapper extends Component {
     render() {
         return (
             <div style={styles.container}>
-                {/* List of messages */}
-                <MessageList isAdmin={this.props.isAdmin}/>
-                {/* Sidebar with feedback-options */}
-                { !this.props.isAdmin ? <FeedbackBox lecture={this.props.lecture}/> : undefined }
-                {/* Inputfield for user */}
-                { !this.props.isAdmin ? <ChatBox lecture={this.props.lecture}/> : undefined }
+                <div style={styles.chat}>
+                    {/* List of messages */}
+                    <MessageList isAdmin={this.props.isAdmin}/>
+                    {/* Inputfield for user */}
+                    { !this.props.isAdmin ? <ChatBox lecture={this.props.lecture}/> : undefined }
+                </div>
+                <FeedbackBox lecture={this.props.lecture} isAdmin={this.props.isAdmin}/>
             </div>
         )
     }

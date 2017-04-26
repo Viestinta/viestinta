@@ -10,11 +10,17 @@ body {
     height: 100%;
 
     background-repeat: no-repeat;
-    /* Maximum browser support */
-    background: -webkit-gradient(linear, center top, center bottom, from(#BBDEFB), to(#64B5F6));
-    background: -webkit-linear-gradient(#BBDEFB, #64B5F6);
-    background: -moz-linear-gradient(#BBDEFB, #64B5F6);
-    background: -o-linear-gradient(#BBDEFB, #64B5F6);
-    background: -ms-linear-gradient(#BBDEFB, #64B5F6);
-    background: linear-gradient(#BBDEFB, #64B5F6);    
+    background-color: #DFF1FF; 
+}
+
+.copy-left { 
+    display: inline-block; 
+    text-align: right; 
+    margin: 0px; 
+    -moz-transform: scaleX(-1); 
+    -o-transform: scaleX(-1); 
+    -webkit-transform: scaleX(-1); 
+    transform: scaleX(-1); 
+    filter: FlipH; 
+    -ms-filter: "FlipH"; 
 }
