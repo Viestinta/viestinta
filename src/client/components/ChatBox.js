@@ -85,14 +85,14 @@ export default class ChatBox extends Component {
    */
   // Listen and update field dynamically when something is written
   changeHandler (event) {
-    var text = e.target.value
-    var length = e.target.value.length
+    var text = event.target.value
+    var length = event.target.value.length
     var disable = false
     
     if (length <= 3) {
       disable = true
     } else if (length > 250) {
-      text = e.target.value.substring(0, 250)
+      text = event.target.value.substring(0, 250)
       length = 250
     }
 
