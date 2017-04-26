@@ -328,7 +328,6 @@ io.sockets.on('connection', function (socket) {
       let counter = 0
       messages.map((message) => {
         usersController.getById(message.UserId).then(function (user) {
-          message = message.toJSON()
           message.userName = user.name
           counter ++
           if(counter === messages.length) {
