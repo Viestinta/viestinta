@@ -158,22 +158,24 @@ module.exports = (io) => {
       })
 
       // Get all messages
-      messagesController.getAllToLecture({
-        id: socket.LectureId
-      })
-        .then(function (messages) {
-          let counter = 0
-          messages.map((message) => {
-            usersController.getById(message.UserId).then(function (user) {
-              message.userName = user.name
-              counter++
-              if (counter === messages.length) {
-                console.log('[app][socket] Sent all messages')
-                socket.emit('all-messages', messages.reverse())
-              }
+      if(process.env.NODE_ENV !== 'test') {
+        messagesController.getAllToLecture({
+          id: socket.LectureId
+        })
+          .then(function (messages) {
+            let counter = 0
+            messages.map((message) => {
+              usersController.getById(message.UserId).then(function (user) {
+                message.userName = user.name
+                counter++
+                if (counter === messages.length) {
+                  console.log('[app][socket] Sent all messages')
+                  socket.emit('all-messages', messages.reverse())
+                }
+              })
             })
           })
-        })
+      }
     })
 
 
@@ -201,25 +203,27 @@ module.exports = (io) => {
         UserId: socket.UserId
       }
 
-      usersController.getById(socket.UserId).then(function (user) {
-        let userName = user.name
+      if(process.env.NODE_ENV !== 'test') {
+        usersController.getById(socket.UserId).then(function (user) {
+          let userName = user.name
 
-        messagesController.createMessage(databaseMsg).then(function (result) {
-          io.sockets.in(socket.room).emit('receive-message', {
-            id: result.id,
-            text: result.text,
-            time: result.time,
-            votesUp: result.votesUp,
-            votesDown: result.votesDown,
-            userName: userName,
-            UserId: result.UserId,
-            LectureId: result.LectureId
+          messagesController.createMessage(databaseMsg).then(function (result) {
+            io.sockets.in(socket.room).emit('receive-message', {
+              id: result.id,
+              text: result.text,
+              time: result.time,
+              votesUp: result.votesUp,
+              votesDown: result.votesDown,
+              userName: userName,
+              UserId: result.UserId,
+              LectureId: result.LectureId
+            })
           })
+
+        }).catch(function (error) {
+          console.log("Error: ", error)
         })
-        
-      }).catch(function(error) {
-        console.log("Error: ", error)
-      })
+      }
     })
 
     // When somebody votes on a message
