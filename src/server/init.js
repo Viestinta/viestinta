@@ -32,18 +32,19 @@ imeDataArray
         let userDataArray = imeData.course.educationalRole.filter((userData) => userData.code === "HeadLecturer")
 
         // Fix array structure and run trough for every HeadLecturer (as there can be more than one)
-        userDataArray
-            .map((userData) => userData = userData.person)
-            .forEach((userData) => {
+        //userDataArray.map((userData) => userData = userData.person)
+        console.log('Filtered user dataArray length: ' + userDataArray.length)
+        userDataArray.forEach((userData) => {
 
+            if (userData.person) {
                 // Find user corresponding to IME info of exists, create if not
                 userController.findOrCreateUser({
-                    name: userData.displayName,
-                    email: userData.email,
+                    name: userData.person.displayName,
+                    email: userData.person.email,
                 })
                 .spread(function (user, created) {
                     if (user) {
-                        console.log("Created user: ", user.name)
+                        console.log('Created user: ' + user.name)
 
                         // Use course data from IME and find corresponding course if exists or create if not
                         courseData = imeData.course
@@ -78,7 +79,10 @@ imeDataArray
                 .catch((err) => {
                     console.error(err)
                 })
-            })
+            } else {
+                console.log("couldn't find person")
+            }
+        })
 })
 
 

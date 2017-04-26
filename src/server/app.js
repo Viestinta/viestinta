@@ -186,10 +186,6 @@ setTimeout(function () {
   })
 }, 5000)
 
-if (process.env.VIESTINTA_INIT_DATABASE) {
-  require('./init')
-}
-
 // When a new user connects
 io.sockets.on('connection', function (socket) {
 
