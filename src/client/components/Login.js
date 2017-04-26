@@ -87,7 +87,7 @@ export default class Login extends Component {
             <img src="images/GitHub-Mark-Light-32px.png" width="24px" />
           </IconButton>
           <p style={styles.text}>
-            &copy; &nbsp;
+            <span className="copy-left">&copy;</span> &nbsp;
             <a href="https://github.com/Viestinta/viestinta/graphs/contributors" style={{color: 'rgba(255, 255, 255, 0.870588)'}}>The Viestintä Team</a> 
             &nbsp; 2017
           </p>
