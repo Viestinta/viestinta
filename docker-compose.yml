@@ -40,8 +40,7 @@ services:
       - VIESTINTA_OVERWRITE_DATABASE_URL
       - VIESTINTA_OVERWRITE_PORT
       - VIESTINTA_OVERWRITE_URL
-      - VIESTINTA_INIT_DATABASE=True
-      - DISABLE_DB_OUTPUT=True
+
     tty: true
     stdin_open: true
 
