@@ -11,6 +11,7 @@ const adminRoleController = require('./database/controllers/adminRoles')
 
 //io server is defined in the Redis/Express section in app.js
 module.exports = (io) => {
+  console.log("[sockets.js]")
   let initCourse = undefined
 
   setTimeout(function () {
@@ -23,6 +24,7 @@ module.exports = (io) => {
 
 // When a new user connects
   io.sockets.on('connection', function (socket) {
+    console.log("[sockets.js] user connected")
 
     /* istanbul ignore next */
 
@@ -91,10 +93,10 @@ module.exports = (io) => {
       initCourse = false
     }
     // Reports when it finds a connection
-    console.log('[app] connection')
+    console.log('[sockets] connection')
 
     socket.on('login', function (data) {
-      console.log('[app] login')
+      console.log('[sockets] login')
     })
 
 
@@ -116,7 +118,7 @@ module.exports = (io) => {
     }
      */
     socket.on('leave-lecture', function (socketLecture) {
-      console.log('[app][socket] leave-lecture ' + socketLecture.room)
+      console.log('[sockets][socket] leave-lecture ' + socketLecture.room)
       socket.user = undefined
       socket.LectureId = undefined
       socket.CourseCode = undefined
@@ -132,8 +134,8 @@ module.exports = (io) => {
     }
      */
     socket.on('join-lecture', function (socketLecture) {
-      console.log('[app][socket] join-lecture ' + socketLecture.room)
-
+      console.log('[sockets][socket] join-lecture ' + socketLecture.room)
+      
       socket.user = socketLecture.user
       usersController.getByEmail(socket.user.email).then(function (user) {
         socket.UserId = user.id
@@ -160,17 +162,21 @@ module.exports = (io) => {
         id: socket.LectureId
       })
         .then(function (messages) {
-          let counter = 0
-          messages.map((message) => {
-            usersController.getById(message.UserId).then(function (user) {
-              message.userName = user.name
-              counter++
-              if (counter === messages.length) {
-                console.log('[app][socket] Sent all messages')
-                socket.emit('all-messages', messages.reverse())
-              }
+          if (process.env.NODE_ENV !== 'test') {
+            let counter = 0
+            messages.map((message) => {
+              usersController.getById(message.UserId).then(function (user) {
+                message.userName = user.name
+                counter++
+                if (counter === messages.length) {
+                  console.log('[app][socket] Sent all messages')
+                  socket.emit('all-messages', messages.reverse())
+                }
+              })
             })
-          })
+          } else {
+              socket.emit('all-messages', messages.reverse())
+          }
         })
     })
 
@@ -187,8 +193,8 @@ module.exports = (io) => {
     }
      */
     socket.on('new-message', function (msg) {
-      console.log('[app] new-message: ' + msg.text)
-      console.log('[app][socket] Message destined for Room: ' + socket.room)
+      console.log('[sockets] new-message: ' + msg.text)
+      console.log('[sockets][socket] Message destined for Room: ' + socket.room)
 
       var timeNow = new Date()
       timeNow.setHours(timeNow.getHours() + 2)
@@ -198,28 +204,34 @@ module.exports = (io) => {
         LectureId: socket.LectureId,
         UserId: socket.UserId
       }
-      usersController.getById(socket.UserId).then(function (user) {
-        let userName = user.name
 
-        messagesController.createMessage(databaseMsg).then(function (result) {
-          io.sockets.in(socket.room).emit('receive-message', {
-            id: result.id,
-            text: result.text,
-            time: result.time,
-            votesUp: result.votesUp,
-            votesDown: result.votesDown,
-            userName: userName,
-            UserId: result.UserId,
-            LectureId: result.LectureId
+      if(process.env.NODE_ENV !== 'test') {
+        usersController.getById(socket.UserId).then(function (user) {
+          let userName = user.name
+
+          messagesController.createMessage(databaseMsg).then(function (result) {
+            io.sockets.in(socket.room).emit('receive-message', {
+              id: result.id,
+              text: result.text,
+              time: result.time,
+              votesUp: result.votesUp,
+              votesDown: result.votesDown,
+              userName: userName,
+              UserId: result.UserId,
+              LectureId: result.LectureId
+            })
           })
+
+        }).catch(function (error) {
+          console.log("Error: ", error)
         })
-      })
+      }
     })
 
     // When somebody votes on a message
     socket.on('new-vote-on-message', function (msgId, value) {
-      console.log('[app] new-voting-message: ' + msgId + " with " + value)
-
+      console.log('[sockets] new-voting-message: ' + msgId + " with " + value)
+      
       messagesController.vote({
         id: msgId,
         value: value
@@ -246,7 +258,7 @@ module.exports = (io) => {
     }
      */
     socket.on('new-feedback', function (feedback) {
-      console.log('[app] new-feedback: ' + feedback.value + ' to room: ' + socket.room)
+      console.log('[sockets] new-feedback: ' + feedback.value + ' to room: ' + socket.room)
       feedbacksController.createFeedback({
         value: feedback.value,
         LectureId: socket.LectureId,
@@ -260,11 +272,11 @@ module.exports = (io) => {
     })
 
     // Called every x minuts
-    socket.on('update-feedback-interval', function () {
+    socket.on('update-feedback-interval', function (lecture) {
       // Get feedback from database for past x minuts
 
-      feedbacksController.getLastIntervalNeg().then(function (resultNeg) {
-        feedbacksController.getLastIntervalPos().then(function (resultPos) {
+      feedbacksController.getLastIntervalNeg(lecture).then(function (resultNeg) {
+        feedbacksController.getLastIntervalPos(lecture).then(function (resultPos) {
           io.sockets.in(socket.room).emit('update-feedback-interval', [resultNeg, resultPos])
         })
       })

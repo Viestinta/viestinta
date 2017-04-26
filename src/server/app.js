@@ -162,7 +162,7 @@ if (process.env.NODE_ENV !== 'test') {
     if (err) throw err
     console.log('Node app is running on port', port)
   })
-}
+} 
 
 //For fake module export in test env
 if(process.env.NODE_ENV !== 'test'){
@@ -171,7 +171,8 @@ if(process.env.NODE_ENV !== 'test'){
 
 module.exports = {
   redis,
-  app
+  app,
+  server
 }
 
 const viestinta = [
