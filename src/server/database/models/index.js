@@ -30,7 +30,9 @@ if (process.env['DATABASE_URL']) {
     options = {logging: false}
   }
 
-  var sequelize = new Sequelize(process.env['DATABASE_URL'], options)
+  const db_url = process.env.VIESTINTA_OVERWRITE_DATABASE_URL || process.env.DATABASE_URL
+
+  var sequelize = new Sequelize(db_url, options)
 }
 
 //Adds all models to the database dictionary, "db"
@@ -63,6 +65,9 @@ sequelize
     .sync()
     .then(function(err) {
       console.log('Database sync complete')
+      if (process.env.VIESTINTA_INIT_DATABASE) {
+        require('../../init')
+      }
     }, function (err) {
       console.log('An error occurred while creating the table:', err);
     })

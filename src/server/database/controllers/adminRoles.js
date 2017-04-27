@@ -13,7 +13,6 @@ const AdminRole = require('../models/index').AdminRole
 let findOrCreateAdminRole = function(adminRole) {
   return AdminRole.findOrCreate({
     where: {
-      roleType: adminRole.roleType,
       CourseId: adminRole.CourseId,
       UserId: adminRole.UserId,
     },
@@ -72,26 +71,11 @@ let getSpecificAdminRole = function (CourseId, UserId) {
 /**
  * @description Updates the adminRole with a new type
  * @param adminRole
- * @param type
+ * @param roleType
  * @return {Promise.<AdminRole>}
  */
-let updateAdminRoleType = function (adminRole, type) {
-  return adminRole.update({type: type})
-}
-
-
-
-/**
- * @description Edits an existing adminRole's details using model.update()
- * @param adminRole
- * @returns {Promise.<AdminRole>}
- */
-let updateAdminRole = function(adminRole) {
-  return adminRole.update(adminRole, {
-    where: {
-      id: adminRole.id
-    }
-  })
+let updateAdminRoleType = function (adminRole, roleType) {
+  return adminRole.update({roleType: roleType})
 }
 
 
@@ -110,21 +94,10 @@ let deleteAdminRole = function(adminRole) {
 /**
  * @description
  * @param adminRoles
- * @param callback
  * @callback Callbacks when all adminRoles have been deleted
  */
-let deleteAllAdminRoles = function (adminRoles, callback) {
-  let adminRolesProcessed = 0
-  adminRoles.forEach(function (adminRole) {
-    deleteAdminRole(adminRole).then(function () {
-      adminRolesProcessed++
-      if(adminRolesProcessed === adminRoles.length){
-        if(callback){
-          callback()
-        }
-      }
-    })
-  })
+let deleteAllAdminRoles = function (adminRoles) {
+  return adminRoles.destroy()
 }
 
 
@@ -195,7 +168,6 @@ module.exports = {
   getAllByUserId:           getAllByUserId,
   getAllByCourseId:         getAllByCourseId,
   getSpecificAdminRole:     getSpecificAdminRole,
-  updateAdminRole:          updateAdminRole,
   updateAdminRoleType:      updateAdminRoleType,
   deleteAdminRole:          deleteAdminRole,
   deleteAllAdminRoles:      deleteAllAdminRoles,

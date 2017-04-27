@@ -5,8 +5,7 @@
   "main": "src/server/app.js",
   "scripts": {
     "dev": "grunt && sequelize db:migrate && sequelize db:seed:all && node src/server/app.js",
-    "test": "node src/server/app.js && nyc --check-coverage --lines 60 mocha src/test/server/**.js && nyc report --reporter=text-lcov > ./coverage/lcov.info",
-    "test-client": "mocha src/test/server/**.js",
+    "test": "node src/server/app.js && nyc --check-coverage --lines 60 mocha src/test/**/**.js && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",
     "webpack": "./node_modules/.bin/webpack"
@@ -34,19 +33,25 @@
   },
   "homepage": "https://viestinta.eu",
   "dependencies": {
+    "asyncawait": "^1.0.6",
+    "asyncwait": "^1.0.2",
     "axios": "^0.15.3",
     "babel": "^6.23.0",
-    "babel-core": "^6.0.0",
+    "babel-core": "^6.24.1",
     "babel-loader": "^6.3.2",
+    "babel-plugin-istanbul": "^4.1.1",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.23.0",
+    "babel-register": "^6.24.1",
     "body-parser": "^1.16.0",
+    "chai": "^3.5.0",
     "codecov": "^1.0.1",
     "connect-redis": "^3.2.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.1",
     "express-session": "^1.15.0",
     "fs": "0.0.1-security",
+    "highcharts": "^5.0.10",
     "istanbul": "^0.4.5",
     "latest-version": "^3.0.0",
     "loadash": "0.0.1",
@@ -74,10 +79,12 @@
     "webpack-dev-server": "^2.3.0"
   },
   "devDependencies": {
+    "asyn": "0.0.1",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-2": "^6.24.1",
     "chai": "^3.5.0",
     "check-dependencies": "^1.0.1",
     "codecov": "^1.0.1",
@@ -88,17 +95,30 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "http": "0.0.0",
-    "material-ui": "^0.17.0",
     "istanbul": "^0.4.5",
     "istanbul-coveralls": "^1.0.3",
+    "jsdom": "^9.12.0",
+    "material-ui": "^0.17.0",
     "mocha": "^3.2.0",
+    "mock-socket": "^6.0.4",
     "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
     "should": "^11.2.0",
+    "sinon": "^2.1.0",
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.3",
+    "socket.io-mock": "^1.2.3",
     "standard": "^8.6.0",
+    "supertest": "^3.0.0",
     "webpack": "^2.2.1"
+  },
+  "nyc": {
+    "exclude": [
+      "src/test/**",
+      "src/server/app.js",
+      "src/server/database/controllers/index.js",
+      "src/server/database/models/index.js"
+    ]
   },
   "babel": {
     "presets": [

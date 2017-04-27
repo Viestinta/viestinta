@@ -4,7 +4,7 @@ import axios from 'axios'
 
 // Theme
 import {orange800} from 'material-ui/styles/colors'
-import {blue500} from 'material-ui/styles/colors'
+import {blue800} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -29,12 +29,15 @@ const styles = {
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: orange800,
-    accent1Color:  blue500
+    accent1Color:  blue800
   }
 })
 
 export default class ChatApp extends Component {
 
+  /**
+   * @summary Saving state and binding functions.
+   */
   constructor (props) {
     super(props)
 
@@ -45,12 +48,21 @@ export default class ChatApp extends Component {
 
     this.getUserInfo = this.getUserInfo.bind(this)
     this.toggleAdmin = this.toggleAdmin.bind(this)
+    this.getAdminInfo =  this.getAdminInfo.bind(this)
   }
 
+  /**
+   * @summary Get info about user when ChatApp mounts.
+   */
   componentDidMount() {
     this.getUserInfo()
+    this.getAdminInfo()
   }
 
+  /**
+   * Get info about user
+   * @return {Number} sum
+   */
   getUserInfo () {
     axios
       .get("/user")
@@ -65,6 +77,32 @@ export default class ChatApp extends Component {
       })
   }
 
+  /**
+   * @summary Get admin info from server
+   */
+  getAdminInfo () {
+    axios
+      .get("/admin")
+      .then(admininfo => {
+        console.log("[ChatApp] Returning admin info: " + JSON.stringify(admininfo.data.length))
+        if (admininfo.data.length) {
+          this.setState({
+            isAdmin: true
+          })
+        } else {
+          this.setState({
+            isAdmin: false
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  /**
+   * @summary Set isAdmin state.
+   */
   toggleAdmin () {
     this.setState({
       isAdmin: !this.state.isAdmin

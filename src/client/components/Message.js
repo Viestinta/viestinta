@@ -24,14 +24,16 @@ const styles = {
 
 		padding: '0px',
 		margin: '10px',
-		textAlign: 'left'
+		textAlign: 'left',
 	},
   listItem: {
     paddingTop: '20px',
     paddingSide: '10px',
     paddingBottom: '10px',
 
-    borderRadius: '2px'
+    borderRadius: '2px',
+    overflowWrap: 'break-word',
+    whiteSpace: 'pre-wrap'
   },
   timestamp: {
     display: 'flex',
@@ -68,6 +70,7 @@ const iconVoteDown = (
 );
 
 /* This icon is not yet in use */
+// TODO: remove?
 const iconButtonMore = (
   <IconButton
     touch={true}
@@ -79,10 +82,13 @@ const iconButtonMore = (
 );
 
 export default class Message extends React.Component {
+  /**
+   * @summary Save state and bind functions
+   * @param {props} props - key, time, text, id, isAdmin and ref from MessageList.
+   */
   constructor (props) {
     super(props)
     this.state = {
-      text: '',
       voteEnabled: true,
       voteUp: true,
       open: false,
@@ -95,6 +101,9 @@ export default class Message extends React.Component {
     this.sendVote = this.sendVote.bind(this)
   }
 
+  /**
+   * @summary Set state voteEnabled, voteUp, open and actionInfo and then calls sendVote.
+   */
   handleVoteUp () {
     this.setState({
       voteEnabled: false,
@@ -105,6 +114,9 @@ export default class Message extends React.Component {
     this.sendVote(1)
   }
 
+  /**
+   * @summary Set state voteEnabled, voteUp, open and actionInfo and then calls sendVote.
+   */
   handleVoteDown () {
     this.setState({
       voteEnabled: false,
@@ -115,11 +127,18 @@ export default class Message extends React.Component {
     this.sendVote(-1)
   }
 
+  /**
+   * @summary Emit id to message and value.
+   * @param {value} value - -1 or 1
+   */
   sendVote (value) {
     var msgId = this.props.id
     socket.emit('new-vote-on-message', msgId, value)
   }
 
+  /**
+   * @summary Set state open.
+   */
   handleRequestClose () {
     this.setState({
       open: false
@@ -148,7 +167,7 @@ export default class Message extends React.Component {
     const footerAdmin = (
       <div style={styles.footer}>
         {timestamp}
-        <p>Student</p>
+        <p>{this.props.userName}</p>
       </div>
     )
     /* This menu is not yet in use */
@@ -162,6 +181,7 @@ export default class Message extends React.Component {
     	<Paper zDepth={3} style={styles.container}>
     		<ListItem
           style={styles.listItem}
+          disabled={true}
           primaryText={this.props.text}
           secondaryText={this.props.isAdmin ? footerAdmin : footer}
         />
@@ -172,6 +192,7 @@ export default class Message extends React.Component {
           autoHideDuration={2000}
           onRequestClose={this.handleRequestClose}
         />
+
       </Paper>
     )
   }

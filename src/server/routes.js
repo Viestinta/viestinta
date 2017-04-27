@@ -14,13 +14,19 @@ const redis = require('../server/app.js')
 
 module.exports = (app) => {
 
+  /* istanbul ignore next */
+  const authorized = function (req) {
+    return process.env.NODE_ENV === 'test' || req.user
+  }
+
   // Serves the root of the page
   // used to serve React frontend via index.html abd bundle.js
   app.get('/', (req, res) => {
-    if(req.user){
-      req.session.key = req.user.data.sub
-      req.session.name = req.user.data.name
-      console.log("Session key: " + req.session.key, "Name: " + req.session.name)
+    /* istanbul ignore if */
+    if(authorized(req) && req.user) {
+        req.session.key = req.user.data.sub
+        req.session.name = req.user.data.name
+        console.log("Session key: " + req.session.key, "Name: " + req.session.name)
     }
 
     res.sendFile(path.resolve(__dirname, '../client/index.html'))
@@ -28,8 +34,9 @@ module.exports = (app) => {
 
   // API request for serving user data to frontend
   // serves only the data part of the user to not compromise tokens
+  /* istanbul ignore next */
   app.get('/user', (req, res) => {
-    if (req.user) {
+    if (authorized(req)) {
       res.status(200)
       res.json({user: req.user.data})
     } else {
@@ -40,8 +47,9 @@ module.exports = (app) => {
 
   // API request for getting admin information
   // for the corresponding user in the database
+  /* istanbul ignore next */
   app.get('/admin', (req, res) => {
-    if(req.user){
+    if(authorized(req)){
       let userinfo = req.user.data
       userController.getByEmail(userinfo.email).then(function (user) {
         adminRoleController.getAllByUserId(user.id).then(function (adminRoles) {
@@ -64,18 +72,18 @@ module.exports = (app) => {
 
   // API request for connecting the session user object
   // with the corresponding user in the database
+  /* istanbul ignore next */
   app.get('/connect', (req, res) => {
-    if (req.user) {
+    if (authorized(req)) {
       req.session.user = req.user
       let userinfo = req.user.data
       userController.findOrCreateUser({
         name: userinfo.name,
-        sub: userinfo.sub,
         email: userinfo.email,
-        email_verified: userinfo.email_verified
       })
       .spread(function (user, created) {
         console.log("Created user:", user.name)
+        console.log("Created userID:", user.id)
       })
       .catch((err) => {
         console.error(err)
@@ -88,7 +96,7 @@ module.exports = (app) => {
 
   // API request for gegtting all Lectures
   app.get('/lectures', (req, res) => {
-    if(req.user){
+    if(authorized(req)){
       res.status(200)
       console.log('[routes][database] Getting all active lectures')
       lecturesController.getAllActive().then(function (lectures, info) {
@@ -122,6 +130,7 @@ module.exports = (app) => {
 
   // API request for logging out
   // Currently not working
+  /* istanbul ignore next */
   app.get('/logout', (req, res) => {
     req.user = undefined
     req.session.destroy()

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from'react-dom'
 import socket from '../socket'
 import Paper from 'material-ui/Paper'
 import {List} from 'material-ui/List'
@@ -22,7 +23,7 @@ const styles = {
     marginTop: 10,
     paddingRight: 20,
 
-    maxHeight: 400,
+    maxHeight: 563,
     width: '100%',
     height: '100%',
 
@@ -30,7 +31,7 @@ const styles = {
     minHeight: 0
   },
   child: {
-    height: 500,
+    minHeight: 400,
     width: '100%',
 
     padding: 0,
@@ -40,7 +41,10 @@ const styles = {
 };
 
 export default class MessageList extends Component {
-
+  /**
+   * @summary Save state and bind functions
+   * @param {props} props - lecture from LectureWrapper.
+   */
   constructor (props) {
     super(props)
     this.state = {
@@ -55,14 +59,32 @@ export default class MessageList extends Component {
     this.sortListByTime = this.sortListByTime.bind(this)
     this.sortListByVotes = this.sortListByVotes.bind(this)
     this.getClock = this.getClock.bind(this)
+    this.scrollToLast = this.scrollToLast.bind(this)
   }
 
+  /**
+   * @summary Set MessageList to listen to server events and scroll to last message.
+   */
   componentDidMount () {
     socket.on('receive-message', this.receiveMessage)
     socket.on('all-messages', this.getAllMessages)
     socket.on('update-message-order', this.sortMessageList)
+
+    // Scroll to last message
+    this.scrollToLast();
   }
 
+  /**
+   * @summary Scroll to last message when component updates.
+   */
+  componentDidUpdate(prevProps, prevState) {
+    this.scrollToLast();
+  }
+
+  /**
+   * @summary Add message to list and sort message list.
+   * @param {message} msg - Received message.
+   */
   receiveMessage (msg) {
     // Copies the list
     var messages = this.state.messages.slice()
@@ -71,17 +93,23 @@ export default class MessageList extends Component {
     messages.push(msg)
 
     this.sortMessageList(messages)
-    console.log("[MessageList] Messages in receiveMessage: ", this.state.messages)
   }
 
+  /**
+   * @summary Set state messages to received messagelist
+   * @param {list} msgList - List of messages.
+   */
   getAllMessages (msgList) {
     this.setState({
       messages: msgList
     })
   }
 
+  /**
+   * @summary Calls sortListByVotes or sortListByTime based on state sortByVotes.
+   * @param {list} list - List of messages to sort.
+   */
   sortMessageList (list) {
-    console.log("[MessageList] sortMessageList(), sortByVotes: " + this.state.sortByVotes)
     if (this.state.sortByVotes) {
       this.sortListByVotes(list)
     }
@@ -90,28 +118,39 @@ export default class MessageList extends Component {
     }
   }
 
+  /**
+   * @summary Sort list based on time and set state selectedIndex and messages
+   * @param {list} list - List of messages to sort.
+   */
   sortListByTime (list) {
-    console.log("[MessageList] Sort list by time")
-    list.slice().sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
+    var sortedList = list.slice().sort( (a, b) => { return (( new Date(a.time) ) - ( new Date(b.time)) ) } )
     
     this.setState({
       selectedIndex: 0,
-      messages: list
+      messages: sortedList
     })
   }
 
+  /**
+   * @summary Sort list based on votes and set state selectedIndex and messages
+   * @param {list} list - List of messages to sort.
+   */
   sortListByVotes (list) {
-    console.log("[MessageList] Sort list by votes")
-    list.slice().sort((a, b) => {
+    var sortedList = list.slice().sort((a, b) => {
       return ((a.votesUp - a.votesDown) - (b.votesUp - b.votesDown))
     })
 
     this.setState({
       selectedIndex: 1,
-      messages: list
+      messages: sortedList
     })
   }
 
+  /**
+   * @summary Get the time from a datestring.
+   * @param {string} time - Date as string.
+   * @return {string} Hour and min in format HH:mm.
+   */
   getClock(time) {
     if(time.length > 5) {
       return time.substring(11, 16)
@@ -120,6 +159,16 @@ export default class MessageList extends Component {
     return time
   }
 
+  /**
+   * @summary Scroll to last message.
+   */
+  scrollToLast() {
+    var len = this.state.messages.length - 1;
+    const node = ReactDOM.findDOMNode(this['_div' + len])
+    if (node) {
+      node.scrollIntoView()
+    }
+  }
 
   render () {
 
@@ -133,7 +182,9 @@ export default class MessageList extends Component {
           time={time}
           text={message.text}
           id={message.id}
+          userName={message.userName}
           isAdmin={this.props.isAdmin}
+          ref={(ref) => this['_div' + i] = ref}
         />
       )
     })
@@ -159,7 +210,7 @@ export default class MessageList extends Component {
       <div style={styles.container}>
         <Paper zDepth={3} style={styles.parent}>
           <List style={styles.child}>
-            {list.reverse()}
+            {this.props.isAdmin ? list.reverse() : list}
           </List>
         </Paper>
         {this.props.isAdmin ? sortMenu : undefined}

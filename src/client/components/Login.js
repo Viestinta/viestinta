@@ -47,17 +47,24 @@ const styles = {
 }
 
 export default class Login extends Component {
-  
+  /**
+   * @summary Save state and bind functions.
+   */
   constructor (props) {
     super(props)
 
     this.login = this.login.bind(this)
   }
-
+  /**
+   * @summary Set Login to listen for server events.
+   */
   componentDidMount() {
     socket.on('login', this.login)
   }
 
+  /**
+   * @summary Emit 'login' to server
+   */
   login () {
     socket.emit('login')
   }
@@ -79,7 +86,7 @@ export default class Login extends Component {
           <p style={styles.text}>
             Viestintä - Making communication and feedback easy.
           </p>
-          <IconButton 
+          <IconButton
             //iconClassName="muidocs-icon-custom-github"
             //iconStyle={{color: 'rgba(255, 255, 255, 0.87)'}}
             href="https://github.com/Viestinta/viestinta" 
@@ -87,7 +94,7 @@ export default class Login extends Component {
             <img src="images/GitHub-Mark-Light-32px.png" width="24px" />
           </IconButton>
           <p style={styles.text}>
-            &copy; &nbsp;
+            <span className="copy-left">&copy;</span> &nbsp;
             <a href="https://github.com/Viestinta/viestinta/graphs/contributors" style={{color: 'rgba(255, 255, 255, 0.870588)'}}>The Viestintä Team</a> 
             &nbsp; 2017
           </p>
