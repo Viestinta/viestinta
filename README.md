@@ -19,6 +19,14 @@
 * Jacob Odgård Tørring (odgaard)
 
 ## Development setup
+
+To run Viestinta, you need to obtain Oauth2 credentials form our provider at <a href="https://dashboard.dataporten.no">Dataporten<a>.
+Or you request <a href="mailto:oleast@stud.ntnu.no">oleast@stud.ntnu.no<a> for the use of our secret keys.
+
+Our setup is developed primarily to work on Linux.
+This does not mean it can't be run on Windows or MacOS, but that you may need to jump trough some hoops to get it working, and that only linux is officially supported.
+This is because hte docker image we are using relies on a linux system, and any other operating system would need to run the container in a virtual machine.
+
 1. Install docker: https://docs.docker.com/engine/installation/
 2. Install docker-compose: https://docs.docker.com/compose/install/
 3. Clone the repo: 
