@@ -79,12 +79,11 @@ module.exports = (app) => {
       let userinfo = req.user.data
       userController.findOrCreateUser({
         name: userinfo.name,
-        sub: userinfo.sub,
         email: userinfo.email,
-        email_verified: userinfo.email_verified
       })
       .spread(function (user, created) {
         console.log("Created user:", user.name)
+        console.log("Created userID:", user.id)
       })
       .catch((err) => {
         console.error(err)

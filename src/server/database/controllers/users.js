@@ -17,10 +17,7 @@ let findOrCreateUser = function(user) {
   return User.findOrCreate({
     where: {
       name: user.name,
-      student_id: user.student_id,
-      email: user.email,
-      email_verified: user.email_verified,
-      sub: user.sub
+      email: user.email
     }
   })
 }
