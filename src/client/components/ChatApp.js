@@ -48,6 +48,7 @@ export default class ChatApp extends Component {
 
     this.getUserInfo = this.getUserInfo.bind(this)
     this.toggleAdmin = this.toggleAdmin.bind(this)
+    this.getAdminInfo =  this.getAdminInfo.bind(this)
   }
 
   /**
@@ -55,6 +56,7 @@ export default class ChatApp extends Component {
    */
   componentDidMount() {
     this.getUserInfo()
+    this.getAdminInfo()
   }
 
   /**
@@ -74,6 +76,30 @@ export default class ChatApp extends Component {
         console.log(err)
       })
   }
+
+  /**
+   * @summary Get admin info from server
+   */
+  getAdminInfo () {
+    axios
+      .get("/admin")
+      .then(admininfo => {
+        console.log("[ChatApp] Returning admin info: " + JSON.stringify(admininfo.data.length))
+        if (admininfo.data.length) {
+          this.setState({
+            isAdmin: true
+          })
+        } else {
+          this.setState({
+            isAdmin: false
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   /**
    * @summary Set isAdmin state.
    */
