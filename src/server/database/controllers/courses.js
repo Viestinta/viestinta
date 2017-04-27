@@ -14,12 +14,10 @@ let findOrCreateCourse = function (course) {
   return Course.findOrCreate({
     where: {
       name: course.name,
-      code: course.code,
-    },
+      code: course.code
+    }
   })
 }
-
-
 
 /**
  * @description Gets all courses
@@ -28,8 +26,6 @@ let findOrCreateCourse = function (course) {
 let getAll = function () {
   return Course.findAll()
 }
-
-
 
 /**
  * @description Returns course by code and returns a Promise for that course
@@ -44,8 +40,6 @@ let getByCode = function (code) {
   })
 }
 
-
-
 /**
  * @description Gets a course by it's unique ID
  * @param CourseId
@@ -57,10 +51,7 @@ let getById = function (CourseId) {
       id: CourseId
     }
   })
-
 }
-
-
 
 /**
  * @description Returns all admins for course
@@ -71,11 +62,9 @@ let getAdminsForCourse = function (course) {
   return AdminRole.findAll({
     where: {
       CourseId: course.id
-    },
+    }
   })
 }
-
-
 
 /**
  * @description Returns all lectures to the course specified by the courseCode
@@ -90,13 +79,11 @@ let getAllLecturesForCourse = function (courseCode, callback) {
       where: {
         CourseId: course.id
       }
-    }).then(function(lectures){
+    }).then(function (lectures) {
       callback(lectures)
     })
   })
 }
-
-
 
 /**
  * @description Gets all users related to course
@@ -116,26 +103,22 @@ let getAllUsersForCourse = function (course) {
   })
 }
 
-
-
 /**
  * @description Updates an existing course's details using model.update()
  * @param course
  * @param updates
  * @returns {Promise.<Course>}
  */
-let updateCourse = function(course, updates) {
+let updateCourse = function (course, updates) {
   return course.update(updates)
 }
-
-
 
 /**
  * @description Deletes an existing course by their unique ID using model.destroy()
  * @param courseCode
  * @returns {Promise.<Course>}
  */
-let deleteCourse=function(courseCode) {
+let deleteCourse = function (courseCode) {
   return Course.destroy({
     where: {
       code: courseCode
@@ -143,17 +126,15 @@ let deleteCourse=function(courseCode) {
   })
 }
 
-
-
 module.exports = {
-  findOrCreateCourse:       findOrCreateCourse,
-  getAll:                   getAll,
-  getByCode:                getByCode,
-  getById:                  getById,
-  getAllUsersForCourse:     getAllUsersForCourse,
-  getAdminsForCourse:       getAdminsForCourse,
-  getAllLecturesForCourse:  getAllLecturesForCourse,
-  updateCourse:             updateCourse,
-  deleteCourse:             deleteCourse,
+  findOrCreateCourse: findOrCreateCourse,
+  getAll: getAll,
+  getByCode: getByCode,
+  getById: getById,
+  getAllUsersForCourse: getAllUsersForCourse,
+  getAdminsForCourse: getAdminsForCourse,
+  getAllLecturesForCourse: getAllLecturesForCourse,
+  updateCourse: updateCourse,
+  deleteCourse: deleteCourse
 
 }

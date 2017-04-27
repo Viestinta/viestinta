@@ -713,7 +713,7 @@ describe('Testing socket.io:', function () {
               })
             })
           }
-
+          
           function clientTwo() {
             return new Promise(function(resolve) {
               clientTwoSocket.on('update-feedback-interval', function(results) {
