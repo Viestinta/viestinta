@@ -20,8 +20,8 @@
 
 ## Development setup
 
-To run Viestinta, you need to obtain Oauth2 credentials form our provider at <a href="https://dashboard.dataporten.no">Dataporten<a>.
-Or you could request <a href="mailto:oleast@stud.ntnu.no">oleast@stud.ntnu.no<a> for the use of our secret keys.
+To run Viestinta, you need to obtain Oauth2 credentials from our provider at <a href="https://dashboard.dataporten.no">Dataporten<a>.
+Or you could request oleast*stud.ntnu.no for the use of our secret keys.
 
 Our setup is developed primarily to work on Linux.
 This does not mean it can't be run on Windows or MacOS, but that you may need to jump trough some hoops to get it working, and that only linux is officially supported.
