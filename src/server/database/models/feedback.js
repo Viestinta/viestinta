@@ -3,7 +3,6 @@
 // Feedback model
 
 module.exports = function (sequelize, DataTypes) {
-
   // Definition of Feedback attributes
   var Feedback = sequelize.define('Feedback', {
     time: {

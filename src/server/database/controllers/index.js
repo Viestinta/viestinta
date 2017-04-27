@@ -11,5 +11,5 @@ module.exports = {
   messages,
   lectures,
   courses,
-  adminRoles,
+  adminRoles
 }

@@ -2,7 +2,7 @@ const Feedback = require('../models/index').Feedback
 
 // Controller for Feedback model
 
-const MIN = 60000
+// const MIN = 60000
 
 module.exports = {
 
@@ -16,8 +16,6 @@ module.exports = {
     return feedback.update(updates)
   },
 
-
-
   /**
    * @description Delete an existing Feedback by the unique ID using model.destroy()
    * @param feedback
@@ -26,8 +24,6 @@ module.exports = {
   deleteFeedback (feedback) {
     return feedback.destroy()
   },
-
-
 
   /**
    * @description Create a new Feedback using model.create()
@@ -43,8 +39,6 @@ module.exports = {
     })
   },
 
-
-
   /**
    * @description Gets number of negative feedback for a lecture For the last 5 min
    * @param lecture
@@ -59,8 +53,6 @@ module.exports = {
     })
   },
 
-
-
   /**
    * @description Gets number of positive feedback for a lecture For the last 5 min
    * @param lecture
@@ -68,14 +60,12 @@ module.exports = {
    */
   getLastIntervalPos (lecture) {
     return Feedback.count({
-     where: {
+      where: {
         LectureId: lecture.id,
         value: 1
       }
     })
   },
-
-
 
   /**
    * @description Gets all feedback
@@ -84,8 +74,6 @@ module.exports = {
   getAll () {
     return Feedback.findAll()
   },
-
-
 
   /**
    * @description Gets all feedback from the last 2 hours for a lecture
