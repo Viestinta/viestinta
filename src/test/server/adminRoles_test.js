@@ -10,7 +10,7 @@ describe('Testing adminRoles', function () {
   let testCourseCode = 'TDT4040'
   let testCourse
   let testAdminRole
-  before(function (done) {
+  before(function (done) { // eslint-disable-line
     userController.findOrCreateUser({
       name: testUserName
     }).spread(function (user, created) {
@@ -68,7 +68,7 @@ describe('Testing adminRoles', function () {
     })
   })
 
-  after(function (done) {
+  after(function (done) { // eslint-disable-line
     userController.deleteUser(testUser, function () {
       courseController.deleteCourse(testCourse.code).then(function () {
         done()

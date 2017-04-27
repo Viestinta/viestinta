@@ -12,7 +12,7 @@ const courseController = require('./database/controllers/courses')
 // io server is defined in the Redis/Express section in app.js
 module.exports = (io) => {
   console.log('[sockets.js]')
-  let initCourse
+  let initCourse // eslint-disable-line
 
   setTimeout(function () {
     lecturesController.getByName('Enkle matriseoperasjoner').then(function (lecture) {
@@ -28,7 +28,7 @@ module.exports = (io) => {
 
     /* istanbul ignore next */
 
-    if (initCourse) {
+    /* if (initCourse) {
       let testCourse1
       let testCourseName1 = 'Matematikk 3'
       let testCourseCode1 = 'TMA4115'
@@ -93,7 +93,7 @@ module.exports = (io) => {
       })
 
       initCourse = false
-    }
+    } */
     // Reports when it finds a connection
     console.log('[sockets] connection')
 

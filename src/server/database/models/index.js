@@ -62,8 +62,8 @@ sequelize
     sequelize
     .sync()
     .then(function (err) {
-      if (err) {
-        console.log(err)
+      if (err && process.env.DEBUG) {
+        console.error(err)
       }
       console.log('Database sync complete')
       if (process.env.VIESTINTA_INIT_DATABASE) {

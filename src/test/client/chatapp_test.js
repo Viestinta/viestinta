@@ -9,7 +9,6 @@ import Login from '../../client/components/Login'
 import Message from '../../client/components/Message'
 import MessageList from '../../client/components/MessageList'
 
-
 import Paper from 'material-ui/Paper'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -29,7 +28,6 @@ const muiTheme = getMuiTheme({
   }
 })
 
-
 describe('MessageList', () => {
   it('should start with an empty list', () => {
     const wrapper = shallow(<MessageList />)
@@ -42,7 +40,7 @@ describe('ChatBox', () => {
 
   it('should include a textfield and a button', () => {
     const wrapper = shallow(<ChatBox />, {muiTheme: getMuiTheme()})
-    
+
     expect(wrapper.containsAllMatchingElements([
       <MuiThemeProvider muiTheme={muiTheme}>
         shallow(<TextField />),
