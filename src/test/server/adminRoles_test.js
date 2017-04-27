@@ -20,7 +20,7 @@ describe('Testing adminRoles', function () {
         code: testCourseCode
       }).spread(function (course, created) {
         testCourse = course
-        adminRoleController.addUserAsAdminToCourse(testUser, testCourse, 'Undass')
+        adminRoleController.addUserAsAdminToCourse(testUser, testCourse, 'Foreleser')
           .then(function (adminRole) {
             testAdminRole = adminRole
             done()
@@ -32,14 +32,14 @@ describe('Testing adminRoles', function () {
     adminRoleController.getAllByUserId(testUser.id)
       .then(function (adminRoles) {
         testAdminRole = adminRoles[0]
-        assert.equal(adminRoles[0].roleType, 'Undass')
+        assert.equal(adminRoles[0].roleType, 'Foreleser')
         done()
       })
   })
   it('Update adminRoleType', function (done) {
-    assert.equal(testAdminRole.roleType, 'Undass')
-    adminRoleController.updateAdminRoleType(testAdminRole, 'Foreleser').then(function () {
-      assert.equal(testAdminRole.roleType, 'Foreleser')
+    assert.equal(testAdminRole.roleType, 'Foreleser')
+    adminRoleController.updateAdminRoleType(testAdminRole, 'Undass').then(function () {
+      assert.equal(testAdminRole.roleType, 'Undass')
       done()
     })
   })
