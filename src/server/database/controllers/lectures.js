@@ -6,13 +6,12 @@ var User = require('../models/index').User
 
 let courseController = require('../controllers/index').courses
 
-
 /**
  * @description Create a new Lecture using model.create()
  * @param lecture
  * @returns {Promise.<Lecture>}
  */
-let createLecture = function(lecture) {
+let createLecture = function (lecture) {
   return Lecture.create({
     name: lecture.name,
     CourseId: lecture.CourseId,
@@ -24,26 +23,22 @@ let createLecture = function(lecture) {
   })
 }
 
-
-
 /**
  * @description Edit an existing Lecture details using model.update()
  * @param lecture
  * @param updates
  * @returns {Promise.<Lecture>}
  */
-let updateLecture = function(lecture, updates) {
+let updateLecture = function (lecture, updates) {
   return lecture.update(updates)
 }
-
-
 
 /**
  * @description Delete an existing Lecture by the unique ID using model.destroy()
  * @param lecture
  * @returns {Promise.<Lecture>}
  */
-let deleteLecture = function(lecture) {
+let deleteLecture = function (lecture) {
   return Lecture.destroy({
     where: {
       id: lecture.id
@@ -51,17 +46,13 @@ let deleteLecture = function(lecture) {
   })
 }
 
-
-
 /**
  * @description Get all lectures
  * @returns {Promise.<Lecture>}
  */
-let getAll = function() {
+let getAll = function () {
   return Lecture.findAll()
 }
-
-
 
 /**
  * @description Gets all currently active lectures
@@ -75,30 +66,26 @@ let getAllActive = function () {
   })
 }
 
-
-
 /**
  * @description Retrive an existing Lecture by the unique ID
  * @param id
  * @returns {Promise.<Lecture>}
  */
-let getById = function(id) {
+let getById = function (id) {
   return Lecture
     .find({
-        where: {
-          id: id
-        }
-      })
+      where: {
+        id: id
+      }
+    })
 }
-
-
 
 /**
  * @description Returns Lecture matching parameter name
  * @param name
  * @returns {Promise.<Lecture>}
  */
-let getByName = function(name) {
+let getByName = function (name) {
   return Lecture.find({
     where: {
       name: name
@@ -106,22 +93,18 @@ let getByName = function(name) {
   })
 }
 
-
-
 /**
  * @description Returns all messages in lecture
  * @param lecture
  * @returns {Promise.<Lecture>}
  */
-let getAllMessages = function(lecture) {
+let getAllMessages = function (lecture) {
   return Message.findAll({
     where: {
       LectureId: lecture.id
-    },
+    }
   })
 }
-
-
 
 /**
  * @description Returns all users related to a lecture
@@ -137,8 +120,6 @@ let getAllUsers = function (lecture) {
   })
 }
 
-
-
 /**
  * @description Gets the CourseId from the lecture
  * @param lecture
@@ -148,8 +129,6 @@ let getCourse = function (lecture) {
   return lecture.CourseId
 }
 
-
-
 /**
  * @description Gets admins for the lecture's course
  * @param lecture
@@ -158,21 +137,18 @@ let getCourse = function (lecture) {
  */
 let getAdmins = function (lecture) {
   return courseController.getAdminsForCourse(lecture.CourseId)
-
 }
 
-
-
 module.exports = {
-  createLecture:        createLecture,
-  updateLecture:        updateLecture,
-  deleteLecture:        deleteLecture,
-  getAll:               getAll,
-  getAllActive:         getAllActive,
-  getById:              getById,
-  getByName:            getByName,
-  getAllMessages:       getAllMessages,
-  getAllUsers:          getAllUsers,
-  getCourse:            getCourse,
-  getAdmins:            getAdmins
+  createLecture: createLecture,
+  updateLecture: updateLecture,
+  deleteLecture: deleteLecture,
+  getAll: getAll,
+  getAllActive: getAllActive,
+  getById: getById,
+  getByName: getByName,
+  getAllMessages: getAllMessages,
+  getAllUsers: getAllUsers,
+  getCourse: getCourse,
+  getAdmins: getAdmins
 }

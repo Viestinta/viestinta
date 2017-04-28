@@ -1,7 +1,7 @@
 // Controller for Message model
 
 const Message = require('../models/index').Message
-const Lecture = require('../models/index').Lecture
+// const Lecture = require('../models/index').Lecture
 
 module.exports = {
 
@@ -19,8 +19,6 @@ module.exports = {
     })
   },
 
-
-
   /**
    * @description Edit an existing Message details using model.update()
    * @param message
@@ -31,8 +29,6 @@ module.exports = {
     return message.update(updates)
   },
 
-
-
   /**
    * @description Delete an existing Message by the unique ID using model.destroy()
    * @param message
@@ -41,8 +37,6 @@ module.exports = {
   deleteMessage (message) {
     return message.destroy()
   },
-
-
 
   /**
    * Get last 10 messages in lecture
@@ -59,8 +53,6 @@ module.exports = {
     })
   },
 
-
-
   /**
    * @description Get all to a specific lecture
    * @param lecture
@@ -72,18 +64,16 @@ module.exports = {
         LectureId: lecture.id
       },
       raw: true,
-      order: '"time" DESC',
+      order: '"time" DESC'
     })
   },
-
-
 
   /**
    * @descriptio Gets all to a specific user
    * @param user
    * @returns {Promise.<Message>}
    */
-  getAllToUser(user){
+  getAllToUser (user) {
     return Message.findAll({
       where: {
         UserId: user.id
@@ -91,22 +81,18 @@ module.exports = {
     })
   },
 
-
-
   /**
    * @description Gets all messages containing the given text
    * @param text
    * @returns {Promise.<Array.<Message>>}
    */
-  getAllByText(text){
+  getAllByText (text) {
     return Message.findAll({
       where: {
         text: text
       }
     })
   },
-
-
 
   /**
    * @description Get all
@@ -123,8 +109,6 @@ module.exports = {
     return Message.findById(req.id)
   },
 
-
-
 /**
    * @description Changes voting attributes in message
    * @param req
@@ -132,7 +116,7 @@ module.exports = {
    * @callback Callbacks when voting attributes have been updated
    */
   vote (req, callback) {
-    console.log("In vote")
+    console.log('In vote')
     Message.find({where: {id: req.id}})
       .then(function (msg) {
         if (req.value === 1) {

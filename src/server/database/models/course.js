@@ -7,11 +7,11 @@ module.exports = function (sequelize, DataTypes) {
 
   let Course = sequelize.define('Course', {
     name: {
-      type: DataTypes.STRING,   //Calculus 1
+      type: DataTypes.STRING,   // Calculus 1
       allowNull: false
     },
     code: {
-      type: DataTypes.STRING,   //TMA4100
+      type: DataTypes.STRING,   // TMA4100
       allowNull: false
     },
     description: {

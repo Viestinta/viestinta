@@ -3,32 +3,30 @@ var pg = require('pg')
 delete pg.native
 
 var assert = require('assert')
-var db = require('../../server/database/models/index')
+// var db = require('../../server/database/models/index')
 const feedbackController = require('../../server/database/controllers/feedback')
 const lectureController = require('../../server/database/controllers/lectures')
 const courseController = require('../../server/database/controllers/courses')
-const should = require('should')
-
+// const should = require('should')
 
 describe('Testing feedback: ', function () {
+  let testCourse
+  let testLecture
 
-  let testCourse = undefined
-  let testLecture = undefined
+  let testFeedback1
+  let testFeedback2
+  let testFeedback3
 
-  let testFeedback1 = undefined
-  let testFeedback2 = undefined
-  let testFeedback3 = undefined
+  let preexistingFeedbackCount
 
-  let preexistingFeedbackCount = undefined
-
-  before(function (done) {
+  before(function (done) { // eslint-disable-line
     courseController.findOrCreateCourse({
-      name: "TestCourse",
-      code: "TEST0000"
+      name: 'TestCourse',
+      code: 'TEST0000'
     }).spread(function (course, created) {
       testCourse = course
       lectureController.createLecture({
-        name: "TestLecture",
+        name: 'TestLecture',
         CourseId: testCourse.id
       }).then(function (lecture) {
         testLecture = lecture
@@ -60,7 +58,6 @@ describe('Testing feedback: ', function () {
     })
   })
 
-
   it('Date to Feedback object in database is correct', function (done) {
     let testTime = new Date()
     feedbackController.createFeedback({
@@ -75,7 +72,7 @@ describe('Testing feedback: ', function () {
   it('Lecture to feedback object in database is lecture set', function (done) {
     feedbackController.createFeedback({
       value: 1,
-      LectureId: testLecture.id,
+      LectureId: testLecture.id
     }).then(function (feedback) {
       testFeedback1 = feedback
       assert.equal(testFeedback1.LectureId, testLecture.id)
@@ -136,13 +133,13 @@ describe('Testing feedback: ', function () {
   it('Delete feedback', function (done) {
     feedbackController.deleteFeedback(testFeedback1).then(function () {
       feedbackController.getAll().then(function (feedback) {
-        assert.equal(feedback.length,preexistingFeedbackCount + 2)
+        assert.equal(feedback.length, preexistingFeedbackCount + 2)
         done()
       })
     })
   })
 
-  after(function (done) {
+  after(function (done) { // eslint-disable-line
     testFeedback2.destroy().then(function () {
       testFeedback3.destroy().then(function () {
         testLecture.destroy().then(function () {

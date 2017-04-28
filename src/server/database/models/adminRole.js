@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
   var AdminRole = sequelize.define('AdminRole', {
     roleType: {
       type: DataTypes.STRING,
-      defaultValue: "Foreleser"
+      defaultValue: 'Foreleser'
     },
     active: {
       type: DataTypes.BOOLEAN,
