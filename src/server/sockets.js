@@ -11,7 +11,7 @@ const courseController = require('./database/controllers/courses')
 
 // io server is defined in the Redis/Express section in app.js
 module.exports = (io) => {
-  console.log('[sockets.js]')
+  console.log('[sockets]')
   let initCourse // eslint-disable-line
 
   setTimeout(function () {
@@ -22,91 +22,29 @@ module.exports = (io) => {
     })
   }, 5000)
 
-// When a new user connects
+  // When a new user connects
   io.sockets.on('connection', function (socket) {
-    console.log('[sockets.js] user connected')
-
-    /* istanbul ignore next */
-
-    /* if (initCourse) {
-      let testCourse1
-      let testCourseName1 = 'Matematikk 3'
-      let testCourseCode1 = 'TMA4115'
-
-      let testLecture1
-      let testLectureName1 = 'Enkle matriseoperasjoner'
-
-      courseController.findOrCreateCourse({
-        name: testCourseName1,
-        code: testCourseCode1
-      }).spread(function (course, created) {
-        testCourse1 = course
-        lecturesController.createLecture({
-          name: testLectureName1,
-          CourseId: testCourse1.id
-        }).then(function (lecture) {
-          testLecture1 = lecture
-          console.log(testLecture1)
-        })
-      })
-
-      let testCourse2
-      let testCourseName2 = 'Krets- og digitalteknikk'
-      let testCourseCode2 = 'TFE4101'
-
-      let testLecture2
-      let testLectureName2 = 'Ohms Lov'
-
-      courseController.findOrCreateCourse({
-        name: testCourseName2,
-        code: testCourseCode2
-      }).spread(function (course, created) {
-        testCourse2 = course
-        lecturesController.createLecture({
-          name: testLectureName2,
-          CourseId: testCourse2.id
-        }).then(function (lecture) {
-          testLecture2 = lecture
-          console.log(testLecture2)
-        })
-      })
-
-      let testCourse3
-      let testCourseName3 = 'Objektorientert programmering'
-      let testCourseCode3 = 'TDT4100'
-
-      let testLecture3
-      let testLectureName3 = 'Intro til Java'
-
-      courseController.findOrCreateCourse({
-        name: testCourseName3,
-        code: testCourseCode3
-      }).spread(function (course, created) {
-        testCourse3 = course
-        lecturesController.createLecture({
-          name: testLectureName3,
-          CourseId: testCourse3.id
-        }).then(function (lecture) {
-          testLecture3 = lecture
-          console.log(testLecture3)
-        })
-      })
-
-      initCourse = false
-    } */
     // Reports when it finds a connection
-    console.log('[sockets] connection')
+    console.log('[sockets] Connection established')
 
     socket.on('login', function (data) {
-      console.log('[sockets] login')
+      console.log('[sockets][login]')
     })
 
+    /**
+     * @template socketLecture: {
+      courseCode: (string),
+      name: (string),
+      startDate: (string),
+      endDate: (string),
+    }
+     */
     socket.on('create-lecture', function (socketLecture) {
-      console.log('[app] create-lecture')
       courseController.getByCode(socketLecture.courseCode).then(function (course) {
         socketLecture.CourseId = course.id
         lecturesController.createLecture(socketLecture).then(function (lecture) {
           io.sockets.emit('new-lecture', lecture.get({plain: true}))
+          console.log('[sockets][create-lecture] Created lecture: ' + socketLecture.courseCode)
         })
       })
     })
@@ -119,12 +57,12 @@ module.exports = (io) => {
     }
      */
     socket.on('leave-lecture', function (socketLecture) {
-      console.log('[sockets][socket] leave-lecture ' + socketLecture.room)
       socket.user = undefined
       socket.LectureId = undefined
       socket.CourseCode = undefined
       socket.room = undefined
       socket.leave(socketLecture.room)
+      console.log('[sockets][leave-lecture] Left room identifier:' + socketLecture.room)
     })
 
     /**
@@ -135,31 +73,28 @@ module.exports = (io) => {
     }
      */
     socket.on('join-lecture', function (socketLecture) {
-      console.log('[sockets][socket] join-lecture ' + socketLecture.room)
-
       socket.user = socketLecture.user
       usersController.getByEmail(socket.user.email).then(function (user) {
         socket.UserId = user.id
-        console.log('Socket after saving UserId ')
       })
       socket.LectureId = socketLecture.id
       socket.CourseCode = socketLecture.code
       socket.room = socketLecture.room
       socket.join(socketLecture.room)
 
-      console.log('[app][socket] Connected to lecture with ID: ' + socket.LectureId)
-      console.log('[app][socket] For course with code: ' + socket.CourseCode)
-      console.log('[app][socket] as user with username: ' + socket.user.name)
-      console.log('[app][socket] Joined room identifier: ' + socket.room)
+      console.log('[sockets][join-lecture] Connected to lecture with ID: ' + socket.LectureId)
+      console.log('[sockets][join-lecture] For course with code: ' + socket.CourseCode)
+      console.log('[sockets][join-lecture] as user with username: ' + socket.user.name)
+      console.log('[sockets][join-lecture] Joined room identifier: ' + socket.room)
 
-      // Get all feedback
+      // Get all feedback to lecture
       feedbacksController.getAllToLecture({
         id: socket.LectureId
       }).then(function (feedback) {
         socket.emit('all-feedback', feedback)
       })
 
-      // Get all messages
+      // Get all messages to lecture
       messagesController.getAllToLecture({
         id: socket.LectureId
       })
@@ -171,7 +106,6 @@ module.exports = (io) => {
                 message.userName = user.name
                 counter++
                 if (counter === messages.length) {
-                  console.log('[app][socket] Sent all messages')
                   socket.emit('all-messages', messages.reverse())
                 }
               })
@@ -182,20 +116,15 @@ module.exports = (io) => {
         })
     })
 
-    /** TODO: lecture can be removed, because of the new socket variables
+    /**
      * @deprecated
      * @template msg: {
       text: (string),
-      lecture: {
-        id: (int),
-        code: (string),
-        room: (string),
-      }
     }
-     */
+     **/
     socket.on('new-message', function (msg) {
-      console.log('[sockets] new-message: ' + msg.text)
-      console.log('[sockets][socket] Message destined for Room: ' + socket.room)
+      console.log('[sockets][new-message] Message text: ' + msg.text)
+      console.log('[sockets][new-message] Message sent to: ' + socket.room)
 
       var timeNow = new Date()
       timeNow.setHours(timeNow.getHours() + 2)
@@ -206,13 +135,14 @@ module.exports = (io) => {
         UserId: socket.UserId
       }
 
-      console.log('socket.UserId: ', socket.UserId)
       let userId = socket.UserId
       if (process.env.NODE_ENV === 'test') {
         userId = socket.user.id
       }
       usersController.getById(userId).then(function (user) {
         let userName = user.name
+        console.log('[sockets][new-message] Message by user: ' + userName)
+
         messagesController.createMessage(databaseMsg).then(function (result) {
           io.sockets.in(socket.room).emit('receive-message', {
             id: result.id,
@@ -226,13 +156,13 @@ module.exports = (io) => {
           })
         })
       }).catch(function (error) {
-        console.log('Error: ', error)
+        console.error('[sockets][new-message] Error: ', error)
       })
     })
 
-    // When somebody votes on a message
+    // When someone votes on a message
     socket.on('new-vote-on-message', function (msgId, value) {
-      console.log('[sockets] new-voting-message: ' + msgId + ' with ' + value)
+      console.log('[sockets][new-vote-on-message] Vote value: ' + value + ', on messageID ' + msgId)
 
       messagesController.vote({
         id: msgId,
@@ -246,21 +176,14 @@ module.exports = (io) => {
       })
     })
 
-    // When somebody gives feedback
-
-    /** TODO: Remove lecture, it's defined in the socket itself now
-     * @deprecated
+    /**
      * @template feedback: {
       value: (int),
-      lecture: {
-        id: (int),
-        code: (string),
-        room: (string),
-      }
     }
      */
+    // When someone gives feedback
     socket.on('new-feedback', function (feedback) {
-      console.log('[sockets] new-feedback: ' + feedback.value + ' to room: ' + socket.room)
+      console.log('[sockets][new-feedback] Feedback value: ' + feedback.value + ', to room: ' + socket.room)
       feedbacksController.createFeedback({
         value: feedback.value,
         LectureId: socket.LectureId,
@@ -273,6 +196,7 @@ module.exports = (io) => {
       })
     })
 
+    /** @deprecated **/
     // Called every x minuts
     socket.on('update-feedback-interval', function (lecture) {
       // Get feedback from database for past x minuts
@@ -285,7 +209,7 @@ module.exports = (io) => {
     })
 
     socket.on('disconnect', function () {
-      // TODO: Do something on disconnect?
+      console.log('[sockets][disconnect]')
     })
   })
 }
