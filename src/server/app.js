@@ -13,8 +13,6 @@ const bodyparser = require('body-parser')
 const cookieparser = require('cookie-parser')
 const redisAdapter = require('socket.io-redis')
 const session = require('express-session')
-const nconf = require('nconf')
-const path = require('path')
 
 const PDStrategy = require('passport-openid-connect').Strategy
 const router = require('./routes')
@@ -23,22 +21,6 @@ const sockets = require('./sockets')
 // ///////////////////////////////////////////////////
 // Initial Server Setup
 // ///////////////////////////////////////////////////
-
-nconf.argv()
-  .env('__')
-  .file({ file: path.resolve(__dirname, './etc/config.json') })
-  .defaults({
-    'http': {
-      'port': 8080,
-      'enforceHTTPS': false
-    },
-    'session': {
-      'secret': 'SSSSEEEECCCCRRRREEEETTTTSECRET'
-    },
-    'dataporten': {
-      'enableAuthentication': false
-    }
-  })
 
 const app = express()
 
@@ -70,7 +52,8 @@ if (process.env.NODE_ENV !== 'test') {
   // Creating Redis SessionStore
   const sessionStore = new RedisStore({host: redisHost, port: 6379, client: redis})
 
-  io.adapter(redisAdapter({ host: redisHost, port: 6379, client: redis })) // Faulty warning for client: redis
+  // Applying the redisAdapter to socketIO
+  io.adapter(redisAdapter({ host: redisHost, port: 6379, client: redis }))
 
   // Connects to Redis server
   redis.on('connect', function () {
@@ -108,17 +91,13 @@ if (process.env.NODE_ENV !== 'test') {
 // Passport/Dataporten setup
 // ///////////////////////////////////////////////////
 
-// Get all the config items from nconf in one request
-let pdConfigNconf = nconf.get('dataporten')
-
-// Set OAUTH2 config with either environment variables
-// or if they are not available, get them from nconf (./etc/config.json)
+// Set OAUTH2 config with environment variables
 let pdConfig = {
-  'issuerHost': process.env.VIESTINTA_OAUTH2_HOST_URL || pdConfigNconf.issuerHost,
-  'client_id': process.env.VIESTINTA_OAUTH2_CLIENT_ID || pdConfigNconf.client_id,
-  'client_secret': process.env.VIESTINTA_OAUTH2_CLIENT_SECRET || pdConfigNconf.client_secret,
-  'redirect_uri': process.env.VIESTINTA_OAUTH2_REDIRECT_URI || pdConfigNconf.redirect_uri,
-  'scope': process.env.VIESTINTA_OAUTH2_SCOPE || pdConfigNconf.scope
+  'issuerHost': process.env.VIESTINTA_OAUTH2_HOST_URL,
+  'client_id': process.env.VIESTINTA_OAUTH2_CLIENT_ID,
+  'client_secret': process.env.VIESTINTA_OAUTH2_CLIENT_SECRET,
+  'redirect_uri': process.env.VIESTINTA_OAUTH2_REDIRECT_URI,
+  'scope': process.env.VIESTINTA_OAUTH2_SCOPE
 }
 
 // Initialize a PassportDataportenStrategy with the OAUTH2 config
@@ -139,7 +118,7 @@ router(app)
 sockets(io)
 
 // ///////////////////////////////////////////////////
-// End of file
+// End of setup
 // ///////////////////////////////////////////////////
 
 // Prevent NodeJS container from locking into listen when running in test env
@@ -173,3 +152,4 @@ const viestinta = [
 ]
 
 console.log(viestinta.join('\n'))
+
