@@ -3,7 +3,6 @@ const lecturesController = require('./database/controllers/lectures')
 const messagesController = require('./database/controllers/messages')
 const feedbacksController = require('./database/controllers/feedback')
 const courseController = require('./database/controllers/courses')
-// const adminRoleController = require('./database/controllers/adminRoles')
 
 // ///////////////////////////////////////////////////
 // Setup for SocketIO
@@ -13,14 +12,6 @@ const courseController = require('./database/controllers/courses')
 module.exports = (io) => {
   console.log('[sockets]')
   let initCourse // eslint-disable-line
-
-  setTimeout(function () {
-    lecturesController.getByName('Enkle matriseoperasjoner').then(function (lecture) {
-      if (!lecture) {
-        initCourse = true
-      }
-    })
-  }, 5000)
 
   // When a new user connects
   io.sockets.on('connection', function (socket) {
