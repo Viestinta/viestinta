@@ -1,6 +1,5 @@
 
 // Import controllers for putting into database
-// const lecturesController = require('./database/controllers/lectures')
 const courseController = require('./database/controllers/courses')
 const userController = require('./database/controllers/users')
 const adminRoleController = require('./database/controllers/adminRoles')
@@ -16,7 +15,7 @@ let imeDataArray = require('./ime-database.json')
 let number = 0
 let imeLength = imeDataArray.length
 
-console.log('Data length: ' + imeLength)
+console.log('[init] Data length: ' + imeLength)
 
 imeDataArray
 
@@ -26,13 +25,13 @@ imeDataArray
     // Run trough every course in the IME Database
     .forEach((imeData, index) => {
       number++
-      console.log('Running number ' + number + ' of ' + imeLength)
+      console.log('[init] Running number ' + number + ' of ' + imeLength)
         // Find user/lecturer data in database and filter based on if the user is HeadLecturer
       let userDataArray = imeData.course.educationalRole.filter((userData) => userData.code === 'HeadLecturer')
 
         // Fix array structure and run trough for every HeadLecturer (as there can be more than one)
         // userDataArray.map((userData) => userData = userData.person)
-      console.log('Filtered user dataArray length: ' + userDataArray.length)
+      console.log('[init] Filtered user dataArray length: ' + userDataArray.length)
       userDataArray.forEach((userData) => {
         if (userData.person) {
                 // Find user corresponding to IME info of exists, create if not
@@ -42,7 +41,7 @@ imeDataArray
           })
                 .spread(function (user, created) {
                   if (user) {
-                    console.log('Created user: ' + user.name)
+                    console.log('[init] Created user: ' + user.name)
 
                         // Use course data from IME and find corresponding course if exists or create if not
                     let courseData = imeData.course
@@ -52,7 +51,7 @@ imeDataArray
                     })
                         .spread(function (course, created) {
                           if (course) {
-                            console.log('Created course: ', course.name)
+                            console.log('[init] Created course: ', course.name)
 
                                 // With IDs from created user and course, create adminRole with relations to user and course
                             adminRoleController.findOrCreateAdminRole({
@@ -61,7 +60,7 @@ imeDataArray
                             })
                                 .spread(function (adminRole, created) {
                                   if (adminRole) {
-                                    console.log('Created adminRole with CourseId: ' + adminRole.CourseId + ' UserId: ' + adminRole.UserId)
+                                    console.log('[init] Created adminRole with CourseId: ' + adminRole.CourseId + ' UserId: ' + adminRole.UserId)
                                   }
                                 })
                                 .catch((err) => {
@@ -78,7 +77,7 @@ imeDataArray
                   console.error(err)
                 })
         } else {
-          console.log("couldn't find person")
+          console.log("[init] couldn't find person")
         }
       })
     })
