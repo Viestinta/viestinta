@@ -1,7 +1,12 @@
 const express = require('express')
 const path = require('path')
 const passport = require('passport')
-// const db = require('./database/models/index')
+
+// Custom logger
+const winston = require('winston')
+winston.level = process.env.LOG_LEVEL
+
+// Database controllers
 const lecturesController = require('./database/controllers/lectures')
 const courseController = require('./database/controllers/courses')
 const userController = require('./database/controllers/users')
@@ -25,7 +30,7 @@ module.exports = (app) => {
     if (authorized(req) && req.user) {
       req.session.key = req.user.data.sub
       req.session.name = req.user.data.name
-      console.log('Session key: ' + req.session.key, 'Name: ' + req.session.name)
+      winston.info('Session key: ' + req.session.key, 'Name: ' + req.session.name)
     }
 
     res.sendFile(path.resolve(__dirname, '../client/index.html'))
@@ -58,7 +63,7 @@ module.exports = (app) => {
               adminRole.course = course
               counter++
               if (counter === adminRoles.length) {
-                console.log('[routes][database] Found all adminRoles for user, sending response to client')
+                winston.debug('[routes][database] Found all adminRoles for user, sending response to client')
                 res.json(adminRoles)
               }
             })
@@ -80,11 +85,11 @@ module.exports = (app) => {
         email: userinfo.email
       })
       .spread(function (user, created) {
-        console.log('Created user:', user.name)
-        console.log('Created userID:', user.id)
+        winston.info('Created user:', user.name)
+        winston.info('Created userID:', user.id)
       })
       .catch((err) => {
-        console.error(err)
+        winston.error(err)
       })
     } else {
       res.status(403)
@@ -96,14 +101,14 @@ module.exports = (app) => {
   app.get('/lectures', (req, res) => {
     if (authorized(req)) {
       res.status(200)
-      console.log('[routes][database] Getting all active lectures')
+      winston.debug('[routes][database] Getting all active lectures')
       lecturesController.getAllActive().then(function (lectures, info) {
         if (!lectures.length) {
           res.status(404)
           res.json([])
-          console.log('[routes][database] Found no active lectures, returning empty list')
+          winston.debug('[routes][database] Found no active lectures, returning empty list')
         } else {
-          console.log('[routes][database] Found active lectures, finding corresponding courses')
+          winston.debug('[routes][database] Found active lectures, finding corresponding courses')
           let counter = 0
           lectures.map((lecture) => {
             courseController.getById(lecture.CourseId).then(function (course) {
@@ -111,7 +116,7 @@ module.exports = (app) => {
               lecture.course = course
               counter++
               if (counter === lectures.length) {
-                console.log('[routes][database] Found all corresponding courses, sending response to client')
+                winston.debug('[routes][database] Found all corresponding courses, sending response to client')
                 res.json(lectures)
               }
             })
@@ -121,7 +126,7 @@ module.exports = (app) => {
     } else {
       res.status(401)
       res.json([])
-      console.log('[routes][database] User is not authorized for database access, returning empty list')
+      winston.debug('[routes][database] User is not authorized for database access, returning empty list')
     }
   })
 

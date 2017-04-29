@@ -1,6 +1,8 @@
-// var path = require('path')
+const webpack = require('webpack');
+// const debug = process.env.NODE_ENV !== 'production'
 
 module.exports = {
+
   entry: './src/client/client.js',
 
   output: {
@@ -11,6 +13,23 @@ module.exports = {
     inline: true,
     port: 8080
   },
+
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+
+      // Eliminate comments
+      comments: false,
+
+      // Compression specific options
+      compress: {
+        // remove warnings
+        warnings: false,
+
+        // Drop console statements
+        drop_console: true
+      },
+    })
+  ],
 
   module: {
     loaders: [
