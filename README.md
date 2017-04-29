@@ -7,10 +7,12 @@
 <p align="center">
   <a title="Code Style" href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg"></a>
   <a title="Build Status" href="https://drone.viestinta.eu/Viestinta/viestinta"><img src="https://drone.viestinta.eu/api/badges/Viestinta/viestinta/status.svg"></a>
+  <a title="Dependencies" href="https://david-dm.org/Viestinta/viestinta"><img src="https://david-dm.org/Viestinta/viestinta.svg"></a>  
   <a title="Code Coverage" href="https://codecov.io/gh/Viestinta/viestinta"><img src= "https://codecov.io/gh/Viestinta/viestinta/branch/master/graph/badge.svg"></a>
   <a title="License" href="https://github.com/Viestinta/viestinta/blob/master/LICENSE.md"><img src="https://img.shields.io/badge/license-GPLv3-blue.svg"></a>
   <a title="Website" href="https://viestinta.eu/"><img src="https://img.shields.io/badge/website-viestinta.eu-orange.svg"></a>
 </p>
+
 
 ## Team members
 * Dora Oline Eriksrud (teatimes)
