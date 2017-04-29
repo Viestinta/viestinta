@@ -80,6 +80,7 @@ if (process.env.NODE_ENV !== 'test') {
 
   // Enable secure cookies for production env, using HTTPS
   if (app.get('env') === 'production') {
+    sess.cookie.httpOnly = true
     sess.cookie.secure = true
   }
 
