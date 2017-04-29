@@ -47,6 +47,14 @@ let deleteLecture = function (lecture) {
 }
 
 /**
+ * @description Deletes all lectures
+ * @returns {Promise.<Lecture>}
+ */
+let deleteAllLectures = function () {
+  return Lecture.destroy({where: {}})
+}
+
+/**
  * @description Get all lectures
  * @returns {Promise.<Lecture>}
  */
@@ -143,6 +151,7 @@ module.exports = {
   createLecture: createLecture,
   updateLecture: updateLecture,
   deleteLecture: deleteLecture,
+  deleteAllLecture: deleteAllLectures,
   getAll: getAll,
   getAllActive: getAllActive,
   getById: getById,

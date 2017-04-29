@@ -1,7 +1,6 @@
 // Controller for Message model
 
 const Message = require('../models/index').Message
-// const Lecture = require('../models/index').Lecture
 
 module.exports = {
 
@@ -36,6 +35,14 @@ module.exports = {
    */
   deleteMessage (message) {
     return message.destroy()
+  },
+
+  /**
+   * @description Deletes all messages
+   * @returns {Promise}
+   */
+  deleteAllMessages () {
+    return Message.destroy({where: {}})
   },
 
   /**

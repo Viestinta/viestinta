@@ -438,6 +438,7 @@ describe('Testing socket.io:', function () {
             done()
           })
     })
+
   })
 
   describe('Testing new-vote-on-message:', function () {
@@ -694,6 +695,12 @@ describe('Testing socket.io:', function () {
             })
         })
       })
+    })
+  })
+
+  after(function (done) { // eslint-disable-line
+    messageController.deleteAllMessages().then(function () {
+      done()
     })
   })
 })

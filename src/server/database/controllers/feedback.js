@@ -87,5 +87,14 @@ module.exports = {
       },
       raw: true
     })
+  },
+
+  /**
+   * @description Deletes all feedback
+   * @returns {Promise}
+   */
+  deleteAllFeedback () {
+    return Feedback.destroy({where: {}})
   }
+
 }
