@@ -20,7 +20,7 @@ let number = 0
 let imeLength = imeDataArray.length
 
 winston.debug('[init] Data length: ' + imeLength)
-
+winston.info('[init] Starting course and admin setup, please wait.')
 imeDataArray
 
     // Filter the database to courses which include a lecturer
@@ -81,7 +81,8 @@ imeDataArray
                   winston.error(err)
                 })
         } else {
-          winston.warn("[init] couldn't find person")
+          winston.warn("[init] couldn't find person", userData)
         }
       })
     })
+winston.info('[init] Course and admin setup complete.')

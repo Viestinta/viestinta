@@ -31,6 +31,7 @@ services:
       - .:/srv/app/
     environment:
       - DATABASE_URL=postgres://postgres:viestintacentos@postgres:5432/viestintadb_dev
+      - LOG_LEVEL=info
       - VIESTINTA_OAUTH2_HOST_URL
       - VIESTINTA_OAUTH2_CLIENT_ID
       - VIESTINTA_OAUTH2_CLIENT_SECRET

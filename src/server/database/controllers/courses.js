@@ -126,6 +126,14 @@ let deleteCourse = function (courseCode) {
   })
 }
 
+/**
+ * @description Deletes all courses
+ * @returns {Promise.<Course>}
+ */
+let deleteAllCourses = function () {
+  return Course.destroy({where: {}})
+}
+
 module.exports = {
   findOrCreateCourse: findOrCreateCourse,
   getAll: getAll,
@@ -135,6 +143,6 @@ module.exports = {
   getAdminsForCourse: getAdminsForCourse,
   getAllLecturesForCourse: getAllLecturesForCourse,
   updateCourse: updateCourse,
-  deleteCourse: deleteCourse
-
+  deleteCourse: deleteCourse,
+  deleteAllCourses: deleteAllCourses
 }

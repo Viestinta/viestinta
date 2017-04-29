@@ -140,12 +140,10 @@ describe('Testing feedback: ', function () {
   })
 
   after(function (done) { // eslint-disable-line
-    testFeedback2.destroy().then(function () {
-      testFeedback3.destroy().then(function () {
-        testLecture.destroy().then(function () {
-          testCourse.destroy().then(function () {
-            done()
-          })
+    feedbackController.deleteAllFeedback().then(function () {
+      testLecture.destroy().then(function () {
+        testCourse.destroy().then(function () {
+          done()
         })
       })
     })
