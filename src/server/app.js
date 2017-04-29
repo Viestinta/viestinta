@@ -35,8 +35,10 @@ app.use(cookieparser())
 app.use(bodyparser.urlencoded({extended: true}))
 app.use(bodyparser.json())
 
-// Security package
-app.use(helmet)
+// Security package for production
+if (app.get('env') === 'production') {
+  app.use(helmet)
+}
 
 // Setting up custom logger
 const winston = require('winston')
