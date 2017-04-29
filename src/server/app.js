@@ -35,6 +35,15 @@ app.use(bodyparser.urlencoded({extended: true}))
 app.use(bodyparser.json())
 
 // ///////////////////////////////////////////////////
+// Setting up custom logger
+// ///////////////////////////////////////////////////
+
+const winston = require('winston')
+
+// Adjust the log level via environment variable
+winston.level = process.env.LOG_LEVEL
+
+// ///////////////////////////////////////////////////
 // Redis and ExpressJS session setup
 // ///////////////////////////////////////////////////
 
@@ -57,7 +66,7 @@ if (process.env.NODE_ENV !== 'test') {
 
   // Connects to Redis server
   redis.on('connect', function () {
-    console.log('Redis connected')
+    winston.info('Redis connected')
   })
 
   // Declaring session options

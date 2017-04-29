@@ -4,22 +4,26 @@ const messagesController = require('./database/controllers/messages')
 const feedbacksController = require('./database/controllers/feedback')
 const courseController = require('./database/controllers/courses')
 
+// Custom logger
+const winston = require('winston')
+winston.level = process.env.LOG_LEVEL
+
 // ///////////////////////////////////////////////////
 // Setup for SocketIO
 // ///////////////////////////////////////////////////
 
 // io server is defined in the Redis/Express section in app.js
 module.exports = (io) => {
-  console.log('[sockets]')
+  winston.info('[sockets]')
   let initCourse // eslint-disable-line
 
   // When a new user connects
   io.sockets.on('connection', function (socket) {
     // Reports when it finds a connection
-    console.log('[sockets] Connection established')
+    winston.info('[sockets] Connection established')
 
     socket.on('login', function (data) {
-      console.log('[sockets][login]')
+      winston.info('[sockets][login]')
     })
 
     /**
@@ -35,7 +39,7 @@ module.exports = (io) => {
         socketLecture.CourseId = course.id
         lecturesController.createLecture(socketLecture).then(function (lecture) {
           io.sockets.emit('new-lecture', lecture.get({plain: true}))
-          console.log('[sockets][create-lecture] Created lecture: ' + socketLecture.courseCode)
+          winston.info('[sockets][create-lecture] Created lecture: ' + socketLecture.courseCode)
         })
       })
     })
@@ -53,7 +57,7 @@ module.exports = (io) => {
       socket.CourseCode = undefined
       socket.room = undefined
       socket.leave(socketLecture.room)
-      console.log('[sockets][leave-lecture] Left room identifier:' + socketLecture.room)
+      winston.info('[sockets][leave-lecture] Left room identifier:' + socketLecture.room)
     })
 
     /**
@@ -73,10 +77,10 @@ module.exports = (io) => {
       socket.room = socketLecture.room
       socket.join(socketLecture.room)
 
-      console.log('[sockets][join-lecture] Connected to lecture with ID: ' + socket.LectureId)
-      console.log('[sockets][join-lecture] For course with code: ' + socket.CourseCode)
-      console.log('[sockets][join-lecture] as user with username: ' + socket.user.name)
-      console.log('[sockets][join-lecture] Joined room identifier: ' + socket.room)
+      winston.info('[sockets][join-lecture] Connected to lecture with ID: ' + socket.LectureId)
+      winston.info('[sockets][join-lecture] For course with code: ' + socket.CourseCode)
+      winston.info('[sockets][join-lecture] as user with username: ' + socket.user.name)
+      winston.info('[sockets][join-lecture] Joined room identifier: ' + socket.room)
 
       // Get all feedback to lecture
       feedbacksController.getAllToLecture({
@@ -114,8 +118,8 @@ module.exports = (io) => {
     }
      **/
     socket.on('new-message', function (msg) {
-      console.log('[sockets][new-message] Message text: ' + msg.text)
-      console.log('[sockets][new-message] Message sent to: ' + socket.room)
+      winston.info('[sockets][new-message] Message text: ' + msg.text)
+      winston.info('[sockets][new-message] Message sent to: ' + socket.room)
 
       var timeNow = new Date()
       timeNow.setHours(timeNow.getHours() + 2)
@@ -132,7 +136,7 @@ module.exports = (io) => {
       }
       usersController.getById(userId).then(function (user) {
         let userName = user.name
-        console.log('[sockets][new-message] Message by user: ' + userName)
+        winston.info('[sockets][new-message] Message by user: ' + userName)
 
         messagesController.createMessage(databaseMsg).then(function (result) {
           io.sockets.in(socket.room).emit('receive-message', {
@@ -153,7 +157,7 @@ module.exports = (io) => {
 
     // When someone votes on a message
     socket.on('new-vote-on-message', function (msgId, value) {
-      console.log('[sockets][new-vote-on-message] Vote value: ' + value + ', on messageID ' + msgId)
+      winston.info('[sockets][new-vote-on-message] Vote value: ' + value + ', on messageID ' + msgId)
 
       messagesController.vote({
         id: msgId,
@@ -174,7 +178,7 @@ module.exports = (io) => {
      */
     // When someone gives feedback
     socket.on('new-feedback', function (feedback) {
-      console.log('[sockets][new-feedback] Feedback value: ' + feedback.value + ', to room: ' + socket.room)
+      winston.info('[sockets][new-feedback] Feedback value: ' + feedback.value + ', to room: ' + socket.room)
       feedbacksController.createFeedback({
         value: feedback.value,
         LectureId: socket.LectureId,
@@ -200,7 +204,7 @@ module.exports = (io) => {
     })
 
     socket.on('disconnect', function () {
-      console.log('[sockets][disconnect]')
+      winston.info('[sockets][disconnect]')
     })
   })
 }
