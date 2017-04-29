@@ -136,7 +136,7 @@ const port = process.env.VIESTINTA_OVERWRITE_PORT || app.get('port')
 if (process.env.NODE_ENV !== 'test') {
   server.listen(port, (err) => {
     if (err) throw err
-    console.log('Node app is running on port', port)
+    winston.info('Node app is running on port', port)
   })
 }
 
@@ -160,5 +160,8 @@ const viestinta = [
   '                                        '
 ]
 
-console.log(viestinta.join('\n'))
+winston.info(viestinta.join('\n'))
 
+// ///////////////////////////////////////////////////
+// End of file
+// ///////////////////////////////////////////////////

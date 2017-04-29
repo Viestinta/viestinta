@@ -89,7 +89,7 @@ module.exports = (app) => {
         winston.info('Created userID:', user.id)
       })
       .catch((err) => {
-        console.error(err)
+        winston.error(err)
       })
     } else {
       res.status(403)

@@ -151,7 +151,7 @@ module.exports = (io) => {
           })
         })
       }).catch(function (error) {
-        console.error('[sockets][new-message] Error: ', error)
+        winston.error('[sockets][new-message] Error: ', error)
       })
     })
 
