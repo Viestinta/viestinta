@@ -20,15 +20,11 @@ let db = {}
 
 // Use the DATABASE_URL String in the environment to connect to the database if it exists
 if (process.env['DATABASE_URL']) {
-  var options = {}
-
-  if (process.env.DISABLE_DB_OUTPUT) {
-    options.logging = false
-  }
+  var options = {logging: false}
 
   // Disable logging while testing
-  if (process.env.NODE_ENV === 'test') {
-    options = {logging: false}
+  if (process.env.LOG_LEVEL === 'debug') {
+    options.logging = true
   }
 
   const dbUrl = process.env.VIESTINTA_OVERWRITE_DATABASE_URL || process.env.DATABASE_URL
@@ -60,7 +56,7 @@ db.Sequelize = Sequelize
 sequelize
   .authenticate()
   .then(function (auth) {
-    winston.info('Connection has been established successfully.')
+    winston.info('[sequelize] Connection has been established successfully.')
   }).then(function () {
     sequelize
     .sync()
@@ -68,16 +64,16 @@ sequelize
       if (err && process.env.DEBUG) {
         winston.error(err)
       }
-      winston.info('Database sync complete')
+      winston.info('[sequelize] Database sync complete')
       if (process.env.VIESTINTA_INIT_DATABASE) {
         require('../../init')
       }
     }, function (err) {
-      winston.error('An error occurred while creating the table:', err)
+      winston.error('[sequelize] An error occurred while creating the table:', err)
     })
   })
   .catch(function (err) {
-    winston.error('Unable to connect to the database:', err)
+    winston.error('[sequelize] Unable to connect to the database:', err)
   })
 
 // exports db object with all relevant references to models

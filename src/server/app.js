@@ -69,7 +69,7 @@ if (process.env.NODE_ENV !== 'test') {
 
   // Connects to Redis server
   redis.on('connect', function () {
-    winston.info('Redis connected')
+    winston.info('[app] Redis connected')
   })
 
   // Declaring session options
@@ -140,7 +140,7 @@ const port = process.env.VIESTINTA_OVERWRITE_PORT || app.get('port')
 if (process.env.NODE_ENV !== 'test') {
   server.listen(port, (err) => {
     if (err) throw err
-    winston.info('Node app is running on port', port)
+    winston.info('[app] Node app is running on port', port)
   })
 }
 
@@ -164,7 +164,7 @@ const viestinta = [
   '                                        '
 ]
 
-winston.info(viestinta.join('\n'))
+console.log(viestinta.join('\n'))
 
 // ///////////////////////////////////////////////////
 // End of file
