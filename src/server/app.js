@@ -4,13 +4,14 @@
 // ///////////////////////////////////////////////////
 
 // ///////////////////////////////////////////////////
-// Include Statments
+// Include Statements
 // ///////////////////////////////////////////////////
 
 const express = require('express')
 const passport = require('passport')
 const bodyparser = require('body-parser')
 const cookieparser = require('cookie-parser')
+const helmet = require('helmet')
 const redisAdapter = require('socket.io-redis')
 const session = require('express-session')
 
@@ -34,10 +35,10 @@ app.use(cookieparser())
 app.use(bodyparser.urlencoded({extended: true}))
 app.use(bodyparser.json())
 
-// ///////////////////////////////////////////////////
-// Setting up custom logger
-// ///////////////////////////////////////////////////
+// Security package
+app.use(helmet)
 
+// Setting up custom logger
 const winston = require('winston')
 
 // Adjust the log level via environment variable
