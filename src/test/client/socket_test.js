@@ -1,12 +1,14 @@
-// const should = require('should')
 const expect = require('chai').expect
-// const express = require('express')
 
+// Custom logger
+const winston = require('winston')
+winston.level = process.env.LOG_LEVEL
+
+// Database controllers
 const courseController = require('../../server/database/controllers/courses')
 const userController = require('../../server/database/controllers/users')
 const lectureController = require('../../server/database/controllers/lectures')
 const messageController = require('../../server/database/controllers/messages')
-// const adminRoleController = require('../../server/database/controllers/adminRoles')
 const feedbackController = require('../../server/database/controllers/feedback')
 
 // Simulate the servercode in app.js
@@ -302,17 +304,15 @@ describe('Testing socket.io:', function () {
       .then(function () {
         Promise.all([createMessages(), createFeedback()])
           .then(function () {
-            // console.log('testCourseOne: ', testCourseOne)
-            console.log('RoomTwo: ', roomTwo)
             done()
           })
       }).catch(function (err) {
-        console.log(err)
+        winston.error(err)
       })
   })
 
-  describe('should be able to establish connection', function () {
-    it('establishing connection', function (done) {
+  describe('Establishing connection', function () {
+    it('Established connection', function (done) {
       clientOneSocket = io.connect(socketURL, options)
       clientOneSocket.on('connect', function (data) {
         clientOneSocket.connected.should.equal(true)
@@ -324,7 +324,6 @@ describe('Testing socket.io:', function () {
   describe('Testing join-lecture:', function () {
     beforeEach(function (done) { // eslint-disable-line
       clientOneSocket = io.connect(socketURL, options)
-      console.log('testCourseOne.id:', testCourseOne.code)
 
       clientOneSocket.on('connect', function (data) {
         clientOneSocket.emit('login')
@@ -373,9 +372,6 @@ describe('Testing socket.io:', function () {
       clientTwoSocket = io.connect(socketURL, options)
       clientThreeSocket = io.connect(socketURL, options)
 
-      console.log('RoomOne: ', roomOne)
-      console.log('RoomTwo: ', roomTwo)
-
       clientOneSocket.on('connect', function (data) {
         clientOneSocket.emit('login')
         clientOneSocket.emit('join-lecture', {
@@ -384,7 +380,6 @@ describe('Testing socket.io:', function () {
           id: testLectureOne.id,
           room: roomOne
         })
-        console.log('Done with clientOneSocket')
       })
 
       clientTwoSocket.on('connect', function (data) {
@@ -417,15 +412,11 @@ describe('Testing socket.io:', function () {
         LectureId: testLectureOne.id,
         UserId: testUserOne.id
       }
-
-      console.log('testUserOne.id: ', testUserOne.id)
       clientOneSocket.emit('new-message', msg)
       function recClientOne () {
         return new Promise(function (resolve) {
-          console.log('In recCLientOne')
 
           clientOneSocket.on('receive-message', function (message, done) {
-            console.log('clientOne has received message: ', message)
             message.text.should.eql(msg.text)
             message.LectureId.should.eql(msg.LectureId)
             resolve()
@@ -447,6 +438,7 @@ describe('Testing socket.io:', function () {
             done()
           })
     })
+
   })
 
   describe('Testing new-vote-on-message:', function () {
@@ -703,6 +695,12 @@ describe('Testing socket.io:', function () {
             })
         })
       })
+    })
+  })
+
+  after(function (done) { // eslint-disable-line
+    messageController.deleteAllMessages().then(function () {
+      done()
     })
   })
 })

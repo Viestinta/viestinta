@@ -1,7 +1,6 @@
 // Controller for Message model
 
 const Message = require('../models/index').Message
-// const Lecture = require('../models/index').Lecture
 
 module.exports = {
 
@@ -36,6 +35,14 @@ module.exports = {
    */
   deleteMessage (message) {
     return message.destroy()
+  },
+
+  /**
+   * @description Deletes all messages
+   * @returns {Promise}
+   */
+  deleteAllMessages () {
+    return Message.destroy({where: {}})
   },
 
   /**
@@ -116,7 +123,6 @@ module.exports = {
    * @callback Callbacks when voting attributes have been updated
    */
   vote (req, callback) {
-    console.log('In vote')
     Message.find({where: {id: req.id}})
       .then(function (msg) {
         if (req.value === 1) {

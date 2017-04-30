@@ -1,9 +1,12 @@
 
 // Import controllers for putting into database
-// const lecturesController = require('./database/controllers/lectures')
 const courseController = require('./database/controllers/courses')
 const userController = require('./database/controllers/users')
 const adminRoleController = require('./database/controllers/adminRoles')
+
+// Custom logger
+const winston = require('winston')
+winston.level = process.env.LOG_LEVEL
 
 // import IME data
 let imeDataArray = require('./ime-database.json')
@@ -11,13 +14,13 @@ let imeDataArray = require('./ime-database.json')
 
 // reduce the array to something a little smaller to that it can be debugged
 // imeDataArray = [imeDataArray[0], imeDataArray[1], imeDataArray[2]]
-// console.log(JSON.stringify(imeDataArray))
+// winston.debug(JSON.stringify(imeDataArray))
 
 let number = 0
 let imeLength = imeDataArray.length
 
-console.log('Data length: ' + imeLength)
-
+winston.debug('[init] Data length: ' + imeLength)
+winston.info('[init] Starting course and admin setup, please wait.')
 imeDataArray
 
     // Filter the database to courses which include a lecturer
@@ -26,13 +29,13 @@ imeDataArray
     // Run trough every course in the IME Database
     .forEach((imeData, index) => {
       number++
-      console.log('Running number ' + number + ' of ' + imeLength)
+      winston.debug('[init] Running number ' + number + ' of ' + imeLength)
         // Find user/lecturer data in database and filter based on if the user is HeadLecturer
       let userDataArray = imeData.course.educationalRole.filter((userData) => userData.code === 'HeadLecturer')
 
         // Fix array structure and run trough for every HeadLecturer (as there can be more than one)
         // userDataArray.map((userData) => userData = userData.person)
-      console.log('Filtered user dataArray length: ' + userDataArray.length)
+      winston.debug('[init] Filtered user dataArray length: ' + userDataArray.length)
       userDataArray.forEach((userData) => {
         if (userData.person) {
                 // Find user corresponding to IME info of exists, create if not
@@ -42,7 +45,7 @@ imeDataArray
           })
                 .spread(function (user, created) {
                   if (user) {
-                    console.log('Created user: ' + user.name)
+                    winston.debug('[init] Created user: ' + user.name)
 
                         // Use course data from IME and find corresponding course if exists or create if not
                     let courseData = imeData.course
@@ -52,7 +55,7 @@ imeDataArray
                     })
                         .spread(function (course, created) {
                           if (course) {
-                            console.log('Created course: ', course.name)
+                            winston.debug('[init] Created course: ', course.name)
 
                                 // With IDs from created user and course, create adminRole with relations to user and course
                             adminRoleController.findOrCreateAdminRole({
@@ -61,24 +64,25 @@ imeDataArray
                             })
                                 .spread(function (adminRole, created) {
                                   if (adminRole) {
-                                    console.log('Created adminRole with CourseId: ' + adminRole.CourseId + ' UserId: ' + adminRole.UserId)
+                                    winston.debug('[init] Created adminRole with CourseId: ' + adminRole.CourseId + ' UserId: ' + adminRole.UserId)
                                   }
                                 })
                                 .catch((err) => {
-                                  console.error(err)
+                                  winston.error(err)
                                 })
                           }
                         })
                         .catch((err) => {
-                          console.error(err)
+                          winston.error(err)
                         })
                   }
                 })
                 .catch((err) => {
-                  console.error(err)
+                  winston.error(err)
                 })
         } else {
-          console.log("couldn't find person")
+          winston.warn("[init] couldn't find person", userData)
         }
       })
     })
+winston.info('[init] Course and admin setup complete.')

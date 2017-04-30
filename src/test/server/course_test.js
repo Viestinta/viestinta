@@ -579,5 +579,13 @@ describe('Test suite: Course and Lecture testing', function () {
       })
     })
   })
+
+  after(function (done) { // eslint-disable-line
+    lectureController.deleteAllLecture().then(function () {
+      courseController.deleteAllCourses().then(function () {
+        done()
+      })
+    })
+  })
 })
 

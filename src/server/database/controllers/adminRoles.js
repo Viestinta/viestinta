@@ -78,12 +78,11 @@ let deleteAdminRole = function (adminRole) {
 }
 
 /**
- * @description
- * @param adminRoles
- * @callback Callbacks when all adminRoles have been deleted
+ * @description Deletes all adminRoles
+ * @returns {Promise}
  */
-let deleteAllAdminRoles = function (adminRoles) {
-  return adminRoles.destroy()
+let deleteAllAdminRoles = function () {
+  return AdminRole.destroy({where: {}})
 }
 
 /**

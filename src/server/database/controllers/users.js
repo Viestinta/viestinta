@@ -47,19 +47,6 @@ let getByName = function (name) {
 }
 
 /**
- * @description Gets user by subID and returns a Promise for that user
- * @param sub
- * @returns {Promise.<User>}
- */
-let getBySub = function (sub) {
-  return User.find({
-    where: {
-      sub: sub
-    }
-  })
-}
-
-/**
  * @description Gets user by email and returns a Promise for that user
  * @param email
  * @returns {Promise.<User>}
@@ -80,6 +67,14 @@ let getByEmail = function (email) {
  */
 let updateUser = function (user, updates) {
   return user.update(updates)
+}
+
+/**
+ * @description Gets all users
+ * @returns {Promise.<Array.<User>>}
+ */
+let getAllUsers = function () {
+  return User.findAll()
 }
 
 /**
@@ -133,14 +128,22 @@ let deleteUser = function (user, callback) {
       if (adminRoles) {
         adminRoleController.deleteAllAdminRoles(adminRoles)
           .then(function () {
-            user.destroy().then(function () {
+            User.destroy({
+              where: {
+                id: user.id
+              }
+            }).then(function () {
               if (callback) {
                 callback()
               }
             })
           })
       } else {
-        user.destroy().then(function () {
+        User.destroy({
+          where: {
+            id: user.id
+          }
+        }).then(function () {
           if (callback) {
             callback()
           }
@@ -153,12 +156,12 @@ module.exports = {
   findOrCreateUser: findOrCreateUser,
   getById: getById,
   getByName: getByName,
-  getBySub: getBySub,
   getByEmail: getByEmail,
+  getAllUsers: getAllUsers,
   getAllLectureForUser: getAllLectureForUser,
   getAllCourseForUser: getAllCourseForUser,
   addUserToCourse: addUserToCourse,
   addUserToLecture: addUserToLecture,
   updateUser: updateUser,
-  deleteUser: deleteUser
+  deleteUser: deleteUser,
 }

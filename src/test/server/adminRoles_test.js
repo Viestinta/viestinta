@@ -69,9 +69,11 @@ describe('Testing adminRoles', function () {
   })
 
   after(function (done) { // eslint-disable-line
-    userController.deleteUser(testUser, function () {
-      courseController.deleteCourse(testCourse.code).then(function () {
-        done()
+    testUser.destroy().then(function () {
+      testCourse.destroy().then(function () {
+        adminRoleController.deleteAllAdminRoles().then(function () {
+          done()
+        })
       })
     })
   })

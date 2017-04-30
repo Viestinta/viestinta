@@ -50,7 +50,6 @@ describe('Testing messages:', function () {
   let testDate = new Date()
 
   let hours = testDate.getHours()
-  console.log('Hours: ', hours)
   if (hours < 10) {
     hours = '0' + hours
   }
@@ -89,6 +88,35 @@ describe('Testing messages:', function () {
           })
     })
   })
+  it('Get message by ID', function (done) {
+    messageController.createMessage({
+      text: 'TestMessageForID',
+      LectureId: testLecture.id
+    }).then(function (message) {
+      let testMessage = message
+      messageController.getById(message.id).then(function (message2) {
+        assert.equal(testMessage.text,message.text)
+        assert.equal(testMessage.text, 'TestMessageForID')
+        message.destroy().then(function () {
+          done()
+        })
+      })
+    })
+  })
+  it('Get all messages', function (done) {
+    messageController.getAll().then(function (messages) {
+      assert.equal(messages.length, 0)
+      messageController.createMessage({
+        text: 'TestMessageForGetAll',
+        LectureId: testLecture.id
+      }).then(function (message) {
+        messageController.getAll().then(function (messages) {
+          assert.equal(messages[0].text, 'TestMessageForGetAll')
+          done()
+        })
+      })
+    })
+  })
 
   it('User to Message object in database is set to correct user', function (done) {
     messageController.createMessage({
@@ -107,14 +135,14 @@ describe('Testing messages:', function () {
     messageController.createMessage({
       text: 'Herro world'
     }).then(function (message) {
-      let testMessage = message
-
       messageController.updateMessage(message, {
         text: 'Hello world'
-      }).then(function () {
-        assert.equal(testMessage.text, 'Hello world')
-        testMessage.destroy().then(function () {
-          done()
+      }).then(function (message2) {
+        assert.equal(message.text, 'Hello world')
+        message.destroy().then(function () {
+          message2.destroy().then(function () {
+            done()
+          })
         })
       })
     })

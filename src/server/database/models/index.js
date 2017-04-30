@@ -10,22 +10,21 @@ const path = require('path')
 const Sequelize = require('sequelize')
 
 const basename = path.basename(module.filename)
-// const env = process.env.NODE_ENV || 'development'
+
+// Custom logger
+const winston = require('winston')
+winston.level = process.env.LOG_LEVEL
 
 // Dictionary to store references to the models
 let db = {}
 
 // Use the DATABASE_URL String in the environment to connect to the database if it exists
 if (process.env['DATABASE_URL']) {
-  var options = {}
-
-  if (process.env.DISABLE_DB_OUTPUT) {
-    options.logging = false
-  }
+  var options = {logging: false}
 
   // Disable logging while testing
-  if (process.env.NODE_ENV === 'test') {
-    options = {logging: false}
+  if (process.env.LOG_LEVEL === 'debug') {
+    options.logging = true
   }
 
   const dbUrl = process.env.VIESTINTA_OVERWRITE_DATABASE_URL || process.env.DATABASE_URL
@@ -57,24 +56,24 @@ db.Sequelize = Sequelize
 sequelize
   .authenticate()
   .then(function (auth) {
-    console.log('Connection has been established successfully.')
+    winston.info('[sequelize] Connection has been established successfully.')
   }).then(function () {
     sequelize
     .sync()
     .then(function (err) {
       if (err && process.env.DEBUG) {
-        console.error(err)
+        winston.error(err)
       }
-      console.log('Database sync complete')
+      winston.info('[sequelize] Database sync complete')
       if (process.env.VIESTINTA_INIT_DATABASE) {
         require('../../init')
       }
     }, function (err) {
-      console.log('An error occurred while creating the table:', err)
+      winston.error('[sequelize] An error occurred while creating the table:', err)
     })
   })
   .catch(function (err) {
-    console.log('Unable to connect to the database:', err)
+    winston.error('[sequelize] Unable to connect to the database:', err)
   })
 
 // exports db object with all relevant references to models
