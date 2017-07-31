@@ -8,7 +8,9 @@
     "test": "node src/server/app.js && nyc --check-coverage --lines 60 mocha src/test/**/**.js && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "start": "node src/server/app.js",
     "lint": "standard ./server/* ./client/*",
-    "webpack": "./node_modules/.bin/webpack"
+    "webpack": "./node_modules/.bin/webpack",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -60,11 +62,12 @@
     "react-tap-event-plugin": "^2.0.1",
     "redis": "^2.7.1",
     "sequelize": "^3.30.2",
-    "socket.io-client": "^1.7.3",
-    "socket.io-redis": "^4.0.0",
+    "socket.io-client": "^2.0.2",
+    "socket.io-redis": "^5.1.0",
     "uglify-js": "^2.8.22",
     "webpack": "^2.2.1",
-    "winston": "^2.3.1"
+    "winston": "^2.3.1",
+    "snyk": "^1.37.0"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -121,5 +124,6 @@
       "io",
       "should"
     ]
-  }
+  },
+  "snyk": true
 }
