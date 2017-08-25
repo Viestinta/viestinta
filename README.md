@@ -14,7 +14,6 @@
   <a title="Code Coverage" href="https://codecov.io/gh/Viestinta/viestinta"><img src= "https://codecov.io/gh/Viestinta/viestinta/branch/master/graph/badge.svg"></a>
 </p>
 
-
 ## Team members
 * Dora Oline Eriksrud (teatimes)
 * Ole Anders Stokker (frozenlight)
@@ -48,3 +47,11 @@ This is because the docker image we are using relies on a linux system, and any 
 
 ## Production setup
 * https://github.com/Viestinta/viestinta-config
+
+## Trailer
+
+<p align="center">
+  <a href="http://www.youtube.com/watch?v=1h61LraJn34">
+    <img src="http://img.youtube.com/vi/1h61LraJn34/0.jpg"/>
+  </a>
+</p>
